@@ -29,7 +29,7 @@ FRESULT f_open (
 <dt>fp</dt>
 <dd>Pointer to the blank file object structure to be created.</dd>
 <dt>path</dt>
-<dd>Pointer to a null-terminated string that specifies the <a href="filename.html">file name</a> to create or open.</dd>
+<dd>Pointer to a null-terminated string that specifies the <a href="filename.html">file name</a> to open or create.</dd>
 <dt>mode</dt>
 <dd>Mode flags that specifies the type of access and open method for the file. It is specified by a combination of following flags.<br>
 <table class="lst">
@@ -74,7 +74,7 @@ To append data to the file, use <a href="lseek.html"><tt>f_lseek()</tt></a> func
 
 <div class="para desc">
 <h4>Description</h4>
-<p>After <tt>f_open()</tt> function succeeded, the file object is valid. The file object is used for subsequent read/write functions to identify the file. To close an open file, use <a href="close.html"><tt>f_close()</tt></a> function. If the file is modified and not closed properly, the file data will be collapted.</p>
+<p>After <tt>f_open()</tt> function succeeded, the file object is valid. The file object is used for subsequent read/write functions to identify the file. To close an open file, use <a href="close.html"><tt>f_close()</tt></a> function. If the file is modified and not closed properly, the file data will be collapsed.</p>
 <p>If duplicated file open is needed, read <a href="appnote.html#dup">here</a> carefully. However duplicated open of a file with write mode flag is always prohibited.</p>
 <p>Before using any file function, a work area (file system object) must be registered to the logical drive with <a href="mount.html"><tt>f_mount()</tt></a> function. All API functions except for <a href="fdisk.html"><tt>f_fdisk()</tt></a> function can work after this procedure.</p>
 </div>
@@ -104,15 +104,15 @@ int main (void)
     f_mount(&amp;FatFs, "", 0);
 
     <span class="c">/* Open a text file */</span>
-    fr = f_open(&fil, "message.txt", FA_READ);
+    fr = f_open(&amp;fil, "message.txt", FA_READ);
     if (fr) return (int)fr;
 
     <span class="c">/* Read all lines and display it */</span>
-    while (f_gets(line, sizeof line, &fil))
+    while (f_gets(line, sizeof line, &amp;fil))
         printf(line);
 
     <span class="c">/* Close the file */</span>
-    f_close(&fil);
+    f_close(&amp;fil);
 
     return 0;
 }

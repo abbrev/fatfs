@@ -13,7 +13,7 @@
 
 <div class="para func">
 <h2>disk_read</h2>
-<p>The disk_read function reads sector(s) from the disk drive.</p>
+<p>The disk_read function reads sector(s) from the storage device.</p>
 <pre>
 DRESULT disk_read (
   BYTE <span class="arg">pdrv</span>,     <span class="c">/* [IN] Physical drive number */</span>
@@ -28,13 +28,13 @@ DRESULT disk_read (
 <h4>Parameters</h4>
 <dl class="par">
 <dt>pdrv</dt>
-<dd>Specifies the physical drive number.</dd>
+<dd>Physical drive number to identify the target device.</dd>
 <dt>buff</dt>
-<dd>Pointer to the <em>byte array</em> to store the read data. The size of buffer must be in sector size * sector count.</dd>
+<dd>Pointer to the <em>byte array</em> to store the read data.</dd>
 <dt>sector</dt>
-<dd>Specifies the start sector number in logical block address (LBA).</dd>
+<dd>Start sector number in logical block address (LBA).</dd>
 <dt>count</dt>
-<dd>Specifies number of sectors to read. FatFs specifis with 1 to 128. Generally, a multiple sector transfer request must not be split into single sector transactions to the device, or you may not get good read performance.</dd>
+<dd>Number of sectors to read. FatFs specifis it in range of from 1 to 128.</dd>
 </dl>
 </div>
 
@@ -49,7 +49,7 @@ DRESULT disk_read (
 <dt>RES_PARERR</dt>
 <dd>Invalid parameter.</dd>
 <dt>RES_NOTRDY</dt>
-<dd>The disk drive has not been initialized.</dd>
+<dd>The device has not been initialized.</dd>
 </dl>
 </div>
 
@@ -62,6 +62,7 @@ DRESULT disk_read (
 <li>For <tt>f_read()</tt>, avoid long read request that includes a whole of sector. - Direct transfer will never occure.</li>
 <li>For <tt>f_read(fp, buff, btr, &amp;br)</tt>, make sure that <tt>(((UINT)buff &amp; 3) == (f_tell(fp) &amp; 3))</tt> is true. - Word aligned direct transfer is guaranteed.</li>
 </ul>
+<p>Generally, a multiple sector transfer request must not be split into single sector transactions to the storage device, or you will not get good read throughput.</p>
 </div>
 
 

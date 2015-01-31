@@ -17,8 +17,8 @@
 <pre>
 FRESULT f_getlabel (
   const TCHAR* <span class="arg">path</span>,  <span class="c">/* [IN] Drive number */</span>
-  TCHAR* <span class="arg">buff</span>,        <span class="c">/* [OUT] Volume label */</span>
-  DWORD* <span class="arg">sn</span>           <span class="c">/* [OUT] Volume serial number */</span>
+  TCHAR* <span class="arg">label</span>,       <span class="c">/* [OUT] Volume label */</span>
+  DWORD* <span class="arg">vsn</span>          <span class="c">/* [OUT] Volume serial number */</span>
 );
 </pre>
 </div>
@@ -28,9 +28,9 @@ FRESULT f_getlabel (
 <dl class="par">
 <dt>path</dt>
 <dd>Pointer to the null-terminated string that specifies the <a href="filename.html">logical drive</a>. Null-string specifies the default drive.</dd>
-<dt>buff</dt>
+<dt>label</dt>
 <dd>Pointer to the buffer to store the volume label. The buffer size must be at least 12 items. If the volume has no label, a null-string will be returned. Set null pointer if this information is not needed.</dd>
-<dt>sn</dt>
+<dt>vsn</dt>
 <dd>Pointer to the <tt>DWORD</tt> variable to store the volume serial number. Set null pointer if this information is not needed.</dd>
 </dl>
 </div>

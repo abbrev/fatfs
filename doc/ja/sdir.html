@@ -28,8 +28,8 @@
     UINT    lockid;    <span class="c">/* ロックID */</span>
 <span class="k">#endif</span>
 <span class="k">#if</span> _USE_LFN
-    WCHAR*  lfn;       <span class="c">/* LFNバッファへのポインタ */</span>
-    WORD    lfn_idx;   <span class="c">/* 最後にマッチしたLFNエントリの先頭インデックス (0xFFFF:無効) */</span>
+    WCHAR*  lfn;       <span class="c">/* LFNバッファへのポインタ (in/out) */</span>
+    WORD    lfn_idx;   <span class="c">/* LFNエントリの先頭インデックス (0xFFFF:無効) */</span>
 <span class="k">#endif</span>
 } DIR;
 </pre>

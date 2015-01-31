@@ -36,7 +36,7 @@ int f_putc (
 <div class="para ret">
 <h4>戻り値</h4>
 <p>文字が正常に書き込まれると書き込んだ文字数が返されます。ディスクが満杯またはエラーにより書き込まれなかったときは<tt>EOF (-1)</tt>が返されます。</p>
-<p>APIにUnicodeが選択(<tt>_LFN_UNICODE</tt>が1)されているときは、<span class="arg">chr</span>はUTF-16文字になりますが、ファイル上のエンコードは、<tt>_STRF_ENCODE</tt>オプションで選択できます。それ以外の時は無変換(1バイト/1文字)で書き込みます。</p>
+<p>APIにUnicodeが選択(<tt>_LFN_UNICODE</tt>が1)されているときは、<tt class="arg">chr</tt>はUTF-16文字になりますが、ファイル上のエンコードは、<tt>_STRF_ENCODE</tt>オプションで選択できます。それ以外の時は無変換(1バイト/1文字)で書き込みます。</p>
 </div>
 
 
@@ -48,7 +48,7 @@ int f_putc (
 
 <div class="para comp">
 <h4>対応情報</h4>
-<p><tt>_FS_READONLY == 0</tt>で、且つ<tt>_USE_STRFUNC</tt>が 1または 2のとき使用可能です。2を指定すると、<tt>'\n'</tt>は<tt>"\r\n"</tt>に展開されてファイルに書き込まれます。</p>
+<p><tt>_FS_READONLY == 0</tt>で、且つ<tt>_USE_STRFUNC</tt>が 1または 2のとき使用可能です。2を指定すると、<tt>'\n'</tt>は<tt>'\r'+'\n'</tt>に展開されてファイルに書き込まれます。</p>
 </div>
 
 

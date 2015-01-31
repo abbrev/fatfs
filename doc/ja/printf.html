@@ -56,8 +56,8 @@ int f_printf (
 
 <div class="para comp">
 <h4>対応情報</h4>
-<p><tt>_FS_READONLY == 0</tt>で、且つ<tt>_USE_STRFUNC</tt>が 1または 2のとき使用可能になります。2の時は、出力に含まれる<tt>'\n'</tt>が<tt>"\r\n"</tt>に展開されてファイルに書き込まれます。</p>
-<p>APIにUnicodeが選択(<tt>_LFN_UNICODE</tt>が1)されているときは、<span class="arg">fmt</span>はUnicode文字列になりますが、ファイル上のエンコードは、<tt>_STRF_ENCODE</tt>オプションで選択できます。それ以外の時は無変換(1バイト/1文字)で書き込みます。</p>
+<p><tt>_FS_READONLY == 0</tt>で、且つ<tt>_USE_STRFUNC</tt>が1または2のとき使用可能になります。2の時は、出力に含まれる<tt>'\n'</tt>が<tt>'\r'+'\n'</tt>に展開されてファイルに書き込まれます。</p>
+<p>APIにUnicodeが選択(<tt>_LFN_UNICODE</tt>が1)されているときは、<tt class="arg">fmt</tt>はUnicode文字列になりますが、ファイル上のエンコードは、<tt>_STRF_ENCODE</tt>オプションで選択できます。それ以外の時は無変換(1バイト/1文字)で書き込みます。</p>
 </div>
 
 
@@ -66,14 +66,17 @@ int f_printf (
 <pre>
     f_printf(&amp;fil, "%d", 1234);            <span class="c">/* "1234" */</span>
     f_printf(&amp;fil, "%6d,%3d%%", -200, 5);  <span class="c">/* "  -200,  5%" */</span>
-    f_printf(&amp;fil, "%-6u", 100);           <span class="c">/* "100   " */</span>
-    f_printf(&amp;fil, "%ld", 12345678L);      <span class="c">/* "12345678" */</span>
-    f_printf(&amp;fil, "%04x", 0xAB);          <span class="c">/* "00ab" */</span>
+    f_printf(&amp;fil, "%ld", 12345L);         <span class="c">/* "12345" */</span>
+    f_printf(&amp;fil, "%06d", 25);            <span class="c">/* "000025" */</span>
+    f_printf(&amp;fil, "%06d", -25);           <span class="c">/* "000-25" */</span>
+    f_printf(&amp;fil, "%-6d", 25);            <span class="c">/* "25    " */</span>
+    f_printf(&amp;fil, "%u", -1);              <span class="c">/* "65535" or "4294967295" */</span>
+    f_printf(&amp;fil, "%04x", 0xAB3);         <span class="c">/* "0ab3" */</span>
     f_printf(&amp;fil, "%08LX", 0x123ABCL);    <span class="c">/* "00123ABC" */</span>
     f_printf(&amp;fil, "%016b", 0x550F);       <span class="c">/* "0101010100001111" */</span>
     f_printf(&amp;fil, "%s", "String");        <span class="c">/* "String" */</span>
-    f_printf(&amp;fil, "%5s", "abc");          <span class="c">/* "  abc" */</span>
-    f_printf(&amp;fil, "%-5s", "abc");         <span class="c">/* "abc  " */</span>
+    f_printf(&amp;fil, "%8s", "abc");          <span class="c">/* "     abc" */</span>
+    f_printf(&amp;fil, "%-8s", "abc");         <span class="c">/* "abc     " */</span>
     f_printf(&amp;fil, "%c", 'a');             <span class="c">/* "a" */</span>
     f_printf(&amp;fil, "%f", 10.0);            <span class="c">/* 浮動小数点は未サポート */</span>
 </pre>

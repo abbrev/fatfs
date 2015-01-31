@@ -13,7 +13,7 @@
 
 <div class="para func">
 <h2>f_getcwd</h2>
-<p>カレント・ディレクトリを得ます</p>
+<p>カレント・ディレクトリを得ます。</p>
 <pre>
 FRESULT f_getcwd (
   TCHAR* <span class="arg">buff</span>, <span class="c">/* [OUT] バッファ */</span>
@@ -26,9 +26,9 @@ FRESULT f_getcwd (
 <h4>引数</h4>
 <dl class="par">
 <dt>buff</dt>
-<dd>カレント・ディレクトリの文字列を格納するバッファ</dd>
+<dd>カレント・ディレクトリのパス名文字列を格納するバッファ</dd>
 <dt>len</dt>
-<dd>TCHAR単位のバッファ・サイズ</dd>
+<dd><tt>TCHAR</tt>単位のバッファ・サイズ</dd>
 </dl>
 </div>
 
@@ -50,7 +50,7 @@ FRESULT f_getcwd (
 
 <div class="para desc">
 <h4>解説</h4>
-<p>カレント・ドライブのカレント・ディレクトリのフル・パス文字列を取得します。<tt>_VOLUMES</tt>が2以上のときは、論理ドライブ番号の付加されたフル・パス名となります。</p>
+<p>カレント・ドライブのカレント・ディレクトリのフル・パス文字列を取得します。<tt>_VOLUMES</tt>が2以上のときは、論理ドライブ番号の付加されたパス名となります。</p>
 </div>
 
 

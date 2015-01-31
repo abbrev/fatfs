@@ -17,8 +17,8 @@
 <pre>
 FRESULT f_getlabel (
   const TCHAR* <span class="arg">path</span>,  <span class="c">/* [IN] 対象ドライブ */</span>
-  TCHAR* <span class="arg">name</span>,        <span class="c">/* [OUT] ボリューム名を格納するバッファ */</span>
-  DWORD* <span class="arg">sn</span>           <span class="c">/* [OUT] ボリューム・シリアル番号を格納する変数 */</span>
+  TCHAR* <span class="arg">label</span>,       <span class="c">/* [OUT] ボリューム名を格納するバッファ */</span>
+  DWORD* <span class="arg">vsn</span>          <span class="c">/* [OUT] ボリューム・シリアル番号を格納する変数 */</span>
 );
 </pre>
 </div>
@@ -28,10 +28,10 @@ FRESULT f_getlabel (
 <dl class="par">
 <dt>path</dt>
 <dd>対象となる論理ドライブの<a href="filename.html">パス名</a>を示すヌル文字<tt>'\0'</tt>終端の文字列へのポインタを指定します。ヌル文字列の場合は、デフォルト・ドライブを指定したことになります。</dd>
-<dt>name</dt>
+<dt>label</dt>
 <dd>ボリューム名を格納する配列へのポインタを指定します。少なくとも12要素のサイズが必要です。ボリューム名がない場合はヌル文字列が返されます。この情報が不要なときはヌル・ポインタを指定してください。</dd>
-<dt>sn</dt>
-<dd>ボリューム・シリアル番号を格納する<tt>DWORD</tt>変数へのポインタを指定します。この情報が不要なときはヌル・ポインタを指定してください。</dd>
+<dt>vsn</dt>
+<dd>ボリューム・シリアル番号を格納する<tt>DWORD</tt>型変数へのポインタを指定します。この情報が不要なときはヌル・ポインタを指定してください。</dd>
 </dl>
 </div>
 

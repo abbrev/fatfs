@@ -1,4 +1,4 @@
-FatFs Module Source Files R0.10a                      (C)ChaN, 2014
+FatFs Module Source Files R0.10b                      (C)ChaN, 2014
 
 
 FILES
@@ -153,3 +153,6 @@ REVISION HISTORY
                        Fixed f_close() invalidates the file object without volume lock.
                        Fixed f_closedir() returns but the volume lock is left acquired.
                        Fixed creation of an entry with LFN fails on too many SFN collisions.
+
+  Mar 19,'14 R0.10b    Fixed a hard error in the disk I/O layer can collapse the directory entry.
+                       Fixed LFN entry is not deleted on delete/rename an object with lossy converted SFN.

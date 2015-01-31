@@ -13,7 +13,7 @@
 
 <div class="para func">
 <h2>disk_initialize</h2>
-<p>The disk_initialize function initializes the disk drive.</p>
+<p>The disk_initialize function initializes the storage device.</p>
 <pre>
 DSTATUS disk_initialize (
   BYTE <span class="arg">pdrv</span>           <span class="c">/* [IN] Physical drive number */</span>
@@ -25,7 +25,7 @@ DSTATUS disk_initialize (
 <h4>Parameter</h4>
 <dl class="par">
 <dt>pdrv</dt>
-<dd>Specifies the physical drive number to initialize.</dd>
+<dd>Physical drive number to identify the target device.</dd>
 </dl>
 </div>
 
@@ -37,8 +37,8 @@ DSTATUS disk_initialize (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>This function initializes a physical drive and put it ready to generic read/write data. When the function succeeded, <tt>STA_NOINIT</tt> flag in the return value is cleared.</p>
-<p><em>Application program MUST NOT call this function while FatFs is in use, or FAT structure on the volume can be corrapted. To re-initialize the file system, use <tt>f_mount()</tt> function instead.</em> This function is called on volume mount process by FatFs module to manage the media change.</p>
+<p>This function initializes a storage device and put it ready to generic read/write data. When the function succeeded, <tt>STA_NOINIT</tt> flag in the return value is cleared.</p>
+<p><em>Application program MUST NOT call this function, or FAT structure on the volume can be broken. To re-initialize the file system, use <tt>f_mount()</tt> function instead.</em> This function is called at volume mount process by FatFs module to manage the media change.</p>
 </div>
 
 <p class="foot"><a href="../00index_e.html">Return</a></p>

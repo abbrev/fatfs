@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------/
-/  FatFs - FAT file system module  R0.10a                (C)ChaN, 2014
+/  FatFs - FAT file system module  R0.10b                (C)ChaN, 2014
 /-----------------------------------------------------------------------------/
 / FatFs module is a generic FAT file system module for small embedded systems.
 / This is a free software that opened for education, research and commercial
@@ -111,6 +111,8 @@
 /                   Fixed f_close() invalidates the file object without volume lock.
 /                   Fixed f_closedir() returns but the volume lock is left acquired.
 /                   Fixed creation of an entry with LFN fails on too many SFN collisions.
+/ May 19,'14 R0.10b Fixed a hard error in the disk I/O layer can collapse the directory entry.
+/                   Fixed LFN entry is not deleted on delete/rename an object with lossy converted SFN.
 /---------------------------------------------------------------------------*/
 
 #include "ff.h"			/* Declarations of FatFs API */
@@ -125,7 +127,7 @@
 
 ---------------------------------------------------------------------------*/
 
-#if _FATFS != 29000	/* Revision ID */
+#if _FATFS != 8051	/* Revision ID */
 #error Wrong include file (ff.h).
 #endif
 
@@ -150,7 +152,7 @@
 #error Wrong sector size configuration.
 #endif
 #if _MAX_SS == _MIN_SS
-#define	SS(fs)	((UINT)_MIN_SS)	/* Fixed sector size */
+#define	SS(fs)	((UINT)_MAX_SS)	/* Fixed sector size */
 #else
 #define	SS(fs)	((fs)->ssize)	/* Variable sector size */
 #endif
@@ -162,10 +164,10 @@
 #error _FS_LOCK must be 0 at read-only cfg.
 #endif
 typedef struct {
-	FATFS *fs;				/* Object ID 1, volume (NULL:blank entry) */
-	DWORD clu;				/* Object ID 2, directory */
-	WORD idx;				/* Object ID 3, directory index */
-	WORD ctr;				/* Object open counter, 0:none, 0x01..0xFF:read mode open count, 0x100:write mode */
+	FATFS *fs;		/* Object ID 1, volume (NULL:blank entry) */
+	DWORD clu;		/* Object ID 2, directory (0:root) */
+	WORD idx;		/* Object ID 3, directory index */
+	WORD ctr;		/* Object open counter, 0:none, 0x01..0xFF:read mode open count, 0x100:write mode */
 } FILESEM;
 #endif
 
@@ -414,61 +416,61 @@ typedef struct {
 / structure member because the structure is not binary compatible between
 / different platforms */
 
-#define BS_jmpBoot			0	/* Jump instruction (3) */
-#define BS_OEMName			3	/* OEM name (8) */
-#define BPB_BytsPerSec		11	/* Sector size [byte] (2) */
-#define BPB_SecPerClus		13	/* Cluster size [sector] (1) */
-#define BPB_RsvdSecCnt		14	/* Size of reserved area [sector] (2) */
-#define BPB_NumFATs			16	/* Number of FAT copies (1) */
-#define BPB_RootEntCnt		17	/* Number of root directory entries for FAT12/16 (2) */
-#define BPB_TotSec16		19	/* Volume size [sector] (2) */
-#define BPB_Media			21	/* Media descriptor (1) */
-#define BPB_FATSz16			22	/* FAT size [sector] (2) */
-#define BPB_SecPerTrk		24	/* Track size [sector] (2) */
-#define BPB_NumHeads		26	/* Number of heads (2) */
-#define BPB_HiddSec			28	/* Number of special hidden sectors (4) */
-#define BPB_TotSec32		32	/* Volume size [sector] (4) */
-#define BS_DrvNum			36	/* Physical drive number (2) */
-#define BS_BootSig			38	/* Extended boot signature (1) */
-#define BS_VolID			39	/* Volume serial number (4) */
-#define BS_VolLab			43	/* Volume label (8) */
-#define BS_FilSysType		54	/* File system type (1) */
-#define BPB_FATSz32			36	/* FAT size [sector] (4) */
-#define BPB_ExtFlags		40	/* Extended flags (2) */
-#define BPB_FSVer			42	/* File system version (2) */
-#define BPB_RootClus		44	/* Root directory first cluster (4) */
-#define BPB_FSInfo			48	/* Offset of FSINFO sector (2) */
-#define BPB_BkBootSec		50	/* Offset of backup boot sector (2) */
-#define BS_DrvNum32			64	/* Physical drive number (2) */
-#define BS_BootSig32		66	/* Extended boot signature (1) */
-#define BS_VolID32			67	/* Volume serial number (4) */
-#define BS_VolLab32			71	/* Volume label (8) */
-#define BS_FilSysType32		82	/* File system type (1) */
-#define	FSI_LeadSig			0	/* FSI: Leading signature (4) */
-#define	FSI_StrucSig		484	/* FSI: Structure signature (4) */
-#define	FSI_Free_Count		488	/* FSI: Number of free clusters (4) */
-#define	FSI_Nxt_Free		492	/* FSI: Last allocated cluster (4) */
-#define MBR_Table			446	/* MBR: Partition table offset (2) */
-#define	SZ_PTE				16	/* MBR: Size of a partition table entry */
-#define BS_55AA				510	/* Boot sector signature (2) */
+#define BS_jmpBoot			0		/* Jump instruction (3) */
+#define BS_OEMName			3		/* OEM name (8) */
+#define BPB_BytsPerSec		11		/* Sector size [byte] (2) */
+#define BPB_SecPerClus		13		/* Cluster size [sector] (1) */
+#define BPB_RsvdSecCnt		14		/* Size of reserved area [sector] (2) */
+#define BPB_NumFATs			16		/* Number of FAT copies (1) */
+#define BPB_RootEntCnt		17		/* Number of root directory entries for FAT12/16 (2) */
+#define BPB_TotSec16		19		/* Volume size [sector] (2) */
+#define BPB_Media			21		/* Media descriptor (1) */
+#define BPB_FATSz16			22		/* FAT size [sector] (2) */
+#define BPB_SecPerTrk		24		/* Track size [sector] (2) */
+#define BPB_NumHeads		26		/* Number of heads (2) */
+#define BPB_HiddSec			28		/* Number of special hidden sectors (4) */
+#define BPB_TotSec32		32		/* Volume size [sector] (4) */
+#define BS_DrvNum			36		/* Physical drive number (2) */
+#define BS_BootSig			38		/* Extended boot signature (1) */
+#define BS_VolID			39		/* Volume serial number (4) */
+#define BS_VolLab			43		/* Volume label (8) */
+#define BS_FilSysType		54		/* File system type (1) */
+#define BPB_FATSz32			36		/* FAT size [sector] (4) */
+#define BPB_ExtFlags		40		/* Extended flags (2) */
+#define BPB_FSVer			42		/* File system version (2) */
+#define BPB_RootClus		44		/* Root directory first cluster (4) */
+#define BPB_FSInfo			48		/* Offset of FSINFO sector (2) */
+#define BPB_BkBootSec		50		/* Offset of backup boot sector (2) */
+#define BS_DrvNum32			64		/* Physical drive number (2) */
+#define BS_BootSig32		66		/* Extended boot signature (1) */
+#define BS_VolID32			67		/* Volume serial number (4) */
+#define BS_VolLab32			71		/* Volume label (8) */
+#define BS_FilSysType32		82		/* File system type (1) */
+#define	FSI_LeadSig			0		/* FSI: Leading signature (4) */
+#define	FSI_StrucSig		484		/* FSI: Structure signature (4) */
+#define	FSI_Free_Count		488		/* FSI: Number of free clusters (4) */
+#define	FSI_Nxt_Free		492		/* FSI: Last allocated cluster (4) */
+#define MBR_Table			446		/* MBR: Partition table offset (2) */
+#define	SZ_PTE				16		/* MBR: Size of a partition table entry */
+#define BS_55AA				510		/* Signature word (2) */
 
-#define	DIR_Name			0	/* Short file name (11) */
-#define	DIR_Attr			11	/* Attribute (1) */
-#define	DIR_NTres			12	/* NT flag (1) */
-#define DIR_CrtTimeTenth	13	/* Created time sub-second (1) */
-#define	DIR_CrtTime			14	/* Created time (2) */
-#define	DIR_CrtDate			16	/* Created date (2) */
-#define DIR_LstAccDate		18	/* Last accessed date (2) */
-#define	DIR_FstClusHI		20	/* Higher 16-bit of first cluster (2) */
-#define	DIR_WrtTime			22	/* Modified time (2) */
-#define	DIR_WrtDate			24	/* Modified date (2) */
-#define	DIR_FstClusLO		26	/* Lower 16-bit of first cluster (2) */
-#define	DIR_FileSize		28	/* File size (4) */
-#define	LDIR_Ord			0	/* LFN entry order and LLE flag (1) */
-#define	LDIR_Attr			11	/* LFN attribute (1) */
-#define	LDIR_Type			12	/* LFN type (1) */
-#define	LDIR_Chksum			13	/* Sum of corresponding SFN entry */
-#define	LDIR_FstClusLO		26	/* Filled by zero (0) */
+#define	DIR_Name			0		/* Short file name (11) */
+#define	DIR_Attr			11		/* Attribute (1) */
+#define	DIR_NTres			12		/* NT flag (1) */
+#define DIR_CrtTimeTenth	13		/* Created time sub-second (1) */
+#define	DIR_CrtTime			14		/* Created time (2) */
+#define	DIR_CrtDate			16		/* Created date (2) */
+#define DIR_LstAccDate		18		/* Last accessed date (2) */
+#define	DIR_FstClusHI		20		/* Higher 16-bit of first cluster (2) */
+#define	DIR_WrtTime			22		/* Modified time (2) */
+#define	DIR_WrtDate			24		/* Modified date (2) */
+#define	DIR_FstClusLO		26		/* Lower 16-bit of first cluster (2) */
+#define	DIR_FileSize		28		/* File size (4) */
+#define	LDIR_Ord			0		/* LFN entry order and LLE flag (1) */
+#define	LDIR_Attr			11		/* LFN attribute (1) */
+#define	LDIR_Type			12		/* LFN type (1) */
+#define	LDIR_Chksum			13		/* Sum of corresponding SFN entry */
+#define	LDIR_FstClusLO		26		/* Filled by zero (0) */
 #define	SZ_DIR				32		/* Size of a directory entry */
 #define	LLE					0x40	/* Last long entry flag in LDIR_Ord */
 #define	DDE					0xE5	/* Deleted directory entry mark in DIR_Name[0] */
@@ -482,7 +484,7 @@ typedef struct {
 /*------------------------------------------------------------*/
 /* Note that uninitialized variables with static duration are
 /  guaranteed zero/null as initial value. If not, either the
-/  compiler or start-up routine is out of ANSI-C standard.
+/  linker or start-up routine is out of ANSI-C standard.
 */
 
 #if _VOLUMES >= 1 || _VOLUMES <= 10
@@ -641,7 +643,7 @@ void unlock_fs (
 static
 FRESULT chk_lock (	/* Check if the file can be accessed */
 	DIR* dp,		/* Directory object pointing the file to be checked */
-	int acc			/* Desired access (0:Read, 1:Write, 2:Delete/Rename) */
+	int acc			/* Desired access type (0:Read, 1:Write, 2:Delete/Rename) */
 )
 {
 	UINT i, be;
@@ -1499,7 +1501,7 @@ FRESULT dir_find (
 	if (res != FR_OK) return res;
 
 #if _USE_LFN
-	ord = sum = 0xFF;
+	ord = sum = 0xFF; dp->lfn_idx = 0xFFFF;	/* Reset LFN sequence */
 #endif
 	do {
 		res = move_window(dp->fs, dp->sect);
@@ -1510,22 +1512,22 @@ FRESULT dir_find (
 #if _USE_LFN	/* LFN configuration */
 		a = dir[DIR_Attr] & AM_MASK;
 		if (c == DDE || ((a & AM_VOL) && a != AM_LFN)) {	/* An entry without valid data */
-			ord = 0xFF;
+			ord = 0xFF; dp->lfn_idx = 0xFFFF;	/* Reset LFN sequence */
 		} else {
 			if (a == AM_LFN) {			/* An LFN entry is found */
 				if (dp->lfn) {
 					if (c & LLE) {		/* Is it start of LFN sequence? */
 						sum = dir[LDIR_Chksum];
 						c &= ~LLE; ord = c;	/* LFN start order */
-						dp->lfn_idx = dp->index;
+						dp->lfn_idx = dp->index;	/* Start index of LFN */
 					}
 					/* Check validity of the LFN entry and compare it with given name */
 					ord = (c == ord && sum == dir[LDIR_Chksum] && cmp_lfn(dp->lfn, dir)) ? ord - 1 : 0xFF;
 				}
 			} else {					/* An SFN entry is found */
 				if (!ord && sum == sum_sfn(dir)) break;	/* LFN matched? */
-				ord = 0xFF; dp->lfn_idx = 0xFFFF;	/* Reset LFN sequence */
 				if (!(dp->fn[NS] & NS_LOSS) && !mem_cmp(dir, dp->fn, 11)) break;	/* SFN matched? */
+				ord = 0xFF; dp->lfn_idx = 0xFFFF;	/* Reset LFN sequence */
 			}
 		}
 #else		/* Non LFN configuration */
@@ -2678,7 +2680,7 @@ FRESULT f_write (
 				if (fp->fptr == 0) {		/* On the top of the file? */
 					clst = fp->sclust;		/* Follow from the origin */
 					if (clst == 0)			/* When no cluster is allocated, */
-						fp->sclust = clst = create_chain(fp->fs, 0);	/* Create a new cluster chain */
+						clst = create_chain(fp->fs, 0);	/* Create a new cluster chain */
 				} else {					/* Middle or end of the file */
 #if _USE_FASTSEEK
 					if (fp->cltbl)
@@ -2691,6 +2693,7 @@ FRESULT f_write (
 				if (clst == 1) ABORT(fp->fs, FR_INT_ERR);
 				if (clst == 0xFFFFFFFF) ABORT(fp->fs, FR_DISK_ERR);
 				fp->clust = clst;			/* Update current cluster */
+				if (fp->sclust == 0) fp->sclust = clst;	/* Set start cluster if the first write */
 			}
 #if _FS_TINY
 			if (fp->fs->winsect == fp->dsect && sync_window(fp->fs))	/* Write-back sector cache */
@@ -3750,7 +3753,7 @@ FRESULT f_rename (
 FRESULT f_getlabel (
 	const TCHAR* path,	/* Path name of the logical drive number */
 	TCHAR* label,		/* Pointer to a buffer to return the volume label */
-	DWORD* sn			/* Pointer to a variable to return the volume serial number */
+	DWORD* vsn			/* Pointer to a variable to return the volume serial number */
 )
 {
 	FRESULT res;
@@ -3794,11 +3797,11 @@ FRESULT f_getlabel (
 	}
 
 	/* Get volume serial number */
-	if (res == FR_OK && sn) {
+	if (res == FR_OK && vsn) {
 		res = move_window(dj.fs, dj.fs->volbase);
 		if (res == FR_OK) {
 			i = dj.fs->fs_type == FS_FAT32 ? BS_VolID32 : BS_VolID;
-			*sn = LD_DWORD(&dj.fs->win[i]);
+			*vsn = LD_DWORD(&dj.fs->win[i]);
 		}
 	}
 

@@ -7,6 +7,8 @@ a:active {color: darkmagenta; overflow: hidden; outline:none; position: relative
 abbr {border-width: 1px;}
 
 p {margin: 0 0 0.3em 1em;}
+i {margin: 0 0.3em 0 0;}
+b {margin: 0 0.1em;}
 em {font-style: normal; font-weight: bold; margin: 0 0.1em;}
 strong {}
 pre {border: 1px dashed gray; margin: 0.5em 1em; padding: 0.5em; line-height: 1.2em; font-size: 85%; font-family: "Consolas", "Courier New", monospace; background-color: white;}
@@ -28,8 +30,8 @@ div.para {clear: both; font-family: serif;}
 div.ret a {font-size: 0.85em; font-family: "Consolas", "Courier New", monospace; }
 .equ {text-indent: 0; margin: 1em 2em 1em;}
 .indent {margin-left: 2em;}
-.rset {float: right; margin: 0 0 0.5em 0.5em;}
-.lset {float: left; margin: 0 0.5em 0.5em 0.5em;}
+.rset {float: right; margin: 0.3em 0 0.5em 0.5em;}
+.lset {float: left; margin: 0.3em 0.5em 0.5em 0.5em;}
 ul.flat li {list-style-type: none; margin: 0;}
 a.imglnk img {border: 1px solid;}
 .iequ {white-space: nowrap; font-weight: bold;}

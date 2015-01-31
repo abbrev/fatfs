@@ -26,7 +26,7 @@ int f_puts (
 <h4>Parameters</h4>
 <dl class="par">
 <dt>str</dt>
-<dd>Pointer to the null terminated string to be written. The null character will not be written.</dd>
+<dd>Pointer to the null terminated string to be written. The terminator character will not be written.</dd>
 <dt>fp</dt>
 <dd>Pointer to the open file object structure.</dd>
 </dl>
@@ -48,7 +48,7 @@ int f_puts (
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>Available when <tt>_FS_READONLY == 0</tt> and <tt>_USE_STRFUNC</tt> is 1 or 2. When it is set to 2, <tt>'\n'</tt>s contained in the string are converted to <tt>"\r\n"</tt>.</p>
+<p>Available when <tt>_FS_READONLY == 0</tt> and <tt>_USE_STRFUNC</tt> is 1 or 2. When it is set to 2, <tt>'\n'</tt>s contained in the string are converted to <tt>'\r'+'\n'</tt>.</p>
 </div>
 
 

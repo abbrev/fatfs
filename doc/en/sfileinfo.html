@@ -60,7 +60,7 @@
 <dt>fname[]</dt>
 <dd>Indicates the file/directory name in 8.3 format null-terminated string. It is always returnd with upper case in non-LFN configuration but it can be returned with lower case in LFN configuration.</dd>
 <dt>lfname</dt>
-<dd>Pointer to the LFN buffer to store the read LFN. This member must be initialized by application prior to use this structure. Not available in non-LFN configuration.</dd>
+<dd>Pointer to the LFN buffer to store the read LFN. This member must be initialized by application prior to use this structure. Set null pointer if LFN is not needed. Not available in non-LFN configuration.</dd>
 <dt>lfsize</dt>
 <dd>Size of the LFN buffer in unit of TCHAR. This member must be initialized by application prior to use this structure. Not available in non-LFN configuration.</dd>
 </dl>

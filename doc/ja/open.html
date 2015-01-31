@@ -17,7 +17,7 @@
 <pre>
 FRESULT f_open (
   FIL* <span class="arg">fp</span>,           <span class="c">/* [OUT] 空のファイル・オブジェクト構造体へのポインタ */</span>
-  const TCHAR* <span class="arg">path</span>, <span class="c">/* [IN] ファイルのフルパス名へのポインタ */</span>
+  const TCHAR* <span class="arg">path</span>, <span class="c">/* [IN] ファイル名へのポインタ */</span>
   BYTE <span class="arg">mode</span>          <span class="c">/* [IN] モードフラグ */</span>
 );
 </pre>
@@ -29,7 +29,7 @@ FRESULT f_open (
 <dt>fp</dt>
 <dd>新しく作成するファイル・オブジェクト構造体へのポインタを指定します。以降、そのファイルを閉じるまでこのファイル・オブジェクトを使用してファイル操作をします。</dd>
 <dt>path</dt>
-<dd>開く(または作成する)ファイルの <a href="filename.html">ファイル名</a>を示すヌル文字<tt>'\0'</tt>終端の文字列へのポインタを指定します。</dd>
+<dd>開くファイルの<a href="filename.html">ファイル名</a>を示すヌル文字<tt>'\0'</tt>終端の文字列へのポインタを指定します。</dd>
 <dt>mode</dt>
 <dd>ファイルのアクセス方法やオープン方法を決めるフラグです。このパラメータには次の組み合わせを指定します。<br>
 <table class="lst">
@@ -103,15 +103,15 @@ int main (void)
     f_mount(&amp;FatFs, "", 0);
 
     <span class="c">/* テキスト・ファイルを開く */</span>
-    fr = f_open(&fil, "message.txt", FA_READ);
+    fr = f_open(&amp;fil, "message.txt", FA_READ);
     if (fr) return (int)fr;
 
     <span class="c">/* 1行ずつ読み出して表示 */</span>
-    while (f_gets(line, sizeof line, &fil))
+    while (f_gets(line, sizeof line, &amp;fil))
         printf(line);
 
     <span class="c">/* ファイルを閉じる */</span>
-    f_close(&fil);
+    f_close(&amp;fil);
 
     return 0;
 }
