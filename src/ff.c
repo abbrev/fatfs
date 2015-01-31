@@ -2233,7 +2233,7 @@ FRESULT find_volume (	/* FR_OK(0): successful, !=0: any error occurred */
 	if (disk_ioctl(fs->drv, GET_SECTOR_SIZE, &SS(fs)) != RES_OK
 		|| SS(fs) < _MIN_SS || SS(fs) > _MAX_SS) return FR_DISK_ERR;
 #endif
-	/* Find an FAT partition on the drive. Supports only generic partitioning, FDISK and SFD. */
+	/* Find an FAT partition on the drive. Supports only generic partitioning, MBR and SFD. */
 	bsect = 0;
 	fmt = check_fs(fs, bsect);					/* Load sector 0 and check if it is an FAT boot sector as SFD */
 	if (fmt == 1 || (!fmt && (LD2PT(vol)))) {	/* Not an FAT boot sector or forced partition number */
@@ -3997,7 +3997,7 @@ FRESULT f_forward (
 
 FRESULT f_mkfs (
 	const TCHAR* path,	/* Logical drive number */
-	BYTE sfd,			/* Partitioning rule 0:FDISK, 1:SFD */
+	BYTE sfd,			/* Partitioning rule 0:MBR, 1:SFD */
 	UINT au				/* Size of allocation unit in unit of byte or sector */
 )
 {
@@ -4117,7 +4117,7 @@ FRESULT f_mkfs (
 	} else {
 		if (sfd) {	/* No partition table (SFD) */
 			md = 0xF0;
-		} else {	/* Create partition table (FDISK) */
+		} else {	/* Create partition table (MBR) */
 			mem_set(fs->win, 0, SS(fs));
 			tbl = fs->win+MBR_Table;	/* Create partition table for single partition in the drive */
 			tbl[1] = 1;						/* Partition start head */
