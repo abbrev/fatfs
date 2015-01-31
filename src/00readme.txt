@@ -1,4 +1,4 @@
-FatFs Module Source Files R0.10b                      (C)ChaN, 2014
+FatFs Module Source Files R0.10c                      (C)ChaN, 2014
 
 
 FILES
@@ -156,3 +156,8 @@ REVISION HISTORY
 
   Mar 19,'14 R0.10b    Fixed a hard error in the disk I/O layer can collapse the directory entry.
                        Fixed LFN entry is not deleted on delete/rename an object with lossy converted SFN.
+
+  Nov 09,'14 R0.10c    Added a configuration option for the platforms without RTC. (_FS_NORTC)
+                       Fixed volume label created by Mac OS X cannot be retrieved with f_getlabel().
+                       Fixed a potential problem of FAT access that can appear on disk error.
+                       Fixed null pointer dereference on attempting to delete the root direcotry.

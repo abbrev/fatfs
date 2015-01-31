@@ -98,7 +98,7 @@ _USE_STRFUNC     0 (Disable string functions)
 _USE_MKFS        0 (Disable f_mkfs function)
 _USE_FORWARD     0 (Disable f_forward function)
 _USE_FASTSEEK    0 (Disable fast seek feature)
-_CODE_PAGE       932 (Japanese Shift-JIS)
+_CODE_PAGE       932 (Japanese Shift_JIS)
 _USE_LFN         0 (Disable LFN feature)
 _MAX_SS          512 (Fixed sector size)
 _FS_RPATH        0 (Disable relative path feature)
@@ -151,17 +151,17 @@ _FS_LOCK         0 (Disable file lock control)
 
 <div class="para" id="lfn">
 <h3>Long File Name</h3>
-<p>FatFs module supports LFN (long file name). The two different file names, SFN (short file name) and LFN, of a file is transparent on the API except for <tt>f_readdir()</tt> function. The LFN feature is disabled by default. To enable it, set <tt>_USE_LFN</tt> to 1, 2 or 3, and add <tt>option/unicode.c</tt> to the project. The LFN feature requiers a certain working buffer in addition. The buffer size can be configured by <tt>_MAX_LFN</tt> according to the available memory. The length of an LFN will reach up to 255 characters, so that the <tt>_MAX_LFN</tt> should be set to 255 for full featured LFN operation. If the size of working buffer is insufficient for the input file name, the file function fails with <tt>FR_INVALID_NAME</tt>. When enable the LFN feature with re-entrant configuration, <tt>_USE_LFN</tt> must be set to 2 or 3. In this case, the file function allocates the working buffer on the stack or heap. The working buffer occupies <tt>(_MAX_LFN + 1) * 2</tt> bytes.</p>
+<p>FatFs module supports LFN (long file name). The two different file names, SFN (short file name) and LFN, of a file is transparent on the API except for <tt>f_readdir()</tt> function. The LFN feature is disabled by default. To enable it, set <tt>_USE_LFN</tt> to 1, 2 or 3, and add <tt>option/unicode.c</tt> to the project. The LFN feature requiers a certain working buffer in addition. The buffer size can be configured by <tt>_MAX_LFN</tt> according to the available memory. The length of an LFN will reach up to 255 characters, so that the <tt>_MAX_LFN</tt> should be set to 255 for full featured LFN operation. If the size of working buffer is insufficient for the input file name, the file function fails with <tt>FR_INVALID_NAME</tt>. When enable the LFN feature under re-entrant configuration, <tt>_USE_LFN</tt> must be set to 2 or 3. In this case, the file function allocates the working buffer on the stack or heap. The working buffer occupies <tt>(_MAX_LFN + 1) * 2</tt> bytes.</p>
 <table class="lst2 rset">
 <caption>LFN cfg on ARM7TDMI</caption>
 <tr><th>Code page</th><th>Program size</th></tr>
 <tr><td>SBCS</td><td>+3.7K</td></tr>
-<tr><td>932(Shift-JIS)</td><td>+62K</td></tr>
+<tr><td>932(Shift_JIS)</td><td>+62K</td></tr>
 <tr><td>936(GBK)</td><td>+177K</td></tr>
 <tr><td>949(Korean)</td><td>+139K</td></tr>
 <tr><td>950(Big5)</td><td>+111K</td></tr>
 </table>
-<p>When the LFN feature is enabled, the module size will be increased depends on the selected code page. Right table shows how many bytes increased when LFN feature is enabled with some code pages. Especially, in the CJK region, tens of thousands of characters are being used. Unfortunately, it requires a huge OEM-Unicode bidirectional conversion table and the module size will be drastically increased that shown in the table. As the result, the FatFs with LFN feature with those code pages will not able to be implemented to most 8-bit microcontrollers.</p>
+<p>When the LFN feature is enabled, the module size will be increased depends on the selected code page. Right table shows how many bytes increased when LFN feature is enabled with some code pages. Especially, in the CJK region, tens of thousands of characters are being used. Unfortunately, it requires a huge OEM-Unicode bidirectional conversion table and the module size will be drastically increased as shown in the table. As the result, the FatFs with LFN feature with those code pages will not able to be implemented to most 8-bit microcontrollers.</p>
 <p>Note that the LFN feature on the FAT file system is a patent of Microsoft Corporation. This is not the case on FAT32 but most FAT32 drivers come with the LFN feature. FatFs can swich the LFN feature off by configuration option. When enable LFN feature on the commercial products, a license from Microsoft may be required depends on the final destination.</p>
 </div>
 
@@ -211,7 +211,7 @@ Figure 6. Comparison between Multiple/Single Sector Write<br>
 </div>
 <p>The write throughput of the flash memory media becomes the worst at single sector write transaction. The write throughput increases as the number of sectors per a write transaction. This effect more appers at faster interface speed and the performance ratio often becomes grater than ten. <a href="../img/rwtest2.png">This graph</a> is clearly explaining how fast is multiple block write (W:16K, 32 sectors) than single block write (W:100, 1 sector), and also larger card tends to be slow at single block write. The number of write transactions also affects the life time of the flash memory media. Therefore the application program should write the data in large block as possible. The ideal write chunk size and alighment is size of sector, and size of cluster is the best. Of course all layers between the application and the storage device must have consideration on multiple sector write, however most of open-source disk drivers lack it. Do not split a multiple sector write request into single sector write transactions or the write throughput gets poor. Note that FatFs module and its sample disk drivers supprt multiple sector read/write feature. </p>
 <h4>Forcing Memory Erase</h4>
-<p>When remove a file with <tt>f_remove()</tt> function, the data clusters occupied by the file are marked 'free' on the FAT. But the data sectors containing the file data are not that applied any process, so that the file data left occupies a part of the flash memory array as 'live block'. If the file data is forced erased on removing the file, those data blocks will be turned in to the free block pool. This may skip internal block erase operation to the data block on next write operation. As the result the write performance might be improved. FatFs can manage this feature by setting <tt>_USE_ERASE</tt> to 1. Note that this is an expectation of internal process of the flash memory storage and not that always effective. Also <tt>f_remove()</tt> function will take a time when remove a large file. Most applications will not need this feature.</p>
+<p>When remove a file with <tt>f_remove()</tt> function, the data clusters occupied by the file are marked 'free' on the FAT. But the data sectors containing the file data are not that applied any process, so that the file data left occupies a part of the flash memory array as 'live block'. If the file data is forced erased on removing the file, those data blocks will be turned in to the free block pool. This may skip internal block erase operation to the data block on next write operation. As the result the write performance might be improved. FatFs can manage this feature by setting <tt>_USE_TRIM</tt> to 1. Note that this is an expectation of internal process of the flash memory storage and not that always effective. Also <tt>f_remove()</tt> function will take a time when remove a large file. Most applications will not need this feature.</p>
 </div>
 
 <div class="para" id="critical">
@@ -267,7 +267,7 @@ Figure 5. Minimized critical section<br>
 / * Redistributions of source code must retain the above copyright notice.
 /
 /-----------------------------------------------------------------------------/</pre>
-<p>Therefore FatFs license is one of the BSD-style licenses but there is a significant feature. Because FatFs is for embedded projects, the conditions of redistributions in binary form, such as embedded code, hex file, binary library or any forms without source code, are not specified in order to extend usability for commercial products. The documentation of the distributions need not include about FatFs and its license document, and it may also. This is equivalent to the BSD 1-Clause License. Of course FatFs is compatible with the projects under GNU GPL. When redistribute the FatFs with any modification or branch it as a fork, the license can also be changed to GNU GPL, BSD-style license or any free software licenses that not conflict with FatFs license.</p>
+<p>Therefore FatFs license is one of the BSD-style licenses but there is a significant feature. Because FatFs is mainly intended for embedded projects, the redistributions in binary form, such as embedded code or any forms without source code, need not to explain about FatFs in order to extend usability for commercial products. The documentation of the distributions need not include about FatFs and its license documents, and it may also. This is equivalent to the BSD 1-Clause License. Of course FatFs is compatible with the projects under GNU GPL. When redistribute the FatFs with any modification or branch it as a fork, the license can also be changed to GNU GPL, BSD-style license or any free software licenses that not conflict with FatFs license.</p>
 </div>
 
 <p class="foot"><a href="../00index_e.html">Return</a></p>

@@ -1,3 +1,9 @@
+R0.10c, Nov 09, 2014
+  Added a configuration option for the platforms without RTC. (_FS_NORTC)
+  Fixed volume label created by Mac OS X cannot be retrieved with f_getlabel().
+  Fixed a potential problem of FAT access that can appear on disk error.
+  Fixed null pointer dereference on attempting to delete the root direcotry.
+
 R0.10b, May 19, 2014
   Fixed a hard error in the disk I/O layer can collapse the directory entry.
   Fixed LFN entry is not deleted on delete/rename an object with its lossy converted SFN.

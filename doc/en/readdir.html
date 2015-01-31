@@ -77,7 +77,7 @@ FRESULT scan_files (
     FILINFO fno;
     DIR dir;
     int i;
-    char *fn;   <span class="c">/* This function is assuming non-Unicode cfg. */</span>
+    char *fn;   <span class="c">/* This function assumes non-Unicode configuration */</span>
 <span class="k">#if</span> _USE_LFN
     static char lfn[_MAX_LFN + 1];   <span class="c">/* Buffer to store the LFN */</span>
     fno.lfname = lfn;
@@ -100,8 +100,8 @@ FRESULT scan_files (
             if (fno.fattrib &amp; AM_DIR) {                    <span class="c">/* It is a directory */</span>
                 sprintf(&amp;path[i], "/%s", fn);
                 res = scan_files(path);
-                if (res != FR_OK) break;
                 path[i] = 0;
+                if (res != FR_OK) break;
             } else {                                       <span class="c">/* It is a file. */</span>
                 printf("%s/%s\n", path, fn);
             }

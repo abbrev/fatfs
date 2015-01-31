@@ -31,7 +31,7 @@ FRESULT f_mkfs (
 <dt>sfd</dt>
 <dd>Specifies partitioning rule (FDISK(0) or SFD(1)). This argument will be ignored on some case.</dd>
 <dt>au</dt>
-<dd>Specifies size of the allocation unit (cluter) in unit of byte. The value must be sector size * n (n is 1 to 128 and power of 2). When a zero is given, the cluster size is determined depends on the volume size.</dd>
+<dd>Specifies size of the allocation unit (cluter) in number of bytes or sectors. When the value is from 1 to 128, it specifies number of sectors. When the value is <tt>&gt;= _MIN_SS</tt>, it specifies number of bytes. If any invalid value, zero or not power of 2, is given, the cluster size is automatically determined depends on the volume size.</dd>
 </dl>
 </div>
 
@@ -51,16 +51,52 @@ FRESULT f_mkfs (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>The <tt>f_mkfs()</tt> function creates an FAT volume on the logical drive. When FDISK format is specified, a primary partition occupies the entire disk space is created and then an FAT volume is created on the partition. When SFD format is specified, the FAT volume starts from the first sector of the physical drive.</p>
-<p>If the logical drive has been bound to any partition (1-4) by multiple partition feature (<tt>_MULTI_PARTITION</tt>), the FAT volume is created into the specified partition. In this case, the second argument <tt class="arg">sfd</tt> is ignored. The physical drive must have been partitioned with <tt>f_fdisk()</tt> function or any other partitioning tool prior to use this function.</p>
-<p>Note that there are two partitioning rules, FDISK and SFD. The FDISK partitioning is usually used for harddisk, MMC, SDC, CFC and U Disk. It can divide a physical drive into one or more partitions with a partition table on the MBR. However Windows does not support multiple partition on the removable media. The SFD is non-partitioned method. The FAT volume starts from the first sector on the physical drive without partition table. It is usually used for floppy disk, Microdrive, optical disk and super-floppy media.</p>
-<p>The FAT sub-type, FAT12/FAT16/FAT32, is determined by number of clusters on the volume and nothing else, according to the FAT specification issued by Microsoft. Thus which FAT sub-type is selected, is depends on the volume size and the specified cluster size. The cluster size affects performance of the file system and large cluster increases the performance.</p>
-<p>When the number of clusters gets near the FAT sub-type boundaries, the function can fail with <tt>FR_MKFS_ABORTED</tt>.</p>
+<p>The <tt>f_mkfs()</tt> function creates an FAT volume on the specified logical drive. When FDISK format is specified, a primary partition occupies entire space of the physical drive is created and then an FAT volume is created on the partition. When SFD format is specified, the FAT volume starts from the first sector of the physical drive.</p>
+<p>If the logical drive is bound to the specific partition (1-4) by multiple partition feature (<tt>_MULTI_PARTITION</tt>), the FAT volume is created into the partition. In this case, the second argument <tt class="arg">sfd</tt> is ignored. The physical drive must have been partitioned with <tt>f_fdisk()</tt> function or any other partitioning tools prior to create the FAT volume with this function.</p>
+<p>Note that there are two partitioning rules, FDISK and SFD. The FDISK partitioning is usually used for harddisk, MMC, SDC, CFC and U Disk. It can divide a physical drive into one or more partitions with a partition table on the MBR. However Windows does not support multiple partition on the removable disk. The SFD is non-partitioned method. The FAT volume starts from the first sector on the physical drive without partition table. It is usually used for floppy disk, Microdrive, optical disk and any type of super-floppy media.</p>
+<p>The FAT sub-type, FAT12/FAT16/FAT32, is determined by number of clusters on the volume and nothing else, according to the FAT specification issued by Microsoft. Thus which FAT sub-type is selected, is depends on the volume size and the specified cluster size. The cluster size affects read/write throughput and space usage efficiency. Larger cluster size increases the read/write throughput and decreases the space usage efficiency of the volume.</p>
+<p>In case of the number of clusters gets near the FAT sub-type boundaries, the function can fail with <tt>FR_MKFS_ABORTED</tt>.</p>
 </div>
 
 <div class="para comp">
 <h4>QuickInfo</h4>
 <p>Available when <tt>_FS_READOLNY == 0</tt> and <tt>_USE_MKFS == 1</tt>.</p>
+</div>
+
+<div class="para use">
+<h4>Example</h4>
+<pre>
+<span class="c">/* Format the default drive */</span>
+int main (void)
+{
+    FATFS fs;      <span class="c">/* File system object (volume work area) */</span>
+    FIL fil;       <span class="c">/* File object */</span>
+    FRESULT res;   <span class="c">/* API result code */</span>
+    UINT bw;       <span class="c">/* Bytes written */</span>
+
+
+    <span class="c">/* Register work area */</span>
+    f_mount(&amp;fs, "", 0);
+
+    <span class="c">/* Create FAT volume with default cluster size */</span>
+    res = f_mkfs("", 0, 0);
+    if (res) ...
+
+    <span class="c">/* Create a file as new */</span>
+    res = f_open(&fil, "hello.txt", FA_CREATE_NEW | FA_WRITE);
+    if (res) ...
+
+    <span class="c">/* Write a message */</span>
+    f_write(&fil, "Hello, World!\r\n", 15, &bw);
+    if (bw != 15) ...
+
+    <span class="c">/* Close the file */</span>
+    f_close(&fil);
+
+    <span class="c">/* Unregister work area */</span>
+    f_mount(0, "", 0);
+
+</pre>
 </div>
 
 <div class="para ref">

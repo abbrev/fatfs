@@ -21,7 +21,7 @@
 <dt id="ie">FR_INT_ERR</dt>
 <dd>Assertion failed. An insanity is detected in the internal process. One of the following possibilities is suspected.
 <ul>
-<li>Work area (file system object, file object or etc...) is broken by stack overflow or any other application. This is the reason in most case.</li>
+<li>Work area (file system object, file object or etc...) has been broken by stack overflow or any other tasks. This is the reason in most case.</li>
 <li>There is any error of the FAT structure on the volume.</li>
 </ul>
 Note that if once this error occured at any operation to an open file, the file object is aborted and all operations to the file except for close will be rejected.
@@ -51,7 +51,7 @@ Note that if once this error occured at any operation to an open file, the file 
 <dt id="io">FR_INVALID_OBJECT</dt>
 <dd>The file/directory object structure is invalid or a null pointer is given. All open objects of the logical drive are invalidated by the voulme mount process.</dd>
 <dt id="wp">FR_WRITE_PROTECTED</dt>
-<dd>Any write mode action against the write-protected media.</dd>
+<dd>Any write mode operation against the write-protected media.</dd>
 <dt id="id">FR_INVALID_DRIVE</dt>
 <dd>Invalid drive number is specified in the path name. A null pointer is given as the path name. (Related option: <tt>_VOLUMES</tt>)</dd>
 <dt id="ne">FR_NOT_ENABLED</dt>
@@ -74,7 +74,7 @@ Note that if once this error occured at any operation to an open file, the file 
 <dd>Not enough memory for the operation. There is one of the following reasons:
 <ul>
 <li>Could not allocate a memory for LFN working buffer. (Related option: <tt>_USE_LFN</tt>)</li>
-<li>Size of the given CLMT buffer is insufficient for the file fragments.</li>
+<li>Size of the given buffer is insufficient for the size required.</li>
 </ul>
 </dd>
 <dt id="tf">FR_TOO_MANY_OPEN_FILES</dt>

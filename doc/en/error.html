@@ -41,7 +41,7 @@ int f_error (
 <h4>Description</h4>
 <p>In this revision, this function is implemented as a macro.</p>
 <pre>
-<span class="k">#define</span> f_error(fp) (((fp)->flag & FA__ERROR) ? 1 : 0)
+<span class="k">#define</span> f_error(fp) ((fp)->flag)
 </pre>
 </div>
 

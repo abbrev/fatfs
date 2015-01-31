@@ -32,9 +32,9 @@ DRESULT disk_read (
 <dt>buff</dt>
 <dd>Pointer to the <em>byte array</em> to store the read data.</dd>
 <dt>sector</dt>
-<dd>Start sector number in logical block address (LBA).</dd>
+<dd>Start sector number in 32-bit LBA.</dd>
 <dt>count</dt>
-<dd>Number of sectors to read. FatFs specifis it in range of from 1 to 128.</dd>
+<dd>Number of sectors to read in range of from 1 to 128..</dd>
 </dl>
 </div>
 
@@ -56,9 +56,10 @@ DRESULT disk_read (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>The memory address specified by <tt class="arg">buff</tt> is not that always aligned to word boundary because the type of argument is defined as <tt>BYTE*</tt>. The misaligned read/write request can occure at <a href="appnote.html#fs1">direct transfer</a>. If the bus architecture, especially DMA controller, does not allow misaligned memory access, it should be solved in this function. There are some workarounds described below to avoid this issue.</p>
+<p>The data read/write operation to the storage devices is done in unit of <em>sector</em>. FatFs supports the sector size in range of from 512 to 4096 bytes. When FatFs is configured to fixed sector size (<tt>_MIN_SS == MAX_SS</tt>, this will be the most case), the read/write function must work at that sector size. If variable sector size is selected (<tt>_MIN_SS &lt; MAX_SS</tt>), FatFs inquires the sector size with <tt>disk_ioctl()</tt> after initialization</tt>.
+<p>The memory address specified by <tt class="arg">buff</tt> is not that always aligned to word boundary because the argument is defined as <tt>BYTE*</tt>. The misaligned read/write request can occure at <a href="appnote.html#fs1">direct transfer</a>. If the bus architecture, especially DMA controller, does not allow misaligned memory access, it should be solved in this function. There are some workarounds described below to avoid this issue.</p>
 <ul>
-<li>Convert word transfer to byte transfer in this function. - Recommended.</li>
+<li>Convert word transfer to byte transfer in this function if needed. - Recommended.</li>
 <li>For <tt>f_read()</tt>, avoid long read request that includes a whole of sector. - Direct transfer will never occure.</li>
 <li>For <tt>f_read(fp, buff, btr, &amp;br)</tt>, make sure that <tt>(((UINT)buff &amp; 3) == (f_tell(fp) &amp; 3))</tt> is true. - Word aligned direct transfer is guaranteed.</li>
 </ul>

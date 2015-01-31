@@ -17,9 +17,9 @@
 <p>The format of path name on the FatFs module is similer to the filename specs of DOS/Windos as follows:</p>
 <pre>"[<em>drive</em>:][/]<em>directory</em>/<em>file</em>"</pre>
 <p>The FatFs module supports long file name (LFN) and 8.3 format file name (SFN). The LFN can be used when LFN feature is enabled (<tt>_USE_LFN &gt; 0</tt>). The sub directories are separated with a \ or / in the same way as DOS/Windows API. Duplicated separators are skipped and ignored. Only a difference is that the logical drive is specified in a numeral with a colon. When drive number is omitted, the drive number is assumed as <em>default drive</em> (drive 0 or current drive).</p>
-<p>Control characters (<tt>'\0'</tt> to <tt>'\x1F'</tt>) are recognized as end of the path name. Leading/embedded spaces in the path name are valid as a part of the name at LFN configuration but they are recognized as end of the path name at non-LFN configuration. Trailing spaces and dots are ignored.</p>
+<p>Control characters (<tt>'\0'</tt> to <tt>'\x1F'</tt>) are recognized as end of the path name. Leading/embedded spaces in the path name are valid as a part of the name at LFN configuration but the space is recognized as end of the path name at non-LFN configuration. Trailing spaces and dots are ignored at both configurations.</p>
 <p>In default configuration (<tt>_FS_RPATH == 0</tt>), it does not have a concept of current directory like OS oriented file system. All objects on the volume are always specified in full path name that follows from the root directory. Dot directory names are not allowed. Heading separator is ignored and it can be exist or omitted. The default drive is fixed to drive 0.</p>
-<p>When relative path feature is enabled (<tt>_FS_RPATH == 1</tt>), specified path is followed from the root directory if a heading separator is exist. If not, it is followed from the current directory of the drive set with <a href="chdir.html">f_chdir</a> function. Dot names are also allowed for the path name. The default drive is the current drive set with <a href="chdrive.html">f_chdrive</a> function.</p>
+<p>When relative path feature is enabled (<tt>_FS_RPATH == 1</tt>), specified path is followed from the root directory if a heading separator is exist. If not, it is followed from the current directory of the drive set by <a href="chdir.html">f_chdir</a> function. Dot names are also allowed for the path name. The default drive is the current drive set by <a href="chdrive.html">f_chdrive</a> function.</p>
 <table class="lst2">
 <tr><td>Path name</td><td>_FS_RPATH == 0</td><td>_FS_RPATH == 1</td></tr>
 <tr class="lst3"><td>file.txt</td><td>A file in the root directory of the drive 0</td><td>A file in the current directory of the current drive</td></tr>
@@ -35,13 +35,13 @@
 <tr><td>dir1/..</td><td>Invalid name</td><td>The current directory</td></tr>
 <tr><td>/..</td><td>Invalid name</td><td>The root directory (sticks the top level)</td></tr>
 </table>
-<p>When option <tt>_STR_VOLUME_ID</tt> is specified, also pre-defined strings can be used as drive identifier in the path name instead of a numeral.</p>
+<p>When option <tt>_STR_VOLUME_ID</tt> is specified, also pre-defined strings can be used as drive identifier in the path name instead of a numeral. e.g. <tt>"sd:file1.txt"</tt> or <tt>"ram:swapfile.dat"</tt>.</p>
 </div>
 
 <p><br></p>
 <div class="para" id="uni">
 <h3>Unicode API</h3>
-<p>The path names are input/output in either ANSI/OEM code (SBCS/DBCS) or Unicode depends on the configuration options. The type of arguments which specify the file names are defined as <tt>TCHAR</tt>. It is an alias of <tt>char</tt> in default. The code set used to the file name string is ANSI/OEM specifid by <tt>_CODE_PAGE</tt>. When <tt>_LFN_UNICODE</tt> is set to 1, the type of the <tt>TCHAR</tt> is switched to <tt>WCHAR</tt> to support Unicode (UTF-16 encoding). In this case, the LFN feature is fully supported and the Unicode specific characters, such as ✝☪✡☸☭, can also be used for the path name. It also affects data types and encoding of the string I/O functions. To define literal strings, <tt>_T(s)</tt> and <tt>_TEXT(s)</tt> macro are available to select either ANSI/OEM or Unicode automatically. The code shown below is an example to define the literal strings.</p>
+<p>The path names are input/output in either ANSI/OEM code or Unicode depends on the configuration options. The type of arguments which specify the path names are defined as <tt>TCHAR</tt>. It is an alias of <tt>char</tt> by default. The code set used to the path name string is ANSI/OEM specifid by <tt>_CODE_PAGE</tt>. When <tt>_LFN_UNICODE</tt> is set to 1, the type of the <tt>TCHAR</tt> is switched to <tt>WCHAR</tt> to support Unicode (UTF-16 encoding). In this case, the LFN feature is fully supported and the Unicode specific characters, such as ✝☪✡☸☭, can also be used for the path name. It also affects data types and encoding of the string I/O functions. To define literal strings, <tt>_T(s)</tt> and <tt>_TEXT(s)</tt> macro are available to select either ANSI/OEM or Unicode automatically. The code shown below is an example to define the literal strings.</p>
 <pre>
  f_open(fp, "filename.txt", FA_READ);      <span class="c">/* ANSI/OEM string */</span>
  f_open(fp, L"filename.txt", FA_READ);     <span class="c">/* Unicode string */</span>
@@ -64,13 +64,13 @@ PARTITION VolToPart[] = {
     {0, 3},     <span class="c">/* Logical drive 2 ==> Physical drive 0, 3rd partition */</span>
     {1, 0}      <span class="c">/* Logical drive 3 ==> Physical drive 1 (auto detection) */</span>
 };
-
-<img src="../img/f7.png" width="828" height="288" alt="relationship between logical drive and physical drive">
 </pre>
+<div><img src="../img/f7.png" width="828" height="288" alt="relationship between logical drive and physical drive"></div>
 <p>There are some considerations on using <tt>_MULTI_PARTITION</tt> configuration.</p>
 <ul>
-<li>Only four primary partitions can be specified. Logical partition is not supported.</li>
 <li>The physical drive that has two or more mounted partitions must be non-removable. Media change while a system operation is prohibited.</li>
+<li>Only four primary partitions can be specified. Extended partition is not supported.</li>
+<li>Windows does not support multiple volumes on the removable storage. Only first parition will be mounted.</li>
 </ul>
 </div>
 

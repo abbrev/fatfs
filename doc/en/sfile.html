@@ -13,7 +13,7 @@
 
 <div class="para">
 <h2>FIL</h2>
-<p>The <tt>FIL</tt> structure (file object) holds state of an open file. It is created by <tt>f_open()</tt> function and discarded by <tt>f_close()</tt> function. Application program must not modify any member in this structure except for <tt>cltbl</tt>. Note that a sector buffer is defined in this structure at non-tiny configuration, so that the <tt>FIL</tt> structures should not be defined as auto variable.</p>
+<p>The <tt>FIL</tt> structure (file object) holds the state of an open file. It is created by <tt>f_open()</tt> function and discarded by <tt>f_close()</tt> function. Application program must not modify any member in this structure except for <tt>cltbl</tt>. Note that a sector buffer is defined in this structure at non-tiny configuration (<tt>_FS_TINY == 0</tt>), so that the <tt>FIL</tt> structures at that configuration should not be defined as auto variable.</p>
 
 <pre>
 <span class="k">typedef</span> <span class="k">struct</span> {
