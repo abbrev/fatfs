@@ -7,15 +7,15 @@ systems", by ChaN. See http://elm-chan.org/fsw/ff/00index_e.html.
 License
 =======
 
-FatFs module is an open source software to implement FAT file system to
-small embedded systems. This is a free software and is opened for education,
-research and commercial developments under license policy of following trems.
+FatFs module is a free software that opened under license policy of
+following conditions.
 
-Copyright (C) 2014, ChaN, all right reserved.
+Copyright (C) 2015, ChaN, all right reserved.
 
-* The FatFs module is a free software and there is NO WARRANTY.
-* No restriction on use. You can use, modify and redistribute it for
-  personal, non-profit or commercial product UNDER YOUR RESPONSIBILITY.
-* Redistributions of source code must retain the above copyright notice.
+1. Redistributions of source code must retain the above copyright notice,
+   this condition and the following disclaimer.
 
-
+This software is provided by the copyright holder and contributors "AS IS"
+and any warranties related to this software are DISCLAIMED.
+The copyright owner or contributors be NOT LIABLE for any damages caused
+by use of this software.

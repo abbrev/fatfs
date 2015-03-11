@@ -58,7 +58,7 @@ FRESULT f_rename (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>Renames a file or sub-directory and can also move it to other directory within the same logical drive. <em>Do not rename open objects</em> or directry table can be broken.</p>
+<p>Renames a file or sub-directory and can also move it to other directory in the same logical drive. The object must not be opened, or <em>the FAT volume can be collapsed</em>. It will be rejected when <a href="appnote.html#dup">file lock feature</a> is enabled.</p>
 </div>
 
 

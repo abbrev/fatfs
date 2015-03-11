@@ -38,7 +38,7 @@ FRESULT f_open (
 <tr><td>FA_WRITE</td><td>Specifies write access to the object. Data can be written to the file. Combine with <tt>FA_READ</tt> for read-write access.</td></tr>
 <tr><td>FA_OPEN_EXISTING</td><td>Opens the file. The function fails if the file is not existing. (Default)</td></tr>
 <tr><td>FA_OPEN_ALWAYS</td><td>Opens the file if it is existing. If not, a new file is created.<br>
-To append data to the file, use <a href="lseek.html"><tt>f_lseek()</tt></a> function after file open in this method.</td></tr>
+To append data to the file, use <a href="lseek.html"><tt>f_lseek</tt></a> function after file open in this method.</td></tr>
 <tr><td>FA_CREATE_NEW</td><td>Creates a new file. The function fails with <tt>FR_EXIST</tt> if the file is existing.</td></tr>
 <tr><td>FA_CREATE_ALWAYS</td><td>Creates a new file. If the file is existing, it will be truncated and overwritten.</td></tr>
 </table>
@@ -74,9 +74,9 @@ To append data to the file, use <a href="lseek.html"><tt>f_lseek()</tt></a> func
 
 <div class="para desc">
 <h4>Description</h4>
-<p>After <tt>f_open()</tt> function succeeded, the file object is valid. The file object is used for subsequent read/write functions to identify the file. To close an open file, use <a href="close.html"><tt>f_close()</tt></a> function. If the file is modified and not closed properly, the file data will be collapsed.</p>
+<p>After <tt>f_open</tt> function succeeded, the file object is valid. The file object is used for subsequent read/write functions to identify the file. Open files must be closed prior to shutdown, media removal or re-mount, or the file data will be collapsed. To close an open file, use <a href="close.html"><tt>f_close</tt></a> function.</p>
 <p>If duplicated file open is needed, read <a href="appnote.html#dup">here</a> carefully. However duplicated open of a file with write mode flag is always prohibited.</p>
-<p>Before using any file function, a work area (file system object) must be registered to the logical drive with <a href="mount.html"><tt>f_mount()</tt></a> function. All API functions except for <a href="fdisk.html"><tt>f_fdisk()</tt></a> function can work after this procedure.</p>
+<p>Before using any file function, a work area (file system object) must be registered to the logical drive with <a href="mount.html"><tt>f_mount</tt></a> function. All API functions except for <a href="fdisk.html"><tt>f_fdisk</tt></a> function can work after this procedure.</p>
 </div>
 
 

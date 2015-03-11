@@ -9,7 +9,7 @@ a:hover {background-color: #a0ffff;}
 a:active {color: darkmagenta; overflow: hidden; outline:none; position: relative; top: 1px; left: 1px;}
 abbr {border-width: 1px;}
 
-p {text-indent: 1em; margin: 0 0 0.3em 0.5em;}
+p {text-indent: 0.5em; margin: 0 0 0.3em 0.5em;}
 i {margin: 0 0.3em 0 0;}
 b {margin: 0 0.1em;}
 em {font-style: normal; font-weight: bold; margin: 0 0.1em;}
@@ -51,6 +51,7 @@ hr.hds {clear: both; margin-bottom: 1em;}
 
 h2 {font-size: 2em; font-family: "‚l‚r ‚oƒSƒVƒbƒN",sans-serif; background-color: #d8d8FF; padding: 0.5em 0.5em; margin: 0 0 0.5em;}
 h3 {font-size: 1.5em; font-family: "‚l‚r ‚oƒSƒVƒbƒN",sans-serif; margin: 1.5em 0 0.5em;}
+div.doc h3 {border-color: #b0d8d8; border-style: solid; border-width: 0px 0px 4px 12px; padding: 4px; margin-top: 2em;}
 h4 {font-size: 1.2em; font-family: "‚l‚r ‚oƒSƒVƒbƒN",sans-serif; margin: 1em 0 0.2em;}
 h5 {font-size: 1em; font-family: "‚l‚r ‚oƒSƒVƒbƒN",sans-serif; margin: 0.5em 0 0em;}
 small {font-size: 80%;}
