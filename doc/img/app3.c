@@ -41,12 +41,14 @@ DWORD allocate_contiguous_clusters (    /* Returns the first sector in LBA (0:er
             ccl = cl;
         } while (++ncl < tcl);
         if (ncl == tcl)             /* Is the file contiguous? */
-            return clust2sect(fp->fs, fp->sclust);  /* Return file start sector */
+            return clust2sect(fp->fs, fp->sclust);  /* File is contiguous. Return the start sector */
     }
+    /* File is not contiguous */
 #if _FS_READONLY
     return 0;
 #else
-    if (f_truncate(fp)) return 0;   /* Remove the existing chain */
+    if (!(fp->flag & FA_WRITE)) return 0;   /* Exit if the file object is for read-only */
+    if (f_truncate(fp)) return 0;           /* Remove the existing chain */
 
     /* Find a free contiguous area */
     ccl = cl = 2; ncl = 0;
@@ -80,26 +82,24 @@ int main (void)
     DWORD org;
 
 
-    /* Open or create a file */
+    /* Open or create a file to write */
     f_mount(&fs, "", 0);
-    fr = f_open(&fil, "swapfile.sys", FA_READ | FA_WRITE | FA_OPEN_ALWAYS);
+    fr = f_open(&fil, "fastrec.log", FA_READ | FA_WRITE | FA_OPEN_ALWAYS);
     if (fr) return 1;
 
-    /* Check if the file is 64MB in size and occupies a contiguous area.
+    /* Check if the file is 256MB in size and occupies a contiguous area.
     /  If not, a contiguous area will be re-allocated to the file. */
-    org = allocate_contiguous_clusters(&fil, 0x4000000);
+    org = allocate_contiguous_clusters(&fil, 0x10000000);
     if (!org) {
         printf("Function failed due to any error or insufficient contiguous area.\n");
         f_close(&fil);
         return 1;
     }
 
-    /* Now you can read/write the file with disk functions bypassing the file system layer. */
-
-    dr = disk_write(fil.fs->drv, Buff, org, 1024);   /* Write 512KiB from top of the file */
-
+    /* Now you can read/write the file without file system layer. */
     ...
-
+    dr = disk_write(fil.fs->drv, Buff, org, 1024);   /* Write 512KiB from top of the file */
+    ...
     f_close(&fil);
     return 0;
 }

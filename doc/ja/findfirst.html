@@ -62,10 +62,10 @@ FRESULT f_findfirst (
 <div class="para desc">
 <h4>解説</h4>
 <p><tt class="arg">path</tt>で指定されるディレクトリを開き、そのディレクトリ内の項目の検索を開始します。正常終了すると、ディレクトリ オブジェクト構造体が作成され、最初に検索名文字列に名前がマッチした項目の情報が<tt class="arg">fno</tt>の指定するファイル情報構造体にストアされます。名前のマッチする項目が見つからなかった場合は、<tt>fno-&gt;fname[]</tt>にヌル文字列が返されます。ファイル情報構造体の使い方については、<a href="readdir.html"><tt>f_readdir</tt></a>関数を参照してください。</p>
-<p>マッチ パターン文字列は、ワイルドカード文字(<tt>?</tt>と<tt>*</tt>)を含むことができます。<tt>?</tt>は任意の1文字に、<tt>*</tt>は0文字以上の任意の文字列にマッチします。LFN構成では、SFNとLFN(あれば)の両方に対してテストを行います。現リビジョンではパターン マッチングにおいて次の点で標準システムとは異なる動作となります</p>
+<p>マッチ パターン文字列は、ワイルドカード文字(<tt>?</tt>と<tt>*</tt>)を含むことができます。<tt>?</tt>は任意の1文字に、<tt>*</tt>は0文字以上の任意の文字列にマッチします。LFN構成では、SFNとLFN(あれば)の両方に対してテストを行います。現リビジョンではパターン マッチングにおいて次の点で標準システムとは異なる動作となります。</p>
 <ul>
 <li><tt>"*.*"</tt>は拡張子なしの名前にマッチしない。(標準システムでは全ての名前にマッチ)</li>
-<li><tt>"*."</tt>のようにピリオドで終わるパターンは、どの名前にもマッチしない。(標準システムでは拡張子無しの名前にマッチ)</li>
+<li>ピリオドで終わるパターンは、どの名前にもマッチしない。(標準システムでは拡張子無しの名前にマッチ)</li>
 <li><a href="filename.html#case">DBCS拡張文字</a>については、LFN構成でも非Unicode API構成ではケース センシティブとなる。</li>
 </ul>
 </div>
@@ -90,7 +90,7 @@ void find_image (void)
 <span class="k">#if</span> _USE_LFN
     char lfn[_MAX_LFN + 1];
     fno.lfname = lfn;
-    fno.lfsize = sizeof lfn;
+    fno.lfsize = _MAX_LFN + 1;
 <span class="k">#endif</span>
 
     fr = f_findfirst(&amp;dj, &amp;fno, "", "dsc*.jpg");  <span class="c">/* "dsc"で始まるJPEGファイルを検索 */</span>

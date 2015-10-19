@@ -56,7 +56,7 @@ int f_printf (
 
 <div class="para comp">
 <h4>対応情報</h4>
-<p>この関数は、<a href="putc.html"><tt>f_putc</tt>関数</a>および<a href="puts.html"><tt>f_puts</tt>関数</a>のラッパー関数です。<tt>_FS_READONLY == 0</tt>で、且つ<tt>_USE_STRFUNC</tt>が1または2のとき使用可能になります。2の時は、出力に含まれる<tt>'\n'</tt>が<tt>'\r'+'\n'</tt>に展開されてファイルに書き込まれます。</p>
+<p>この関数は、<a href="putc.html"><tt>f_putc</tt></a>関数および<a href="puts.html"><tt>f_puts</tt></a>関数のラッパー関数です。<tt>_FS_READONLY == 0</tt>で、且つ<tt>_USE_STRFUNC</tt>が1または2のとき使用可能になります。2の時は、出力に含まれる<tt>'\n'</tt>が<tt>'\r'+'\n'</tt>に展開されてファイルに書き込まれます。</p>
 <p>APIにUnicodeが選択(<tt>_LFN_UNICODE</tt>が1)されているときは、<tt class="arg">fmt</tt>はUnicode文字列になりますが、ファイル上のエンコードは、<tt>_STRF_ENCODE</tt>オプションで選択できます。それ以外の時は無変換(1バイト/1文字)で書き込みます。</p>
 </div>
 

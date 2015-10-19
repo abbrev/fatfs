@@ -307,7 +307,7 @@ int main (int argc, char* argv[])
 
     /* Check function/compatibility of the physical drive #0 */
     rc = test_diskio(0, 1, buff, sizeof buff);
-    if (res) {
+    if (rc) {
         printf("Sorry the function/compatibility test failed.\nFatFs will not work on this disk driver.\n");
     } else {
         printf("Congratulations! The disk I/O layer works well.\n");

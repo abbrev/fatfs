@@ -69,11 +69,14 @@ FRESULT f_rename (
 <div class="para use">
 <h4>使用例</h4>
 <pre>
-    <span class="c">/* ファイルまたはサブディレクトリの名前を変更する */</span>
+    <span class="c">/* デフォルト ドライブにあるオブジェクトの名前を変更 */</span>
     f_rename("oldname.txt", "newname.txt");
 
-    <span class="c">/* ファイルまたはサブディレクトリの名前の変更と別のディレクトリへの移動 */</span>
-    f_rename("oldname.txt", "dir1/newname.txt");
+    <span class="c">/* ドライブ2にあるオブジェクトの名前を変更 */</span>
+    f_rename("2:oldname.txt", "newname.txt");
+
+    <span class="c">/* 名前の変更と同時に別のディレクトリに移動 */</span>
+    f_rename("log.txt", "old/log0001.txt");
 </pre>
 </div>
 
