@@ -113,7 +113,7 @@ FRESULT play_file (
     if (rc) return rc;
 
     <span class="c">/* 全てのデータが転送されるかエラーが発生するまで続ける */</span>
-    while (rc == FR_OK &amp;&amp; !f_eof(&fil)) {
+    while (rc == FR_OK &amp;&amp; !f_eof(&amp;fil)) {
 
         <span class="c">/* ほかの処理... */</span>
 

@@ -193,7 +193,7 @@ R0.10 (October 02, 2013)
   Improved write throughput of f_puts() and f_printf().
   Changed argument of f_chdrive(), f_mkfs(), disk_read() and disk_write().
   Fixed f_write() can be truncated when the file size is close to 4GB.
-  Fixed f_open(), f_mkdir() and f_setlabel() can return incorrect error code.
+  Fixed f_open(), f_mkdir() and f_setlabel() can return incorrect value on error.
 
 
 
@@ -242,4 +242,13 @@ R0.11a (September 05, 2015)
   Fixed errors in the case conversion teble of code page 437 and 850 (ff.c).
   Fixed errors in the case conversion teble of Unicode (cc*.c).
 
+
+
+R0.12 (April 12, 2016)
+
+  Added support of exFAT file system. (_FS_EXFAT)
+  Added f_expand(). (_USE_EXPAND)
+  Changed some members in FINFO structure and behavior of f_readdir().
+  Added an option _USE_CHMOD and removed an option _WORD_ACCESS.
+  Fixed errors in the case conversion teble of Unicode (cc*.c).
 

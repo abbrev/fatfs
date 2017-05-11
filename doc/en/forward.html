@@ -112,7 +112,7 @@ FRESULT play_file (
     if (rc) return rc;
 
     <span class="c">/* Repeat until the file pointer reaches end of the file */</span>
-    while (rc == FR_OK &amp;&amp; !f_eof(&fil)) {
+    while (rc == FR_OK &amp;&amp; !f_eof(&amp;fil)) {
 
         <span class="c">/* any other processes... */</span>
 

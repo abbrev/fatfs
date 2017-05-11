@@ -4,11 +4,11 @@
 / This function checks if the file is contiguous with desired size.
 / If not, a block of contiguous sectors is allocated to the file.
 / If the file has been opened without FA_WRITE flag, it only checks if
-/ the file is contiguous and returns the resulut. */
-
-#if _FATFS != 32020 /* Check if R0.11 */
-#error This function may not be compatible with this revision of FatFs module.
-#endif
+/ the file is contiguous and returns the resulut.
+/-----------------------------------------------------------------------/
+/ This function can work with FatFs R0.09 - R0.11a.
+/ It is incompatible with R0.12+. Use f_expand function instead.
+/----------------------------------------------------------------------*/
 
 /* Declarations of FatFs internal functions accessible from applications.
 /  This is intended to be used for disk checking/fixing or dirty hacks :-) */
@@ -37,18 +37,20 @@ DWORD allocate_contiguous_clusters (    /* Returns the first sector in LBA (0:er
         do {
             cl = get_fat(fp->fs, ccl);  /* Get the cluster status */
             if (cl + 1 < 3) return 0;   /* Hard error? */
-            if (cl != ccl + 1 &&; cl < fp->fs->n_fatent) break;  /* Not contiguous? */
+            if (cl != ccl + 1 && cl < fp->fs->n_fatent) break;  /* Not contiguous? */
             ccl = cl;
         } while (++ncl < tcl);
         if (ncl == tcl)             /* Is the file contiguous? */
             return clust2sect(fp->fs, fp->sclust);  /* File is contiguous. Return the start sector */
     }
+
     /* File is not contiguous */
 #if _FS_READONLY
-    return 0;
+    return 0;								/* Exit if in read-only cfg. */
 #else
     if (!(fp->flag & FA_WRITE)) return 0;   /* Exit if the file object is for read-only */
-    if (f_truncate(fp)) return 0;           /* Remove the existing chain */
+
+    if (f_truncate(fp)) return 0;           /* Remove the non-contiguous chain */
 
     /* Find a free contiguous area */
     ccl = cl = 2; ncl = 0;
@@ -100,6 +102,7 @@ int main (void)
     ...
     dr = disk_write(fil.fs->drv, Buff, org, 1024);   /* Write 512KiB from top of the file */
     ...
+
     f_close(&fil);
     return 0;
 }

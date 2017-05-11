@@ -34,6 +34,7 @@
 <tr><td>/..</td><td>無効</td><td>ルート ディレクトリ(その上は辿れない)</td></tr>
 </table>
 <p>また、<tt><a href="config.html#str_volume_id">_STR_VOLUME_ID</a></tt>オプションを有効にすることでドライブ番号の識別には数字のほか、<tt>"sd:file1.txt"</tt>や<tt>"ram:swapfile.dat"</tt>のように、任意の文字列を使用することも可能になります。</p>
+<p><em>【注意】現リビジョン(R0.12)では、exFATボリューム上においてダブル ドット<tt>".."</tt>はシングル ドット<tt>"."</tt>として機能し、親ディレクトリを辿ることはできません。</em></p>
 </div>
 
 <div class="para doc" id="case">
