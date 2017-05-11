@@ -82,9 +82,10 @@ Note that if once this error occured at any operation to an open file, the file 
 <dt id="ma">FR_MKFS_ABORTED</dt>
 <dd>The <tt>f_mkfs</tt> function aborted before start in format due to a reason as follows:
 <ul>
-<li>The disk/partition size is too small.</li>
-<li>Not allowable cluster size for this disk. This can occure when number of clusters gets near the boundaries of FAT sub-types.</li>
-<li>There is no partition related to the logical drive. (Related option: <tt><a href="config.html#multi_partition">_MULTI_PARTITION</a></tt>)</li>
+<li>It is pmpossible to formart with the given parameters.</li>
+<li>The size of volume is too small.</li>
+<li>The size of given work area is too small.</li>
+<li>The partition bound to the logical drive coulud not be found. (Related option: <tt><a href="config.html#multi_partition">_MULTI_PARTITION</a></tt>)</li>
 </ul>
 </dd>
 

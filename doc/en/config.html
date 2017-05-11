@@ -57,7 +57,7 @@
 <p>Disable (0) or Enable (1) volume label functions, <tt>f_getlabel</tt> and <tt>f_setlabel</tt>.</p>
 
 <h4 id="use_forward">_USE_FORWARD</h4>
-<p>Disable (0) or Enable (1) <tt>f_forward</tt> function. Also <tt>_FS_TINY</tt> needs to be 1.</p>
+<p>Disable (0) or Enable (1) <tt>f_forward</tt> function.</p>
 
 </div>
 
@@ -172,13 +172,13 @@
 <p>Normal (0) or Tiny (1). At the tiny configuration, size of the file object <tt>FIL</tt> is reduced <tt>_MAX_SS</tt> bytes. Instead of private data buffer eliminated from the file object, common sector buffer in the file system object <tt>FATFS</tt> is used for the file data transfer.</p>
 
 <h4 id="fs_exfat">_FS_EXFAT</h4>
-<p>This option switches support for the exFAT file system in addition to the FAT file system, Enabled(1) or Disabled(1). To enable the exFAT, also LFN must be enabled. When enable exFAT, configureing <tt>_LFN_UNICODE = 1</tt> and <tt>_MAX_LFN = 255</tt> is recommended for full-featured exFAT function. Note that enabling exFAT discards C89 compatibility due to need for 64-bit integer type.</p>
+<p>This option switches support for the exFAT file system in addition to the FAT file system, Enabled(1) or Disabled(1). To enable this feature, also LFN must be enabled and configureing <tt>_LFN_UNICODE = 1</tt> and <tt>_MAX_LFN = 255</tt> is recommended for full-featured exFAT function. Note that enabling exFAT discards C89 compatibility because of need for 64-bit integer type.</p>
 
 <h4 id="fs_nortc">_FS_NORTC</h4>
 <p>Use RTC (0) or Do not use RTC (1). This option controls timestamp function. If the system does not have an RTC function or valid timestamp is not needed, set <tt>_FS_NORTC</tt> to 1 to disable the timestamp function. Any object modified by FatFs will have a fixed timestamp value defined by <tt>_NORTC_MON</tt>, <tt>_NORTC_MDAY</tt> and <tt>_NORTC_YEAR</tt>. To use the timestamp function, set <tt>_FS_NORTC = 0</tt> and add <tt>get_fattime</tt> function to the project to get the current time form real-time clock. This option has no effect at read-only configuration.</p>
 
 <h4 id="nortc_time">_NORTC_MON, _NORTC_MDAY, _NORTC_YEAR</h4>
-<p>This set of options defines default timestamp to be used at no RTC systems. This option has no effect at read-only configuration or <tt>_FS_NORTC = 0</tt>.</p>
+<p>This set of options defines the time to be used at no RTC systems. This option has no effect at read-only configuration or <tt>_FS_NORTC = 0</tt>.</p>
 
 <h4 id="fs_lock">_FS_LOCK</h4>
 <p>This option switches file lock function to control duplicated file open and illegal operations to open objects. Note that the file lock function is independent of re-entrancy. This option must be 0 at read-only configuration.</p>
@@ -189,7 +189,7 @@
 </table>
 
 <h4 id="fs_reentrant">_FS_REENTRANT</h4>
-<p>Disable (0) or Enable (1). This option switches the re-entrancy (thread safe) of the FatFs module itself. Note that file/directory access to the different volume is always re-entrant and it can work simultaneously regardless of this option but volume control functions, <tt>f_mount</tt>, <tt>f_mkfs</tt> and <tt>f_fdisk</tt>, are always not re-entrant. Only file/directory access to the same volume, in other words, exclusive use of each file system object, is under control of this function. To enable this function, also user provided synchronization handlers, <tt>ff_req_grant</tt>, <tt>ff_rel_grant</tt>, <tt>ff_del_syncobj</tt> and <tt>ff_cre_syncobj</tt>, need to be added to the project. Sample code is available in <tt>option/syscall.c</tt>.</p>
+<p>Disable (0) or Enable (1). This option switches the re-entrancy (thread safe) of the FatFs module itself. Note that file/directory access to the different volume is always re-entrant and it can work simultaneously regardless of this option but volume control functions, <tt>f_mount</tt>, <tt>f_mkfs</tt> and <tt>f_fdisk</tt>, are always not re-entrant. Only file/directory access to the same volume, in other words, exclusive use of each file system object, is under control of this function. To enable this feature, also user provided synchronization handlers, <tt>ff_req_grant</tt>, <tt>ff_rel_grant</tt>, <tt>ff_del_syncobj</tt> and <tt>ff_cre_syncobj</tt>, need to be added to the project. Sample code is available in <tt>option/syscall.c</tt>.</p>
 
 <h4 id="fs_timeout">_FS_TIMEOUT</h4>
 <p>Number of time ticks to abort the file function with <tt>FR_TIMEOUT</tt> when wait time is too long. This option has no effect when <tt>_FS_REENTRANT = 0</tt>.</p>

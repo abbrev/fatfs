@@ -35,7 +35,7 @@
 <tr><td>dir1/..</td><td>Invalid name</td><td>The current directory</td></tr>
 <tr><td>/..</td><td>Invalid name</td><td>The root directory (sticks the top level)</td></tr>
 </table>
-<p>When option <tt><a href="config.html#str_volume_id">_STR_VOLUME_ID</a></tt> is specified, also pre-defined strings can be used as drive identifier in the path name instead of a numeral. e.g. <tt>"sd:file1.txt"</tt> or <tt>"ram:swapfile.dat"</tt>.</p>
+<p>When option <tt><a href="config.html#str_volume_id">_STR_VOLUME_ID</a></tt> is specified, also pre-defined strings can be used as drive identifier in the path name instead of a numeral. e.g. <tt>"sd:file1.txt"</tt>, <tt>"ram:swapfile.dat"</tt> and DOS/Windows style drive letter, of course.</p>
 <p><em>Remark: In this revision, R0.12, double dot name <tt>".."</tt> cannot follow the parent directory on the exFAT volume. It will work as <tt>"."</tt> and stay there.</em></p>
 </div>
 
@@ -58,25 +58,25 @@
 
 <div class="para doc" id="vol">
 <h3>Volume Management</h3>
-<p>The FatFs module needs dynamic work area called <em>file system object</em> for each volume (logical drive). It is registered to the FatFs module by <tt>f_mount</tt> function. By default, each logical drive is bound to the physical drive with the same drive number and an FAT volume on the drive is serched by volume mount process. It loads boot sectors and checks it if it is an FAT boot sector in order of sector 0 as SFD format, 1st partition, 2nd partition, 3rd partition and 4th partition as FDISK format.</p>
+<p>FatFs module needs dynamic work area, <em>file system object</em>, for each volume (logical drive). It is registered/unregistered to the FatFs module by <tt>f_mount</tt> function. By default, each logical drive is bound to the physical drive with the same drive number and an FAT volume on the drive is serched by the volume mount process. It reads boot sectors and checks it if it is an FAT boot sector in order of sector 0 as SFD format, 1st partition, 2nd partition, 3rd partition and 4th partition as FDISK format.</p>
 <p>When <tt><a href="config.html#multi_partition">_MULTI_PARTITION</a> == 1</tt> is specified by configuration option, each individual logical drive is bound to the partition on the physical drive specified by volume management table. The volume management table must be defined by user to resolve the relationship between logical drives and partitions. Following code is an example of a volume management table.</p>
 <pre>
-Example: Logical drive 0-2 are tied to three pri-partitions on the physical drive 0 (fixed disk)
-         Logical drive 3 is tied to an FAT volume on the physical drive 1 (removable disk)
+Example: Logical drive 0-2 are tied to three pri-partitions on the physical drive 0 (fixed drive)
+         Logical drive 3 is tied to an FAT volume on the physical drive 1 (removable drive)
 
 PARTITION VolToPart[] = {
-    {0, 1},     <span class="c">/* Logical drive 0 ==> Physical drive 0, 1st partition */</span>
-    {0, 2},     <span class="c">/* Logical drive 1 ==> Physical drive 0, 2nd partition */</span>
-    {0, 3},     <span class="c">/* Logical drive 2 ==> Physical drive 0, 3rd partition */</span>
-    {1, 0}      <span class="c">/* Logical drive 3 ==> Physical drive 1 (auto detection) */</span>
+    {0, 1},     <span class="c">/* "0:" ==> Physical drive 0, 1st partition */</span>
+    {0, 2},     <span class="c">/* "1:" ==> Physical drive 0, 2nd partition */</span>
+    {0, 3},     <span class="c">/* "2:" ==> Physical drive 0, 3rd partition */</span>
+    {1, 0}      <span class="c">/* "3:" ==> Physical drive 1, auto detection */</span>
 };
 </pre>
-<div><img src="../img/f7.png" width="828" height="288" alt="relationship between logical drive and physical drive"></div>
+<div><img src="../res/f7.png" width="828" height="288" alt="relationship between logical drive and physical drive"></div>
 <p>There are some considerations on using multi-partition configuration.</p>
 <ul>
 <li>The physical drive that has two or more mounted partitions must be non-removable. Media change while a system operation is prohibited.</li>
 <li>Only four primary partitions can be specified. Extended partition is not supported.</li>
-<li>Windows does not support multiple volumes on the removable storage. Only first parition will be mounted.</li>
+<li>Windows does not support multiple volumes on the removable storage. Only first parition will be recognized.</li>
 </ul>
 </div>
 
