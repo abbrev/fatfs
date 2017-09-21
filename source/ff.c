@@ -5764,7 +5764,7 @@ FRESULT f_mkfs (
 			pte[PTE_System] = sys;				/* System type */
 			n = (b_vol + sz_vol) / (63 * 255);	/* (End CHS may be invalid) */
 			pte[PTE_EdHead] = 254;				/* End head */
-			pte[PTE_EdSec] = (BYTE)(n >> 2 | 63);	/* End sector */
+			pte[PTE_EdSec] = (BYTE)(((n >> 2) & 0xC0) | 63);	/* End sector */
 			pte[PTE_EdCyl] = (BYTE)n;			/* End cylinder */
 			st_dword(pte + PTE_StLba, b_vol);	/* Start offset in LBA */
 			st_dword(pte + PTE_SizLba, sz_vol);	/* Size in sectors */
@@ -5827,12 +5827,12 @@ FRESULT f_fdisk (
 
 		/* Set partition table */
 		p[1] = s_hd;						/* Start head */
-		p[2] = (BYTE)((b_cyl >> 2) + 1);	/* Start sector */
-		p[3] = (BYTE)b_cyl;					/* Start cylinder */
+		p[2] = (BYTE)(((b_cyl >> 2) & 0xC0) | 1);	/* Start sector and cylinder high */
+		p[3] = (BYTE)b_cyl;					/* Start cylinder low */
 		p[4] = 0x07;						/* System type (temporary setting) */
 		p[5] = e_hd;						/* End head */
-		p[6] = (BYTE)((e_cyl >> 2) + 63);	/* End sector */
-		p[7] = (BYTE)e_cyl;					/* End cylinder */
+		p[6] = (BYTE)(((e_cyl >> 2) & 0xC0) | 63);	/* End sector and cylinder high */
+		p[7] = (BYTE)e_cyl;					/* End cylinder low */
 		st_dword(p + 8, s_part);			/* Start sector in LBA */
 		st_dword(p + 12, sz_part);			/* Number of sectors */
 
