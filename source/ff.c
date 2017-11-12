@@ -1176,7 +1176,7 @@ DWORD get_fat (		/* 0xFFFFFFFF:Disk error, 1:Internal error, 2..0x7FFFFFFF:Clust
 			break;
 #if FF_FS_EXFAT
 		case FS_EXFAT :
-			if (obj->objsize != 0) {
+			if (obj->objsize != 0 || obj->sclust == 0) {	/* Object except root dir must have valid data */
 				DWORD cofs = clst - obj->sclust;	/* Offset from start cluster */
 				DWORD clen = (DWORD)((obj->objsize - 1) / SS(fs)) / fs->csize;	/* Number of clusters - 1 */
 
@@ -1648,7 +1648,7 @@ FRESULT dir_clear (	/* Returns FR_OK or FR_DISK_ERR */
 {
 	DWORD sect;
 	UINT n, szb;
-	BYTE *ibuf;
+	BYTE *ibuf = 0;
 
 
 	if (sync_window(fs) != FR_OK) return FR_DISK_ERR;	/* Flush disk access window */
@@ -5970,7 +5970,7 @@ FRESULT f_fdisk (
 )
 {
 	UINT i, n, sz_cyl, tot_cyl, b_cyl, e_cyl, p_cyl;
-	BYTE s_hd, e_hd, *p, *buf; = (BYTE*)work;
+	BYTE s_hd, e_hd, *p, *buf = (BYTE*)work;
 	DSTATUS stat;
 	DWORD sz_disk, sz_part, s_part;
 	FRESULT res;
