@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/getlabel.html">
@@ -13,7 +13,7 @@
 
 <div class="para func">
 <h2>f_getlabel</h2>
-<p>The f_getlabel function returns volume label and volume serial number of a drive.</p>
+<p>The f_getlabel function returns volume label and volume serial number of a volume.</p>
 <pre>
 FRESULT f_getlabel (
   const TCHAR* <span class="arg">path</span>,  <span class="c">/* [IN] Drive number */</span>
@@ -29,7 +29,15 @@ FRESULT f_getlabel (
 <dt>path</dt>
 <dd>Pointer to the null-terminated string that specifies the <a href="filename.html">logical drive</a>. Null-string specifies the default drive.</dd>
 <dt>label</dt>
-<dd>Pointer to the buffer to store the volume label. The buffer size must be at least 24 items at <tt>FF_LFN_UNICODE == 0</tt> or 12 items at <tt>FF_LFN_UNICODE == 1</tt>. If the volume has no label, a null-string will be returned. Set null pointer if this information is not needed.</dd>
+<dd>Pointer to the buffer to store the volume label. If the volume has no label, a null-string will be returned. Set null pointer if this information is not needed. The buffer size should be shown below at least to avoid buffer overflow.<br>
+<table class="lst2">
+<tr><td></td><td>FF_FS_EXFAT == 0</td><td>FF_FS_EXFAT == 1</td></tr>
+<tr><td>FF_USE_LFN == 0</td><td>12 items</td><td>-</td></tr>
+<tr><td>FF_LFN_UNICODE == 0</td><td>12 items</td><td>23 items</td></tr>
+<tr><td>FF_LFN_UNICODE == 1</td><td>12 items</td><td>12 items</td></tr>
+<tr><td>FF_LFN_UNICODE == 2</td><td>34 items</td><td>34 items</td></tr>
+</table>
+</dd>
 <dt>vsn</dt>
 <dd>Pointer to the <tt>DWORD</tt> variable to store the volume serial number. Set null pointer if this information is not needed.</dd>
 </dl>
@@ -53,7 +61,7 @@ FRESULT f_getlabel (
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>Available when <tt>FF_USE_LABEL == 1</tt>.</p>
+<p>Available when <tt><a href="config.html#use_label">FF_USE_LABEL</a> == 1</tt>.</p>
 </div>
 
 

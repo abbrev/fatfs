@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/lseek.html">
@@ -29,7 +29,7 @@ FRESULT f_lseek (
 <dt>fp</dt>
 <dd>Pointer to the open file object.</dd>
 <dt>ofs</dt>
-<dd>Byte offset from top of the file to set read/write pointer. The data type <tt>FSIZE_t</tt> is an alias of either <tt>DWORD</tt>(32-bit) or <tt>QWORD</tt>(64-bit) depends on the configuration option <tt>FF_FS_EXFAT</tt>.</dd>
+<dd>Byte offset from top of the file to set read/write pointer. The data type <tt>FSIZE_t</tt> is an alias of either <tt>DWORD</tt>(32-bit) or <tt>QWORD</tt>(64-bit) depends on the configuration option <tt><a href="config.html#fs_exfat">FF_FS_EXFAT</a></tt>.</dd>
 </dl>
 </div>
 
@@ -61,7 +61,7 @@ FRESULT f_lseek (
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>Available when <tt>FF_FS_MINIMIZE &lt;= 2</tt>. To use fast seek function, <tt>FF_USE_FASTSEEK</tt> needs to be set 1.</p>
+<p>Available when <tt><a href="config.html#fs_minimize">FF_FS_MINIMIZE</a> &lt;= 2</tt>. To use fast seek function, <tt><a href="config.html#use_fastseek">FF_USE_FASTSEEK</a></tt> needs to be set 1.</p>
 </div>
 
 

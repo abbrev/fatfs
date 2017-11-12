@@ -48,7 +48,14 @@ Note that if once this error occured at any operation to an open file, the file 
 <dd>Could not find the path.</dd>
 
 <dt id="in">FR_INVALID_NAME</dt>
-<dd>The given string is invalid as the <a href="filename.html">path name</a>.</dd>
+<dd>The given string is invalid as the <a href="filename.html">path name</a>. One of the following possibilities is suspected.
+<ul>
+<li>There is any character not allowed for the file name.</li>
+<li>The string is out of 8.3 format. (at non-LFN cfg.)</li>
+<li><tt>FF_MAX_LFN</tt> is insufficient for the file name. (at LFN cfg.)</li>
+<li>There is any character encoding error in the string.</li>
+</ul>
+</dd>
 
 <dt id="dn">FR_DENIED</dt>
 <dd>The required access was denied due to one of the following reasons:
@@ -69,8 +76,8 @@ Note that if once this error occured at any operation to an open file, the file 
 <dt id="io">FR_INVALID_OBJECT</dt>
 <dd>The file/directory object is invalid or a null pointer is given. There are some reasons as follows:
 <ul>
-<li>It has been closed, it has not been opened or it has been collapsed.</li>
-<li>It has been invalidated by a voulme mount process. Open objects on the volume are invalidated by voulme mount process.</li>
+<li>It has been closed, or collapsed.</li>
+<li>It has been invalidated. Open objects on the volume are invalidated by voulme mount process.</li>
 <li>Physical drive is not ready to work due to a media removal.</li>
 </ul>
 </dd>

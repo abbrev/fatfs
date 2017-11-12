@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/sfatfs.html">
@@ -13,7 +13,7 @@
 
 <div class="para">
 <h2>FATFS</h2>
-<p>The <tt>FATFS</tt> structure (filesystem object) holds dynamic work area of individual logical drives. It is given by application program and registerd/unregisterd to the FatFs module with <tt>f_mount</tt> function. Initialization of the structure is done by volume mount process whenever necessary. Application program must not modify any member in this structure, or the FAT volume can be collapsed.</p>
+<p>The <tt>FATFS</tt> structure (filesystem object) holds dynamic work area of individual logical drives. It is given by application program and registerd/unregisterd to the FatFs module with <tt>f_mount</tt> function. Initialization of the structure is done by volume mount process whenever necessary. Application program <em>must not</em> modify any member in this structure, or the FAT volume will be collapsed.</p>
 <pre>
 <span class="k">typedef</span> <span class="k">struct</span> {
     BYTE    fs_type;      <span class="c">/* FAT type (0, FS_FAT12, FS_FAT16, FS_FAT32 or FS_EXFAT) */</span>
@@ -27,7 +27,7 @@
 <span class="k">#if</span> FF_MAX_SS != FF_MIN_SS
     WORD    ssize;        <span class="c">/* Sector size (512,1024,2048 or 4096) */</span>
 <span class="k">#endif</span>
-<span class="k">#if FF_FS_EXFAT</span>
+<span class="k">#if</span> FF_FS_EXFAT
     BYTE*   dirbuf;       <span class="c">/* Directory entry block scratchpad buffer */</span>
 <span class="k">#endif</span>
 <span class="k">#if</span> FF_FS_REENTRANT
@@ -39,7 +39,7 @@
 <span class="k">#endif</span>
 <span class="k">#if</span> FF_FS_RPATH
     DWORD   cdir;         <span class="c">/* Cluster number of current directory (0:root) */</span>
-<span class="k">#if FF_FS_EXFAT</span>
+<span class="k">#if</span> FF_FS_EXFAT
     DWORD   cdc_scl;      <span class="c">/* Containing directory start cluster (invalid when cdir is 0) */</span>
     DWORD   cdc_size;     <span class="c">/* b31-b8:Size of containing directory, b7-b0: Chain status */</span>
     DWORD   cdc_ofs;      <span class="c">/* Offset in the containing directory (invalid when cdir is 0) */</span>

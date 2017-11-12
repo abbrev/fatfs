@@ -66,14 +66,14 @@ FRESULT f_findfirst (
 <ul>
 <li><tt>"*.*"</tt> never matches any name without extension while it matches any name with or without extension at the standard systems.</li>
 <li>Any pattern terminated with a period never matches any name while it matches any name without extensiton at the standard systems.</li>
-<li><a href="filename.html#case">DBCS extended characters</a> are compared in case-sensitive at LFN with non-Unicode configuration.</li>
+<li><a href="filename.html#case">DBCS extended characters</a> are compared in case-sensitive at LFN with ANSI/OEM API.</li>
 </ul>
 </div>
 
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>This is a wrapper function of <a href="opendir.html"><tt>f_opendir</tt></a> and <a href="readdir.html"><tt>f_readdir</tt></a> function. Available when <tt>FF_USE_FIND &gt;= 1</tt> and <tt>FF_FS_MINIMIZE &lt;= 1</tt>.</p>
+<p>This is a wrapper function of <a href="opendir.html"><tt>f_opendir</tt></a> and <a href="readdir.html"><tt>f_readdir</tt></a> function. Available when <tt><a href="config.html#use_find">FF_USE_FIND</a> &gt;= 1</tt> and <tt><a href="config.html#fs_minimize">FF_FS_MINIMIZE</a> &lt;= 1</tt>.</p>
 </div>
 
 

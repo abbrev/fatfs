@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/setlabel.html">
@@ -51,7 +51,7 @@ FRESULT f_setlabel (
 <h4>Description</h4>
 <p>When the string has a drive number, the volume label will be set to the volume specified by the drive number. If not, the volume label will be set to the default drive. If length of the given volume label is zero, the volume label on the volume will be removed. The format of the volume label on the FAT volume is similar to the file name but there are some differences shown below:</p>
 <ul>
-<li>Period is not allowed.</li>
+<li>Dot is not allowed.</li>
 <li>Spaces can be contained anywhere in the volume label. Trailing spaces are truncated off at FAT volume.</li>
 <li>Up to 11 bytes long as conversion of OEM code page at FAT volume.</li>
 <li>Up to 11 characters long at exFAT volume. Lower case is preserved.</li>
@@ -61,7 +61,7 @@ FRESULT f_setlabel (
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>Available when <tt>FF_FS_READONLY == 0</tt> and <tt>FF_USE_LABEL == 1</tt>.</p>
+<p>Available when <tt><a href="config.html#fs_readonly">FF_FS_READONLY</a> == 0</tt> and <tt><a href="config.html#use_label">FF_USE_LABEL</a> == 1</tt>.</p>
 </div>
 
 

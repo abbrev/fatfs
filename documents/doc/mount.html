@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/mount.html">
@@ -60,7 +60,7 @@ FRESULT f_mount (
 </ol>
 <p>If forced mounting is not specified (<tt>opt = 0</tt>), this function always succeeds regardless of the physical drive status. It only clears (de-initializes) the given work area and registers its address to the internal table and no activity of the physical drive in this function. To unregister the work area, specify a NULL to the <tt class="arg">fs</tt>, and then the work area can be discarded. The volume mount processes, initialize the corresponding physical drive, find the FAT volume in it and then initialize the work area, is performed in the subsequent file/directory functions when either of following conditions is true.</p>
 <ul>
-<li>File system object has not been initialized. It is de-initialized by <tt>f_mount</tt> function.</li>
+<li>Filesystem object has not been initialized. It is de-initialized by <tt>f_mount</tt> function.</li>
 <li>Physical drive is not initialized. It is de-initialized by system reset or media removal.</li>
 </ul>
 <p>If the function with forced mounting (<tt>opt = 1</tt>) failed, it means that the filesystem object has been registered successfully but the volume is currently not ready to work. The volume mount process will be attempted at subsequent file/directroy functions if the filesystem object is not initialized. (delayed mounting)</p>

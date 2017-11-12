@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/dread.html">
@@ -56,12 +56,12 @@ DRESULT disk_read (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>Read/write operation to the generic storage devices, such as memory card, hadddisk and optical disk, is done in unit of block of data bytes called <em>sector</em>. FatFs supports the sector size in range of from 512 to 4096 bytes. When FatFs is configured for fixed sector size (<tt>FF_MIN_SS == MAX_SS</tt>, this is the most case), the read/write function must work at that sector size. When FatFs is configured for variable sector size (<tt>FF_MIN_SS != MAX_SS</tt>), the sector size of medium is inquired with <tt>disk_ioctl</tt> function immediately following <tt>disk_initialize</tt> function.</p>
+<p>Read/write operation to the generic storage devices, such as memory card, hadddisk and optical disk, is done in unit of block of data bytes called <em>sector</em>. FatFs supports the sector size in range of from 512 to 4096 bytes. When FatFs is configured for fixed sector size (<tt>FF_MIN_SS == FF_MAX_SS</tt>, this is the most case), the read/write function must work at that sector size. When FatFs is configured for variable sector size (<tt>FF_MIN_SS != FF_MAX_SS</tt>), the sector size of medium is inquired with <tt>disk_ioctl</tt> function immediately following <tt>disk_initialize</tt> function.</p>
 <p>The memory address specified by <tt class="arg">buff</tt> is not that always aligned to word boundary because the argument is defined as <tt>BYTE*</tt>. The unaligned read/write request can occure at <a href="appnote.html#fs1">direct transfer</a>. If the bus architecture, especially DMA controller, does not allow unaligned memory access, it should be solved in this function. There are some workarounds described below to avoid this issue.</p>
 <ul>
 <li>Convert word transfer to byte transfer in this function if needed. - Recommended.</li>
 <li>On the <tt>f_read()</tt> calls, avoid long read request that includes a whole of sector. - Any direct transfer never occures.</li>
-<li>On the <tt>f_read(fp, data, btw, bw)</tt> calls, make sure that <tt>(((UINT)data &amp; 3) == (f_tell(fp) &amp; 3))</tt> is true. - Word alignment of <tt class="arg">buff</tt> is guaranteed.</li>
+<li>On the <tt>f_read(fp, dat, btw, bw)</tt> calls, make sure that <tt>(((UINT)dat &amp; 3) == (f_tell(fp) &amp; 3))</tt> is true. - Word alignment of <tt class="arg">buff</tt> is guaranteed no matter dat is not word aligned.</li>
 </ul>
 <p>Generally, a multiple sector read request must not be split into single sector transactions to the storage device, or read throughput gets worse.</p>
 </div>

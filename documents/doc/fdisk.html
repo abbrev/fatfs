@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/fdisk.html">
@@ -31,7 +31,7 @@ FRESULT f_fdisk (
 <dt>szt</dt>
 <dd>Pointer to the first item of the partition map table.</dd>
 <dt>work</dt>
-<dd>Pointer to the function work area. The size must be at least <tt>FF_MAX_SS</tt> bytes.</dd>
+<dd>Pointer to the function work area. The size must be at least <tt><a href="config.html#max_ss">FF_MAX_SS</a></tt> bytes. When a null pointer is given, the function allocates a memory block for the working buffer (at only <tt><a href="config.html#use_lfn">FF_USE_LFN</a> == 3</tt>).</dd>
 </dl>
 </div>
 
@@ -42,7 +42,8 @@ FRESULT f_fdisk (
 <a href="rc.html#de">FR_DISK_ERR</a>,
 <a href="rc.html#nr">FR_NOT_READY</a>,
 <a href="rc.html#wp">FR_WRITE_PROTECTED</a>,
-<a href="rc.html#ip">FR_INVALID_PARAMETER</a>
+<a href="rc.html#ip">FR_INVALID_PARAMETER</a>,
+<a href="rc.html#nc">FR_NOT_ENOUGH_CORE</a>
 </p>
 </div>
 
@@ -53,7 +54,7 @@ FRESULT f_fdisk (
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>Available when <tt>FF_FS_READOLNY == 0</tt>, <tt>FF_USE_MKFS == 1</tt> and <tt>FF_MULTI_PARTITION == 1</tt>.</p>
+<p>Available when <tt><a href="config.html#fs_readonly">FF_FS_READOLNY</a> == 0</tt>, <tt><a href="config.html#use_mkfs">FF_USE_MKFS</a> == 1</tt> and <tt><a href="config.html#multi_partition">FF_MULTI_PARTITION</a> == 1</tt>.</p>
 </div>
 
 <div class="para use">

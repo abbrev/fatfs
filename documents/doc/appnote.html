@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/appnote.html">
@@ -31,7 +31,7 @@
 <div class="para doc" id="port">
 <h3>How to Port</h3>
 
-<h4>Basic considerations</h4>
+<h4>Basic Considerations</h4>
 <p>The FatFs module is assuming following conditions on portability.</p>
 <ul>
 <li>ANSI C<br>
@@ -40,13 +40,13 @@ The FatFs module is a middleware written in ANSI C (C89). There is no platform d
 The FatFs module assumes that size of <tt>char</tt>/<tt>short</tt>/<tt>long</tt> are 8/16/32 bit and <tt>int</tt> is 16 or 32 bit. These correspondence are defined in <tt>integer.h</tt>. This will not be a problem on most compilers. When a conflict with existing definitions is occured, you must resolve it with care.</li>
 </ul>
 
-<h4>System organizations</h4>
+<h4>System Organizations</h4>
 <p>The dependency diagram shown below is a typical but not specific configuration of the embedded system with FatFs module.</p>
 <p><img src="../res/modules.png" width="580" height="280" alt="dependency diagram"></p>
 <p>(a) If a working disk module with FatFs disk interface is provided, nothing else will be needed. (b) To attach existing disk drivers with different interface, glue functions are needed to translate the interfaces between FatFs and the drivers.</p>
 <p><img src="../res/funcs.png" width="750" height="420" alt="functional diagram"></p>
 
-<h4>Required functions</h4>
+<h4>Required Functions</h4>
 <p>You need to provide only low level disk I/O functions required by FatFs module and nothing else. If a working disk module for the target system is already provided, you need to write only glue functions to attach it to the FatFs module. If not, you need to port another disk I/O module or write it from scratch. Most of defined functions are not that always required. For example, any write function is not required at read-only configuration. Following table shows which function is required depends on the configuration options.</p>
 <table class="lst2">
 <tr><th>Function</th><th>Required when</th><th>Note</th></tr>
@@ -81,17 +81,17 @@ The FatFs module assumes that size of <tt>char</tt>/<tt>short</tt>/<tt>long</tt>
 <tr><th></th><th>ARM7<small><br>32bit</small></th><th>ARM7<small><br>Thumb</small></th><th>CM3<small><br>Thumb-2</small></th><th>AVR</th><th>H8/300H</th><th>PIC24</th><th>RL78</th><th>V850ES</th><th>SH-2A</th><th>RX600</th><th>IA-32</th></tr>
 <tr class="cal">     <td>Compiler</td><td>GCC</td><td>GCC</td><td>GCC</td><td>GCC</td><td>CH38</td><td>C30</td><td>CC78K0R</td><td>CA850</td><td>SHC</td><td>RXC</td><td>MSC</td></tr>
 <!--                                                      ARM        Thumb          CM3           AVR            H8          PIC24          RL78       V850ES        SH-2A        RX600        IA-32   -->
-<tr class="ral"><td class="cal">text (Full, R/W)</td><td>10.3k</td><td>6.7k</td><td>6.3k</td><td>12.4k</td> <td>9.9k</td><td>11.4k</td><td>13.1k</td><td>8.7k</td><td>9.0k</td><td>6.5k</td><td>8.6k</td></tr>
-<tr class="ral"><td class="cal">text (Min, R/W)</td>  <td>6.9k</td><td>4.7k</td><td>4.4k</td> <td>8.4k</td> <td>6.9k</td> <td>8.0k</td> <td>9.4k</td><td>6.2k</td><td>6.2k</td><td>4.6k</td><td>6.1k</td></tr>
-<tr class="ral"><td class="cal">text (Full, R/O)</td> <td>4.7k</td><td>3.1k</td><td>2.8k</td> <td>5.7k</td> <td>4.7k</td> <td>5.4k</td> <td>6.4k</td><td>4.2k</td><td>4.0k</td><td>3.1k</td><td>4.1k</td></tr>
-<tr class="ral"><td class="cal">text (Min, R/O)</td>  <td>3.6k</td><td>2.4k</td><td>2.2k</td> <td>4.4k</td> <td>3.6k</td> <td>4.2k</td> <td>5.0k</td><td>3.3k</td><td>3.1k</td><td>2.4k</td><td>3.2k</td></tr>
+<tr class="ral"><td class="cal">text (Full, R/W)</td><td>10.4k</td><td>6.7k</td><td>6.3k</td><td>12.4k</td> <td>9.9k</td><td>11.2k</td><td>13.0k</td><td>8.7k</td><td>9.0k</td><td>6.5k</td><td>8.9k</td></tr>
+<tr class="ral"><td class="cal">text (Min, R/W)</td>  <td>7.0k</td><td>4.7k</td><td>4.4k</td> <td>8.4k</td> <td>6.9k</td> <td>7.8k</td> <td>9.4k</td><td>6.0k</td><td>6.2k</td><td>4.6k</td><td>6.3k</td></tr>
+<tr class="ral"><td class="cal">text (Full, R/O)</td> <td>4.8k</td><td>3.1k</td><td>2.8k</td> <td>5.7k</td> <td>4.7k</td> <td>5.3k</td> <td>6.4k</td><td>4.2k</td><td>4.0k</td><td>3.1k</td><td>4.2k</td></tr>
+<tr class="ral"><td class="cal">text (Min, R/O)</td>  <td>3.6k</td><td>2.4k</td><td>2.2k</td> <td>4.4k</td> <td>3.6k</td> <td>4.1k</td> <td>5.0k</td><td>3.3k</td><td>3.1k</td><td>2.4k</td><td>3.3k</td></tr>
 <tr class="ral"><td class="cal">bss</td><td>V*4 + 2</td><td>V*4 + 2</td><td>V*4 + 2</td><td>V*2 + 2</td><td>V*4 + 2</td><td>V*2 + 2</td><td>V*2 + 2</td><td>V*4 + 2</td><td>V*4 + 2</td><td>V*4 + 2</td><td>V*4 + 2</td></tr>
 <tr class="ral"><td class="cal">Work area<br><small>(FF_FS_TINY == 0)</small></td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td><td>V*560<br>+ F*546</td><td>V*560<br>+ F*546</td><td>V*560<br>+ F*546</td><td>V*560<br>+ F*546</td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td></tr>
 <tr class="ral"><td class="cal">Work area<br><small>(FF_FS_TINY == 1)</small></td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td><td>V*560<br>+ F*34</td><td>V*560<br>+ F*34</td><td>V*560<br>+ F*34</td><td>V*560<br>+ F*34</td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td></tr>
 </table>
 <p>These are the memory usage on some target systems with following condition. The memory sizes are in unit of byte, <em>V</em> denotes option <tt>FF_VOLUMES</tt> and <em>F</em> denotes number of open files. All samples here are optimezed in code size.</p>
 <pre>
-FatFs R0.13 options:
+FatFs R0.13a options:
 FF_FS_READONLY   0 (R/W) or 1 (R/O)
 FF_FS_MINIMIZE   0 (Full, with all basic functions) or 3 (Min, with fully minimized)
 FF_FS_TINY       0 (Default) or 1 (Tiny file object)
@@ -155,20 +155,20 @@ And other options are left unchanged from original setting.
 <tr><td>950 (Traditional Chinese)</td><td>+111k</td></tr>
 <tr><td>0 (All code pages)</td><td>+486k</td></tr>
 </table>
-<p>When the LFN is enabled, the module size will be increased depends on the configured code page. Right table shows increment of code size by LFN function at different code pages. Especially, in the CJK region, tens of thousands of characters are being used. Unfortunately, it requires a huge OEM-Unicode bidirectional conversion table and the module size will be drastically increased as shown in the table. As the result, the FatFs with LFN enebled with those code pages will not able to be ported on the most 8-bit MCU systems.</p>
+<p>When the LFN is enabled, the module size will be increased depends on the configured code page. Right table shows increment of code size by LFN function at different code pages. Especially, in the CJK region, tens of thousands of characters are being used. Unfortunately, it requires a huge OEM-Unicode bidirectional conversion table and the module size will be drastically increased as shown in the table. As the result, the FatFs with LFN enebled with those code pages will not able to be ported on the most 8-bit MCU systems. If you can discard ANSI/OEM code API and compatibility with non-ASCII SFN, you will able to configure FatFs for Unicode API with any SBCS.</p>
 <p>There ware some restrictions on using LFN for open source project because the support for LFN on the FAT volume was a patent of Microsoft Corporation. The related patents have expired and using the LFN function have got free for any projects.</p>
 </div>
 
 <div class="para doc" id="unicode">
 <h3>Unicode API</h3>
-<p>By default, FatFs uses ANSI/OEM code set on the API even at LFN configuration. FatFs can also switch the character encoding on the API to Unicode by configuration option <tt><a href="config.html#lfn_unicode">FF_LFN_UNICODE</a></tt>. This means that FatFs supports the full featured LFN specification. The data type <tt>TCHAR</tt> specifies path name strings on the API is an alias of either <tt>char</tt>(ANSI/OEM) or <tt>WCHAR</tt>(UTF-16) depends on that option. For more information, refer to the description in the <a href="filename.html#uni">file name</a>.</p>
-<p>Note that code page setting, <tt><a href="config.html#code_page">FF_CODE_PAGE</a></tt>, has actually no meaning for the path names at the Unicode API. However it still affects code conversion of string I/O functions at <tt><a href="config.html#strf_encode">FF_STRF_ENCODE = 0</a></tt> and backward compatibility with non-LFN systems, so that code page needs to be set properly when it is considered a problem.</p>
+<p>By default, FatFs uses ANSI/OEM code set on the API even at LFN configuration. FatFs can also switch the character encoding on the API to Unicode by configuration option <tt><a href="config.html#lfn_unicode">FF_LFN_UNICODE</a></tt>. This means that FatFs supports the full featured LFN specification. The data type <tt>TCHAR</tt> specifies path name strings on the API is an alias of either <tt>char</tt>(ANSI/OEM or UTF-8) or <tt>WCHAR</tt>(UTF-16) depends on that option. For more information, refer to the description in the <a href="filename.html#uni">file name</a>.</p>
+<p>Note that code page setting, <tt><a href="config.html#code_page">FF_CODE_PAGE</a></tt>, has actually no meaning for the path names at the Unicode API. However it still affects code conversion of string I/O functions at <tt><a href="config.html#strf_encode">FF_STRF_ENCODE</a> == 0</tt> and backward compatibility with non-LFN systems, so that code page needs to be set properly when it is considered a problem.</p>
 </div>
 
 <div class="para doc" id="exfat">
 <h3>exFAT Filesystem</h3>
-<p>The exFAT (Microsoft's Extended File Allocation Table) filesystem is a succession of the FAT filesystem which has been widely used in embedded systems, consumer devices and portable storage media. It is adopted by SDA (SD Association) as a recommended filesystem for high capacity SD cards larger than 32 GB and they are being shipped with this format, so that the exFAT became one of the standard filesystems for removable media as well as FAT. The exFAT filesystem allows the file size beyond the 4 GB limit what FAT filesystem allows upto and some filesystem overhead, especially cluster allocation delay, are reduced as well. This feature improves the write throughput to the file.</p>
-<p>Note that the exFAT is a patent of Microsoft Corporation. The exFAT function of FatFs is an implementation based on <cite>US. Pat. App. Pub. No. 2009/0164440 A1</cite>. FatFs module can swich the support for exFAT on/off by configuration option, <tt><a href="config.html#fs_exfat">FF_FS_EXFAT</a></tt>. When enable the exFAT on the commercial products, a license by Microsoft will be needed depends on the final destination of the products.</p>
+<p>The exFAT (Microsoft's Extended File Allocation Table) filesystem is a succession of the FAT/FAT32 filesystem which has been widely used in embedded systems, consumer devices and portable storage media. It is adopted by SDA (SD Association) as a recommended filesystem for high capacity SD cards larger than 32 GB and they are being shipped with this format, so that the exFAT became one of the standard filesystems for removable media as well as FAT. The exFAT filesystem allows the file size beyond the 4 GB limit what FAT filesystem allows upto and some filesystem overhead, especially cluster allocation delay, are reduced as well. This feature improves the write throughput to the file.</p>
+<p>Note that the exFAT is a patent of Microsoft Corporation. The exFAT function of FatFs is an implementation based on <cite>US. Pat. App. Pub. No. 2009/0164440 A1</cite>. FatFs module can switch the support for exFAT on/off by configuration option, <tt><a href="config.html#fs_exfat">FF_FS_EXFAT</a></tt>. When enable the exFAT on the commercial products, a license by Microsoft will be needed depends on the final destination of the products.</p>
 <p><em>Remark: Enabling exFAT discards ANSI C (C89) compatibility because of need for 64-bit integer type.</em></p>
 </div>
 
@@ -257,7 +257,7 @@ Figure 5. Minimized critical section<br>
 <p>FatFs has being developped as a personal project of the author, ChaN. It is free from the code anyone else wrote at current release. Following code block shows a copy of the FatFs license document that included in the source files.</p>
 <pre>
 /*----------------------------------------------------------------------------/
-/  FatFs - Generic FAT Filesystem Module  Rx.xx                              /
+/  FatFs - Generic FAT Filesystem Module  Rx.xx                               /
 /-----------------------------------------------------------------------------/
 /
 / Copyright (C) 20xx, ChaN, all right reserved.

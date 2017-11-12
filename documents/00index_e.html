@@ -24,12 +24,12 @@
  <li>Very small footprint for program code and work area.</li>
  <li>Various <a href="doc/config.html">configuration options</a> to support for:
   <ul>
-   <li>Multiple volumes (physical drives and partitions).</li>
-   <li>Multiple ANSI/OEM code pages including DBCS.</li>
-   <li>Long file name in ANSI/OEM or Unicode.</li>
+   <li>Long file name in ANSI/OEM, UTF-16 or UTF-8.</li>
    <li>exFAT filesystem.</li>
-   <li>RTOS envilonment.</li>
-   <li>Fixed or variable sector size.</li>
+   <li>Thread safe for RTOS.</li>
+   <li>Multiple volumes (physical drives and partitions).</li>
+   <li>Variable sector size.</li>
+   <li>Multiple code pages including DBCS.</li>
    <li>Read-only, optional API, I/O buffer and etc...</li>
   </ul>
  </li>
@@ -119,7 +119,8 @@
 <h3>Resources</h3>
 <p>The FatFs module is a free software opened for education, research and development. You can use, modify and/or redistribute it for personal projects or commercial products without any restriction under your responsibility. For further information, refer to the application note.</p>
 <ul>
- <li>Read first: <a href="doc/appnote.html">FatFs module application note</a> <span class="mfd">May 21, 2017</span></li>
+ <li>Read first: <a href="doc/appnote.html">FatFs module application note</a></li>
+ <li>Download: <a href="http://elm-chan.org/fsw/ff/archives.html">Archives of FatFs and Petit-FatFs</a></li>
  <li>Community: <a href="http://elm-chan.org/fsw/ff/bd/">FatFs User Forum</a></li>
  <li><a href="https://msdn.microsoft.com/en-us/windows/hardware/gg463080.aspx">FAT32 Specification by Microsoft</a>↗ (The authorized document on FAT filesystem)</li>
  <li><a href="http://elm-chan.org/docs/fat_e.html">The basics of FAT filesystem</a></li>
@@ -130,6 +131,7 @@
  <li><a href="http://nemuisan.blog.bai.ne.jp/">Nemuisan's Blog</a>↗ (Well written implementations for STM32F/SPI &amp; SDIO and LPC4088/SDMMC)</li>
  <li><a href="res/rwtest1.png">Benchmark 1</a> (ATmega1284/20MHz with MMC via USART in SPI, CFC via GPIO)</li>
  <li><a href="res/rwtest2.png">Benchmark 2</a> (LPC2368/72MHz with MMC via MCI)</li>
+ <li><a href="res/fd.mp4">Demo movie of an application</a> (this project is in ffsample.zip/lpc23xx)</li></ul>
 </div>
 
 

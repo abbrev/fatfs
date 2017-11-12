@@ -33,6 +33,7 @@
    <li><a href="#use_lfn">FF_USE_LFN</a></li>
    <li><a href="#max_lfn">FF_MAX_LFN</a></li>
    <li><a href="#lfn_unicode">FF_LFN_UNICODE</a></li>
+   <li><a href="#lfn_buf">FF_LFN_BUF, FF_SFN_BUF</a></li>
    <li><a href="#strf_encode">FF_STRF_ENCODE</a></li>
    <li><a href="#fs_rpath">FF_FS_RPATH</a></li>
  </ul>
@@ -143,7 +144,7 @@
 </table>
 
 <h4 id="use_lfn">FF_USE_LFN</h4>
-<p>This option switches the support for long file name (LFN). When enable the LFN, Unicode support functions <tt>ffunicode.c</tt> need to be added to the project. The working buffer for LFN occupies <tt>(FF_MAX_LFN + 1) * 2</tt> bytes and additional <tt>((FF_MAX_LFN + 44) / 15 * 32</tt> bytes when exFAT enabled. When use stack for the working buffer, take care on stack overflow. When use heap memory for the working buffer, memory management functions, <tt>ff_memalloc</tt> and <tt>ff_memfree</tt>, need to be added to the project.</p>
+<p>This option switches the support for long file name (LFN). When enable the LFN, Unicode support module <tt>ffunicode.c</tt> need to be added to the project. When use stack for the working buffer, take care on stack overflow. When use heap memory for the working buffer, memory management functions (<tt>ff_memalloc</tt> and <tt>ff_memfree</tt>) need to be added to the project.</p>
 <table class="lst1">
 <tr><th>Value</th><th>Description</th></tr>
 <tr><td>0</td><td>Disable LFN. Path name in only 8.3 format can be used.</td></tr>
@@ -153,19 +154,37 @@
 </table>
 
 <h4 id="max_lfn">FF_MAX_LFN</h4>
-<p>This option defines the size of LFN working buffer from 12 to 255 in unit of character. This option has no effect when LFN is disabled.</p>
+<p>LFN function requiers certain internal working buffer. This option defines size of the buffer and the value can be in range of 12 to 255 in UTF-16 encoding unit of the LFN. The buffer occupies <tt>(FF_MAX_LFN + 1) * 2</tt> bytes and additional <tt>(FF_MAX_LFN + 44) / 15 * 32</tt> bytes when exFAT is enabled. It is recommended to be set 255 to fully support the LFN specification. This option has no effect when LFN is disabled.</p>
 
 <h4 id="lfn_unicode">FF_LFN_UNICODE</h4>
-<p>This option switches character encoding on the API, ANSI/OEM (0) or Unicode in UTF-16 (1). To use Unicode string for the path name, enable LFN and set this option to 1. This option also affects behavior of string I/O functions. When LFN is disabled, this option has no effect. For more information, read <a href="filename.html#uni">here</a>.</p>
+<p>This option switches character encoding on the API.</p>
+<table class="lst2">
+<tr><th>Value</th><th>Character Encoding</th><th>TCHAR</th></tr>
+<tr><td>0</td><td>ANSI/OEM in current CP</td><td>char</td></tr>
+<tr><td>1</td><td>Unicode in UTF-16</td><td>WCHAR</td></tr>
+<tr><td>2</td><td>Unicode in UTF-8</td><td>char</td></tr>
+</table>
+<p>This option also affects behavior of string I/O functions. When LFN is disabled, this option has no effect. For more information, read <a href="filename.html#uni">here</a>.</p>
+
+<h4 id="lfn_buf">FF_LFN_BUF, FF_SFN_BUF</h4>
+<p>This set of options defines size of file name members, <tt>fname[]</tt> and <tt>altname[]</tt>, in the <tt><a href="sfileinfo.html">FILINFO</a></tt> structure which is used to read out the directory items. These values should be suffcient for the file names to read. The maximum possible length of the read file name depends on the character encoding on the API as follows:</p>
+<table class="lst2">
+<tr><th>Encoding</th><th>LFN length</th><th>SFN length</th></tr>
+<tr><td>ANSI/OEM at SBCS</td><td>255 items</td><td>12 items</td></tr>
+<tr><td>ANSI/OEM at DBCS</td><td>510 items</td><td>12 items</td></tr>
+<tr><td>Unicode in UTF-16</td><td>255 items</td><td>12 items</td></tr>
+<tr><td>Unicode in UTF-8</td><td>765 items</td><td>34 items</td></tr>
+</table>
+<p>If the size of name member is insufficient for the LFN, the item is treated as without LFN. When LFN is not enabled, these options have no effect.</p>
 
 <h4 id="strf_encode">FF_STRF_ENCODE</h4>
-<p>When Unicode API is selected by <tt>FF_LFN_UNICODE = 1</tt>, string I/O functions, <tt>f_gets</tt>, <tt>f_putc</tt>, <tt>f_puts</tt> and <tt>f_printf</tt> convert the character encodins in it. This option defines the assumption of character encoding <em>on the file</em> to be read/written via those functions. When Unicode API is not selected, the string functions work without any conversion and this option has no effect.</p>
-<table class="lst1">
+<p>When character encoding on the API is Unicode (<tt>FF_LFN_UNICODE &gt;= 1</tt>), string I/O functions, <tt>f_gets</tt>, <tt>f_putc</tt>, <tt>f_puts</tt> and <tt>f_printf</tt>, convert the character encodins in it. This option defines the assumption of character encoding <em>on the file</em> to be read/written via those functions. When <tt>FF_LFN_UNICODE == 0</tt>, the string functions work without any code conversion and this option has no effect.</p>
+<table class="lst2">
 <tr><th>Value</th><th>Description</th></tr>
-<tr><td>0</td><td>ANSI/OEM</td></tr>
-<tr><td>1</td><td>UTF-16LE</td></tr>
-<tr><td>2</td><td>UTF-16BE</td></tr>
-<tr><td>3</td><td>UTF-8</td></tr>
+<tr><td>0</td><td>ANSI/OEM in current CP</td></tr>
+<tr><td>1</td><td>Unicode in UTF-16LE</td></tr>
+<tr><td>2</td><td>Unicode in UTF-16BE</td></tr>
+<tr><td>3</td><td>Unicode in UTF-8</td></tr>
 </table>
 
 <h4 id="fs_rpath">FF_FS_RPATH</h4>
@@ -221,13 +240,13 @@
 <p>Normal (0) or Tiny (1). At the tiny configuration, size of the file object <tt>FIL</tt> is reduced <tt>FF_MAX_SS</tt> bytes. Instead of private data buffer eliminated from the file object, common sector buffer in the filesystem object <tt>FATFS</tt> is used for the file data transfer.</p>
 
 <h4 id="fs_exfat">FF_FS_EXFAT</h4>
-<p>This option switches support for the exFAT filesystem in addition to the FAT/FAT32 filesystem, Enabled(1) or Disabled(0). To enable this feature, also LFN must be enabled and configureing <tt>FF_LFN_UNICODE = 1</tt> and <tt>FF_MAX_LFN = 255</tt> is recommended for full-featured exFAT function. Note that enabling exFAT discards ANSI C (C89) compatibility because of need for 64-bit integer type.</p>
+<p>This option switches support for the exFAT filesystem in addition to the FAT/FAT32 filesystem, Enabled (1) or Disabled (0). To enable exFAT, also LFN must be enabled and configureing <tt>FF_LFN_UNICODE &gt;= 1</tt> and <tt>FF_MAX_LFN == 255</tt> is recommended for full-featured exFAT function. Note that enabling exFAT discards ANSI C (C89) compatibility because of need for 64-bit integer type.</p>
 
 <h4 id="fs_nortc">FF_FS_NORTC</h4>
-<p>Use RTC (0) or Do not use RTC (1). This option controls timestamp function. If the system does not have an RTC function or valid timestamp is not needed, set <tt>FF_FS_NORTC</tt> to 1 to disable the timestamp function. Any object modified by FatFs will have a fixed timestamp defined by <tt>FF_NORTC_MON</tt>, <tt>FF_NORTC_MDAY</tt> and <tt>FF_NORTC_YEAR</tt>. To use the timestamp function, set <tt>FF_FS_NORTC = 0</tt> and add <tt>get_fattime</tt> function to the project to get the current time form real-time clock. This option has no effect at read-only configuration.</p>
+<p>Use RTC (0) or Do not use RTC (1). This option controls timestamp function. If the system does not have any RTC function or valid timestamp is not needed, set <tt>FF_FS_NORTC</tt> to 1 to disable the timestamp function. Every objects modified by FatFs will have a fixed timestamp defined by <tt>FF_NORTC_MON</tt>, <tt>FF_NORTC_MDAY</tt> and <tt>FF_NORTC_YEAR</tt>. To use the timestamp function, set <tt>FF_FS_NORTC == 0</tt> and add <tt>get_fattime</tt> function to the project to get current time form the RTC. This option has no effect at read-only configuration.</p>
 
 <h4 id="nortc_time">FF_NORTC_MON, FF_NORTC_MDAY, FF_NORTC_YEAR</h4>
-<p>This set of options defines the time to be used at no RTC systems. This option has no effect at read-only configuration or <tt>FF_FS_NORTC = 0</tt>.</p>
+<p>This set of options defines the time to be used at no RTC systems. This option has no effect at read-only configuration or <tt>FF_FS_NORTC == 0</tt>.</p>
 
 <h4 id="fs_lock">FF_FS_LOCK</h4>
 <p>This option switches file lock function to control duplicated file open and illegal operations to open objects. Note that the file lock function is independent of re-entrancy. This option must be 0 at read-only configuration.</p>
@@ -241,10 +260,10 @@
 <p>Disable (0) or Enable (1). This option switches the re-entrancy (thread safe) of the FatFs module itself. Note that file/directory access to the different volume is always re-entrant and it can work simultaneously regardless of this option but volume control functions. <tt>f_mount</tt>, <tt>f_mkfs</tt> and <tt>f_fdisk</tt>, are always not re-entrant. Only file/directory access to the same volume, in other words, exclusive use of each filesystem object, is under control of this function. To enable this feature, also user provided synchronization handlers, <tt>ff_req_grant</tt>, <tt>ff_rel_grant</tt>, <tt>ff_del_syncobj</tt> and <tt>ff_cre_syncobj</tt>, need to be added to the project. Sample code is available in <tt>ffsystem.c</tt>.</p>
 
 <h4 id="fs_timeout">FF_FS_TIMEOUT</h4>
-<p>Number of time ticks to abort the file function with <tt>FR_TIMEOUT</tt> when wait time is too long. This option has no effect when <tt>FF_FS_REENTRANT = 0</tt>.</p>
+<p>Number of time ticks to abort the file function with <tt>FR_TIMEOUT</tt> when wait time is too long. This option has no effect when <tt>FF_FS_REENTRANT == 0</tt>.</p>
 
 <h4 id="sync_t">FF_SYNC_t</h4>
-<p>This option defines O/S dependent sync object type. e.g. <tt>HANDLE</tt>, <tt>ID</tt>, <tt>OS_EVENT*</tt>, <tt>SemaphoreHandle_t</tt> and etc. A header file for O/S definitions needs to be included somewhere in the scope of <tt>ff.c</tt>. This option has no effect when <tt>FF_FS_REENTRANT = 0</tt>.</p>
+<p>This option defines O/S dependent sync object type. e.g. <tt>HANDLE</tt>, <tt>ID</tt>, <tt>OS_EVENT*</tt>, <tt>SemaphoreHandle_t</tt> and etc. A header file for O/S definitions needs to be included somewhere in the scope of <tt>ff.c</tt>. This option has no effect when <tt>FF_FS_REENTRANT == 0</tt>.</p>
 
 </div>
 

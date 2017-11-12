@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/lseek.html">
@@ -57,7 +57,7 @@ FRESULT f_expand (
 <li>No free contiguous space was found.</li>
 <li>Size of the file was not zero.</li>
 <li>The file has been opened in read-only mode.</li>
-<li>Not allowable file size. (&gt;= 4GiB on FAT volume)</li>
+<li>Not allowable file size. (&gt;= 4 GB on FAT volume)</li>
 </ul>
 <p>When <tt class="arg">opt</tt> is 0, the function finds a contiguous data area and set it as suggested point for next allocation instead of allocating it to the file. The next cluster allocation is started at top of the contiguous area found by this function. Thus the write file is guaranteed be contiguous and no allocation delay until the size reaches that size at least unless any other changes to the volume is performed.</p>
 <p>The contiguous file would have an advantage at time-critical read/write operations. It eliminates some overheads in the filesystem and the storage media caused by random access due to fragmented file data. Especially FAT access for the contiguous file on the exFAT volume is completely eliminated and storage media will be accessed sequentially.</p>

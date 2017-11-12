@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/getcwd.html">
@@ -50,14 +50,14 @@ FRESULT f_getcwd (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>The <tt>f_getcwd</tt> function retrieves full path name of the current directory of the current drive. When <tt>FF_VOLUMES</tt> is larger than 1, a logical drive number is added to top of the path name.</p>
+<p>The <tt>f_getcwd</tt> function retrieves full path name of the current directory of the current drive. When <tt><a href="config.html#volumes">FF_VOLUMES</a></tt> is larger than 1, a logical drive number is added to top of the path name.</p>
 <p><em>Note: In this revision, this function cannot retrieve the current directory path on the exFAT volume. It always returns the root directory path.</em></p>
 </div>
 
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>Available when <tt>FF_FS_RPATH == 2</tt>.</p>
+<p>Available when <tt><a href="config.html#fs_rpath">FF_FS_RPATH</a> == 2</tt>.</p>
 </div>
 
 

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <link rel="up" title="FatFs" href="../00index_e.html">
 <link rel="alternate" hreflang="ja" title="Japanese" href="../ja/getcwd.html">
@@ -28,7 +28,7 @@ FRESULT f_setcp (
 <dd>OEM code page to be used for the path name. Valid values are as follows.<br>
 <table class="lst1">
 <tr><th>Value</th><th>Meaning</th></tr>
-<tr><td>0</td><td>Initial value (non-ASCII character cannot be used)</td></tr>
+<tr><td>0</td><td>Initial value (any extended character cannot be used)</td></tr>
 <tr><td>437</td><td>U.S.</td></tr>
 <tr><td>720</td><td>Arabic</td></tr>
 <tr><td>737</td><td>Greek</td></tr>
@@ -67,13 +67,13 @@ FRESULT f_setcp (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>The <tt>f_setcp</tt> function sets the active code page for the path name. Also code conversion of string functions will be affected by the code page when <tt>FF_LFN_UNICODE = 1</tt> and <tt>FF_STRF_ENCODE = 0</tt>. Because the initial setting of the code page is 0 and API function with non-ASCII character will not work properly. Any valid code page needs to be set on the system start-up and it should not be changed on the fly.</p>
+<p>The <tt>f_setcp</tt> function sets the active code page for the path name. Also code conversion of string functions will be affected by the setting of code page when <tt><a href="config.html#lfn_unicode">FF_LFN_UNICODE</a> &gt;= 1</tt> and <tt><a href="config.html#strf_encode">FF_STRF_ENCODE</a> == 0</tt>. Because the initial setting of the code page is 0 and API function with extended character will not work properly, a valid code page needs to be set on the system start-up and it should not be changed on the fly.</p>
 </div>
 
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>Available when <tt>FF_CODE_PAGE == 0</tt>.</p>
+<p>Available when <tt><a href="config.html#code_page">FF_CODE_PAGE</a> == 0</tt>.</p>
 </div>
 
 
