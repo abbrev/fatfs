@@ -1,3 +1,9 @@
+R0.13b (April 07, 2018)
+  Added support for UTF-32 encoding on the API. (FF_LFN_UNICODE = 3)
+  Added support for Unix style volume ID. (FF_STR_VOLUME_ID = 2)
+  Fixed accesing any object on the exFAT root directory beyond the cluster boundary can fail. (appeared at R0.12c)
+  Fixed f_setlabel() does not reject some invalid characters. (appeared at R0.09b)
+
 R0.13a (October 14, 2017)
   Added support for UTF-8 encoding on the API. (FF_LFN_UNICODE = 2)
   Added options for file name output buffer. (FF_LFN_BUF, FF_SFN_BUF).

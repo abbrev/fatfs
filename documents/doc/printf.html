@@ -54,13 +54,13 @@ int f_printf (
 <dt>width</dt><dd>Minimum width of the field, <tt>1-99</tt> or <tt>*</tt>. If the width of generated string is less than the specified value, rest field is padded with white spaces or zeros. An <tt>*</tt> specifies the value comes from an argument in int type.</dd>
 <dt>type</dt><dd><tt>c s d u o x b</tt> and prefix <tt>l</tt> specify type of the argument, character, string, signed integer in decimal, unsigned integer in decimal, unsigned integer in octal, unsigned integer in hexdecimal and unsigned integer in binary respectively. If <tt>sizeof (long)</tt> is greater than <tt>sizeof (int)</tt> (this is typical of 8/16-bit systems), a prefix <tt>l</tt> needs to be explicitly specified for long integer argument. These characters except for <tt>x</tt> are case insensitive.</dd>
 </dl>
-<p>When FatFs is configured for Unicode API (<tt><a href="config.html#lfn_unicode">FF_LFN_UNICODE</a> &gt;= 1</tt>), character encoding on the string fuctions, <tt>f_putc</tt>, <tt>f_puts</tt>, <tt>f_printf</tt> and <tt>f_gets</tt> function, is also switched to Unicode. The Unicode characters in multiple encoding unit, such as surrogate pair and multi-byte sequence, should not be divided into two function calls, or the character will be lost. The character encoding <em>on the file</em> to be written via this function is selected by <tt><a href="config.html#strf_encode">FF_STRF_ENCODE</a></tt> option. If the character encoding on the file differs from that on the API, it is converted in this function. In this case, input characters with wrong encoding or invalid for the output will be lost.</p>
+<p>When FatFs is configured for Unicode API (<tt><a href="config.html#lfn_unicode">FF_LFN_UNICODE</a> &gt;= 1</tt>), character encoding on the string fuctions, <tt>f_putc</tt>, <tt>f_puts</tt>, <tt>f_printf</tt> and <tt>f_gets</tt> function, is also switched to Unicode. The Unicode characters in multiple encoding unit, such as surrogate pair and multi-byte sequence, should not be divided into two function calls, or the character will be lost. The character encoding <em>on the file</em> to be written via this function is selected by <tt><a href="config.html#strf_encode">FF_STRF_ENCODE</a></tt>. The characters with wrong encoding or invalid for the output encoding will be lost.</p>
 </div>
 
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>This is a wrapper function of <a href="write.html"><tt>f_write</tt></a> function. Available when <tt><a href="config.html#fs_readonly">FF_FS_READONLY</a> == 0</tt> and <tt><a href="config.html#use_strfunc">FF_USE_STRFUNC</a> &gt;= 1</tt>. When it is set to 2, <tt>'\n'</tt>s contained in the output are converted to <tt>'\r'+'\n'</tt> each.</p>
+<p>This is a wrapper function of <a href="write.html"><tt>f_write</tt></a> function. Available when <tt><a href="config.html#fs_readonly">FF_FS_READONLY</a> == 0</tt> and <tt><a href="config.html#use_strfunc">FF_USE_STRFUNC</a> &gt;= 1</tt>. When <tt>FF_USE_STRFUNC == 2</tt>, <tt>'\n'</tt>s in the generated string are written as <tt>'\r'+'\n'</tt> each.</p>
 </div>
 
 

@@ -19,7 +19,7 @@
 <dd>The function succeeded.</dd>
 
 <dt id="de">FR_DISK_ERR</dt>
-<dd>The lower layer, <tt>disk_read</tt>, <tt>disk_write</tt> or <tt>disk_ioctl</tt> function, reported that an unrecoverable hard error occured.<br>Note that if once this error occured at any operation to an open file, the file object is aborted and all operations to the file except for close will be rejected.</dd>
+<dd>The lower layer, <tt>disk_read</tt>, <tt>disk_write</tt> or <tt>disk_ioctl</tt> function, reported that an unrecoverable hard error occured.<br>Note that if once this error occured at any operation to an open file, the file object is aborted and any operations to the file except for close will be rejected.</dd>
 
 <dt id="ie">FR_INT_ERR</dt>
 <dd>Assertion failed. An insanity is detected in the internal process. One of the following possibilities is suspected.
@@ -27,6 +27,7 @@
 <li>Work area (file system object, file object or etc...) has been broken by stack overflow or any other tasks. This is the reason in most case.</li>
 <li>There is an error of the FAT structure on the volume.</li>
 <li>There is a bug in the FatFs module itself.</li>
+<li>Wrong lower layer implementation.</li>
 </ul>
 Note that if once this error occured at any operation to an open file, the file object is aborted and all operations to the file except for close will be rejected.
 </dd>
@@ -35,9 +36,9 @@ Note that if once this error occured at any operation to an open file, the file 
 <dd>The lower layer, <a href="dinit.html"><tt>disk_initialize</tt></a> function, reported that the storage device could not be got ready to work. One of the following possibilities is suspected.
 <ul>
 <li>No medium in the drive.</li>
-<li>Wrong lower layer implementation for the storage device.</li>
+<li>Wrong lower layer implementation.</li>
 <li>Wrong hardware configuration.</li>
-<li>The storage device is broken.</li>
+<li>The storage device has been broken.</li>
 </ul>
 </dd>
 
@@ -92,14 +93,13 @@ Note that if once this error occured at any operation to an open file, the file 
 <dd>Work area for the logical drive has not been registered by <tt>f_mount</tt> function.</dd>
 
 <dt id="ns">FR_NO_FILESYSTEM</dt>
-<dd>There is no valid FAT volume on the drive.</dd>
+<dd>There is no valid FAT volume on the drive or wrong lower layer implementation.</dd>
 
 <dt id="ma">FR_MKFS_ABORTED</dt>
 <dd>The <tt>f_mkfs</tt> function aborted before start in format due to a reason as follows:
 <ul>
-<li>It is pmpossible to formart with the given parameters.</li>
-<li>The size of volume is too small.</li>
-<li>The size of given work area is too small.</li>
+<li>It is impossible to format with the given parameters.</li>
+<li>The size of volume is too small. 128 sectors minimum with <tt>FM_SFD</tt>.</li>
 <li>The partition bound to the logical drive coulud not be found. (Related option: <tt><a href="config.html#multi_partition">FF_MULTI_PARTITION</a></tt>)</li>
 </ul>
 </dd>

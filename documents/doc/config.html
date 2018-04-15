@@ -116,7 +116,7 @@
 <h3>Namespace and Locale Configurations</h3>
 
 <h4 id="code_page">FF_CODE_PAGE</h4>
-<p>This option specifies the OEM code page to be used on the target system. Incorrect setting of the code page can cause a file open failure. If any non-ASCII character is not used at all, there is no difference between any code pages.</p>
+<p>This option specifies the OEM code page to be used on the target system. Incorrect setting of the code page can cause a file open failure. If any non-ASCII character is not used at all, there is no difference between any code page settings.</p>
 <table class="lst1">
 <tr><th>Value</th><th>Code page</th></tr>
 <tr><td>0</td><td>Include all code pages below and set by <tt>f_setcp()</tt></td></tr>
@@ -154,34 +154,35 @@
 </table>
 
 <h4 id="max_lfn">FF_MAX_LFN</h4>
-<p>LFN function requiers certain internal working buffer. This option defines size of the buffer and the value can be in range of 12 to 255 in UTF-16 encoding unit of the LFN. The buffer occupies <tt>(FF_MAX_LFN + 1) * 2</tt> bytes and additional <tt>(FF_MAX_LFN + 44) / 15 * 32</tt> bytes when exFAT is enabled. It is recommended to be set 255 to fully support the LFN specification. This option has no effect when LFN is disabled.</p>
+<p>LFN function requiers certain internal working buffer for the file name. This option defines size of the buffer and the value can be in range of 12 to 255 in UTF-16 encoding unit of the LFN. The buffer occupies <tt>(FF_MAX_LFN + 1) * 2</tt> bytes and additional <tt>(FF_MAX_LFN + 44) / 15 * 32</tt> bytes when exFAT is enabled. It is recommended to be set 255 to fully support the LFN specification. This option has no effect when LFN is not enabled.</p>
 
 <h4 id="lfn_unicode">FF_LFN_UNICODE</h4>
-<p>This option switches character encoding on the API.</p>
+<p>This option switches character encoding for the file name on the API. When Unicode is selected, <tt>FF_CODE_PAGE</tt> has actually no meaning except for compatibility with legacy systems. FatFs supports the code point upto U+10FFFF.</p>
 <table class="lst2">
-<tr><th>Value</th><th>Character Encoding</th><th>TCHAR</th></tr>
+<tr><th>Value</th><th>Character Encoding</th><th><tt>TCHAR</tt></th></tr>
 <tr><td>0</td><td>ANSI/OEM in current CP</td><td>char</td></tr>
 <tr><td>1</td><td>Unicode in UTF-16</td><td>WCHAR</td></tr>
 <tr><td>2</td><td>Unicode in UTF-8</td><td>char</td></tr>
+<tr><td>3</td><td>Unicode in UTF-32</td><td>DWORD</td></tr>
 </table>
-<p>This option also affects behavior of string I/O functions. When LFN is disabled, this option has no effect. For more information, read <a href="filename.html#uni">here</a>.</p>
+<p>This option also affects behavior of string I/O functions (see <tt>FF_STRF_ENCODE</tt>). When LFN is not enabled, this option has no effect and FatFs works at ANSI/OEM code on the API. For more information, read <a href="filename.html#uni">here</a>.</p>
 
 <h4 id="lfn_buf">FF_LFN_BUF, FF_SFN_BUF</h4>
-<p>This set of options defines size of file name members, <tt>fname[]</tt> and <tt>altname[]</tt>, in the <tt><a href="sfileinfo.html">FILINFO</a></tt> structure which is used to read out the directory items. These values should be suffcient for the file names to read. The maximum possible length of the read file name depends on the character encoding on the API as follows:</p>
+<p>This set of options defines size of file name members, <tt>fname[]</tt> and <tt>altname[]</tt>, in the <tt><a href="sfileinfo.html">FILINFO</a></tt> structure which is used to read out the directory items. These values should be suffcient for the file names to read. How long is the read file name length maximum depends on the character encoding on the API as follows:</p>
 <table class="lst2">
 <tr><th>Encoding</th><th>LFN length</th><th>SFN length</th></tr>
 <tr><td>ANSI/OEM at SBCS</td><td>255 items</td><td>12 items</td></tr>
 <tr><td>ANSI/OEM at DBCS</td><td>510 items</td><td>12 items</td></tr>
-<tr><td>Unicode in UTF-16</td><td>255 items</td><td>12 items</td></tr>
+<tr><td>Unicode in UTF-16/32</td><td>255 items</td><td>12 items</td></tr>
 <tr><td>Unicode in UTF-8</td><td>765 items</td><td>34 items</td></tr>
 </table>
 <p>If the size of name member is insufficient for the LFN, the item is treated as without LFN. When LFN is not enabled, these options have no effect.</p>
 
 <h4 id="strf_encode">FF_STRF_ENCODE</h4>
-<p>When character encoding on the API is Unicode (<tt>FF_LFN_UNICODE &gt;= 1</tt>), string I/O functions, <tt>f_gets</tt>, <tt>f_putc</tt>, <tt>f_puts</tt> and <tt>f_printf</tt>, convert the character encodins in it. This option defines the assumption of character encoding <em>on the file</em> to be read/written via those functions. When <tt>FF_LFN_UNICODE == 0</tt>, the string functions work without any code conversion and this option has no effect.</p>
+<p>When character encoding on the API is Unicode (<tt>FF_LFN_UNICODE &gt;= 1</tt>), string I/O functions, <tt>f_gets</tt>, <tt>f_putc</tt>, <tt>f_puts</tt> and <tt>f_printf</tt>, convert the character encodins in it. This option defines the assumption of character encoding <em>on the file</em> to be read/written via those functions. When LFN is not enabled or <tt>FF_LFN_UNICODE == 0</tt>, the string functions work without any encoding conversion and this option has no effect.</p>
 <table class="lst2">
-<tr><th>Value</th><th>Description</th></tr>
-<tr><td>0</td><td>ANSI/OEM in current CP</td></tr>
+<tr><th>Value</th><th>Character encoding on the file</th></tr>
+<tr><td>0</td><td>ANSI/OEM in current code page</td></tr>
 <tr><td>1</td><td>Unicode in UTF-16LE</td></tr>
 <tr><td>2</td><td>Unicode in UTF-16BE</td></tr>
 <tr><td>3</td><td>Unicode in UTF-8</td></tr>
@@ -203,13 +204,23 @@
 <h3>Volume/Drive Configurations</h3>
 
 <h4 id="volumes">FF_VOLUMES</h4>
-<p>This option configures number of volumes (logical drives, from 1 to 10) to be used.</p>
+<p>This option configures number of volumes (logical drives upto 10) to be used.</p>
 
 <h4 id="str_volume_id">FF_STR_VOLUME_ID</h4>
-<p>Disable (0) or Enable (1). This option switches the support for string volume ID. When enabled, also pre-defined strings in <tt>FF_VOLUME_STRS</tt> can be used as drive identifier in the path name.</p>
+<p>This option switches the support for string volume ID. When arbitrary string for the volume ID is enabled for the drive prefix, also pre-defined strings by <tt>FF_VOLUME_STRS</tt> or user defined strings can be used as drive prefix in the path name. Numeric drive number is always valid regardless of this option, and also either format of drive prefix can be enabled by this option.</p>
+<table class="lst2">
+<tr><th>Value</th><th>Description</th><th>Example</th></tr>
+<tr><td>0</td><td>Only DOS/Windows style drive prefix in numeric ID can be used.</td><td>0:/filename</td></tr>
+<tr><td>1</td><td>Also DOS/Windows style drive prefix in string ID can be used.</td><td>flash:/filename</td></tr>
+<tr><td>2</td><td>Also Unix style drive prefix in string ID can be used.</td><td>/flash/filename</td></tr>
+</table>
 
 <h4 id="volume_strs">FF_VOLUME_STRS</h4>
-<p>This option defines the drive ID strings for each logical drives. Number of items must not be less than <tt>FF_VOLUMES</tt>. Valid characters for the drive ID string are: A-Z and 0-9.</p>
+<p>This option defines the volume ID strings for each logical drives. Number of items must not be less than <tt>FF_VOLUMES</tt>. Valid characters for the volume ID string are A-Z, a-z and 0-9, however, they are compared in case-insensitive. If <tt>FF_STR_VOLUME_ID == 0</tt>, this option has no effect. If <tt>FF_STR_VOLUME_ID &gt;= 1</tt> and this option is not defined, a user defined volume string table needs to be defined as shown below.</p>
+<pre>
+<span class="c">/* User defined volume ID strings for 0:    1:      2:    3:   ... */</span>
+const char* VolumeStr[FF_VOLUMES] = {"ram","flash","sdc","usb"};
+</pre>
 
 <h4 id="multi_partition">FF_MULTI_PARTITION</h4>
 <p>Disable (0) or Enable (1). This option switches multi-partition function. By default (0), each logical drive number is bound to the same physical drive number and only a volume in the physical drive is mounted. When enabled, each logical drive is bound to the partition on the physical drive listed in the user defined partition resolution table <tt>VolToPart[]</tt>. Also <tt>f_fdisk</tt> funciton will be available. For more information, read <a href="filename.html#vol">here</a>.</p>

@@ -31,10 +31,10 @@ FRESULT f_getlabel (
 <dt>label</dt>
 <dd>Pointer to the buffer to store the volume label. If the volume has no label, a null-string will be returned. Set null pointer if this information is not needed. The buffer size should be shown below at least to avoid buffer overflow.<br>
 <table class="lst2">
-<tr><td></td><td>FF_FS_EXFAT == 0</td><td>FF_FS_EXFAT == 1</td></tr>
+<tr><td>Configuration</td><td>FF_FS_EXFAT == 0</td><td>FF_FS_EXFAT == 1</td></tr>
 <tr><td>FF_USE_LFN == 0</td><td>12 items</td><td>-</td></tr>
 <tr><td>FF_LFN_UNICODE == 0</td><td>12 items</td><td>23 items</td></tr>
-<tr><td>FF_LFN_UNICODE == 1</td><td>12 items</td><td>12 items</td></tr>
+<tr><td>FF_LFN_UNICODE == 1/3</td><td>12 items</td><td>12 items</td></tr>
 <tr><td>FF_LFN_UNICODE == 2</td><td>34 items</td><td>34 items</td></tr>
 </table>
 </dd>
@@ -68,7 +68,7 @@ FRESULT f_getlabel (
 <div class="para use">
 <h4>Example</h4>
 <pre>
-    char str[24];
+    char str[12];
 
     <span class="c">/* Get volume label of the default drive */</span>
     <em>f_getlabel</em>("", str, 0);

@@ -89,10 +89,10 @@ The FatFs module assumes that size of <tt>char</tt>/<tt>short</tt>/<tt>long</tt>
 <tr class="ral"><td class="cal">Work area<br><small>(FF_FS_TINY == 0)</small></td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td><td>V*560<br>+ F*546</td><td>V*560<br>+ F*546</td><td>V*560<br>+ F*546</td><td>V*560<br>+ F*546</td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td><td>V*564<br>+ F*552</td></tr>
 <tr class="ral"><td class="cal">Work area<br><small>(FF_FS_TINY == 1)</small></td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td><td>V*560<br>+ F*34</td><td>V*560<br>+ F*34</td><td>V*560<br>+ F*34</td><td>V*560<br>+ F*34</td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td><td>V*564<br>+ F*40</td></tr>
 </table>
-<p>These are the memory usage on some target systems with following condition. The memory sizes are in unit of byte, <em>V</em> denotes option <tt>FF_VOLUMES</tt> and <em>F</em> denotes number of open files. All samples here are optimezed in code size.</p>
+<p>These are the memory usage on some target systems with following condition. The memory sizes are in unit of byte, <em>V</em> denotes number of mounted volumes and <em>F</em> denotes number of open files. All samples here are optimezed in code size.</p>
 <pre>
 FatFs R0.13a options:
-FF_FS_READONLY   0 (R/W) or 1 (R/O)
+FF_FS_READONLY   0 (Read/Write) or 1 (Read only)
 FF_FS_MINIMIZE   0 (Full, with all basic functions) or 3 (Min, with fully minimized)
 FF_FS_TINY       0 (Default) or 1 (Tiny file object)
 And other options are left unchanged from original setting.
@@ -155,14 +155,15 @@ And other options are left unchanged from original setting.
 <tr><td>950 (Traditional Chinese)</td><td>+111k</td></tr>
 <tr><td>0 (All code pages)</td><td>+486k</td></tr>
 </table>
-<p>When the LFN is enabled, the module size will be increased depends on the configured code page. Right table shows increment of code size by LFN function at different code pages. Especially, in the CJK region, tens of thousands of characters are being used. Unfortunately, it requires a huge OEM-Unicode bidirectional conversion table and the module size will be drastically increased as shown in the table. As the result, the FatFs with LFN enebled with those code pages will not able to be ported on the most 8-bit MCU systems. If you can discard ANSI/OEM code API and compatibility with non-ASCII SFN, you will able to configure FatFs for Unicode API with any SBCS.</p>
+<p>When the LFN is enabled, the module size will be increased depends on the configured code page. Right table shows increment of code size by LFN function at different code pages. Especially, in the CJK region, tens of thousands of characters are being used. Unfortunately, it requires a huge OEM-Unicode bidirectional conversion table and the module size will be drastically increased as shown in the table. As the result, the FatFs with LFN enebled with those code pages will not able to be ported on the most 8-bit MCU systems.</p>
+<p>If you can discard ANSI/OEM code API and backward compatibility with non-ASCII SFN, you will able to configure FatFs for Unicode API with any SBCS.</p>
 <p>There ware some restrictions on using LFN for open source project because the support for LFN on the FAT volume was a patent of Microsoft Corporation. The related patents have expired and using the LFN function have got free for any projects.</p>
 </div>
 
 <div class="para doc" id="unicode">
 <h3>Unicode API</h3>
-<p>By default, FatFs uses ANSI/OEM code set on the API even at LFN configuration. FatFs can also switch the character encoding on the API to Unicode by configuration option <tt><a href="config.html#lfn_unicode">FF_LFN_UNICODE</a></tt>. This means that FatFs supports the full featured LFN specification. The data type <tt>TCHAR</tt> specifies path name strings on the API is an alias of either <tt>char</tt>(ANSI/OEM or UTF-8) or <tt>WCHAR</tt>(UTF-16) depends on that option. For more information, refer to the description in the <a href="filename.html#uni">file name</a>.</p>
-<p>Note that code page setting, <tt><a href="config.html#code_page">FF_CODE_PAGE</a></tt>, has actually no meaning for the path names at the Unicode API. However it still affects code conversion of string I/O functions at <tt><a href="config.html#strf_encode">FF_STRF_ENCODE</a> == 0</tt> and backward compatibility with non-LFN systems, so that code page needs to be set properly when it is considered a problem.</p>
+<p>By default, FatFs uses ANSI/OEM code set on the API even at LFN configuration. FatFs can also switch the character encoding on the API to Unicode by configuration option <tt><a href="config.html#lfn_unicode">FF_LFN_UNICODE</a></tt>. This means that FatFs supports the full featured LFN specification. The data type <tt>TCHAR</tt> specifies path name strings on the API is an alias of either <tt>char</tt>(ANSI/OEM or UTF-8), <tt>WCHAR</tt>(UTF-16) or <tt>DWORD</tt>(UTF-32) depends on that option. For more information, refer to the description in the <a href="filename.html#uni">file name</a>.</p>
+<p>Note that code page setting, <tt><a href="config.html#code_page">FF_CODE_PAGE</a></tt>, has actually no meaning for the path names at the Unicode API. However it still affects code conversion of string I/O functions at <tt><a href="config.html#strf_encode">FF_STRF_ENCODE</a> != 0</tt> and backward compatibility with legacy systems, so that code page needs to be configured properly when it is considered a problem.</p>
 </div>
 
 <div class="para doc" id="exfat">
@@ -175,31 +176,31 @@ And other options are left unchanged from original setting.
 <div class="para doc" id="reentrant">
 <h3>Re-entrancy</h3>
 <p>The file operations to the <em>different volumes</em> each other is always re-entrant regardless of configurations except when LFN is enabled with static working buffer. It can work concurrently without any mutual exclusion.</p>
-<p>The file operations to the <em>same volume</em> is not re-entrant. It can also be configured for thread-safe by option <tt><a href="config.html#fs_reentrant">FF_FS_REENTRANT</a></tt>. In this case, also the OS dependent synchronization object control functions, <tt>ff_cre_syncobj/ff_del_syncobj/ff_req_grant/ff_rel_grant</tt>, need to be added to the project. There are some examples in the <tt>ffsystem.c</tt>. When a file function is called while the volume is being accessed by another task, the file function to the volume will be suspended until that task leaves the file function. If the wait time exceeded a period defined by <tt>FF_TIMEOUT</tt>, the file function will abort with <tt>FR_TIMEOUT</tt>. The timeout function might not be supported on the some RTOSs.</p>
+<p>The file operations to the <em>same volume</em> is not re-entrant. It can also be configured for thread-safe by option <tt><a href="config.html#fs_reentrant">FF_FS_REENTRANT</a></tt>. In this case, also the OS dependent synchronization control functions, <tt>ff_cre_syncobj/ff_del_syncobj/ff_req_grant/ff_rel_grant</tt>, need to be added to the project. There are some examples in the <tt>ffsystem.c</tt>. When a file function is called while the volume is being accessed by another task, the file function to the volume will be suspended until that task leaves the file function. If the wait time exceeded a period defined by <tt>FF_TIMEOUT</tt>, the file function will abort with <tt>FR_TIMEOUT</tt>. The timeout function might not be supported on the some RTOSs.</p>
 <p>There is an exception on the re-entrancy for <tt>f_mount/f_mkfs</tt> function. These volume management functions are not re-entrant to the same volume. When use these functions, other tasks need to avoid to access the volume.</p>
 <p>Remarks: This section describes on the re-entrancy of the FatFs module itself. The <tt>FF_FS_REENTRANT</tt> option enables only exclusive use of each filesystem objects and FatFs never prevents to re-enter <tt>disk_*()</tt> functions. Thus the low level disk I/O layer must be always thread-safe when FatFs API is re-entered for different volumes.</p>
 </div>
 
 <div class="para doc" id="dup">
 <h3>Duplicated File Open</h3>
-<p>FatFs module does not support the read/write collision control of duplicated open to a file. The duplicated open is permitted only when each of open method to a file is read mode. The duplicated open with one or more write mode to a file is always prohibited, and also open file must not be renamed or deleted. A violation of these rules can cause data colluption.</p>
-<p>The file lock control can be enabled by <tt><a href="config.html#fs_lock">FF_FS_LOCK</a></tt> option. The value of option defines the number of open objects to manage simultaneously. In this case, if any open, rename or remove that violating the file shareing rule that described above is attempted, the file function will rejected with <tt>FR_LOCKED</tt>. If number of open objects, files and sub-directories, is equal to <tt>FF_FS_LOCK</tt>, an extra <tt>f_open/f_opendir</tt> function will fail with <tt>FR_TOO_MANY_OPEN_FILES</tt>.</p>
+<p>FatFs module does not support the read/write collision control of duplicated open to a file. The duplicated open is permitted only when each of open method to a file is read mode. The duplicated open with one or more write mode to a file is always prohibited, and also open file must not be renamed or deleted. A violation of these rules can cause data collaption.</p>
+<p>The file lock control can be enabled by <tt><a href="config.html#fs_lock">FF_FS_LOCK</a></tt> option. The value of option defines the number of open objects to manage simultaneously. In this case, if any opening, renaming or removing against the file shareing rule that described above is attempted, the file function will be rejected with <tt>FR_LOCKED</tt>. If number of open objects, files and sub-directories, is equal to <tt>FF_FS_LOCK</tt>, an extra <tt>f_open/f_opendir</tt> function will fail with <tt>FR_TOO_MANY_OPEN_FILES</tt>.</p>
 </div>
 
 <div class="para doc" id="fs1">
 <h3>Performance Effective File Access</h3>
 <p>For good read/write throughput on the small embedded systems with limited size of memory, application programmer should consider what process is done in the FatFs module. The file data on the volume is transferred in following sequence by <tt>f_read</tt> function.</p>
-<p>Figure 1. Sector misaligned read (short)<br>
+<p>Figure 1. Sector unaligned read (short)<br>
 <img src="../res/f1.png" width="490" height="110" alt="">
 </p>
-<p>Figure 2. Sector misaligned read (long)<br>
+<p>Figure 2. Sector unaligned read (long)<br>
 <img src="../res/f2.png" width="490" height="140" alt="">
 </p>
 <p>Figure 3. Fully sector aligned read<br>
 <img src="../res/f3.png" width="490" height="119" alt="">
 </p>
 <p>The file I/O buffer is a sector buffer to read/write a part of data on the sector. The sector buffer is either file private sector buffer on each file object or shared sector buffer in the filesystem object. The buffer configuration option <tt><a href="config.html#fs_tiny">FF_FS_TINY</a></tt> determins which sector buffer is used for the file data transfer. When tiny buffer configuration (1) is selected, data memory consumption is reduced <tt>FF_MAX_SS</tt> bytes each file object. In this case, FatFs module uses only a sector buffer in the filesystem object for file data transfer and FAT/directory access. The disadvantage of the tiny buffer configuration is: the FAT data cached in the sector buffer will be lost by file data transfer and it must be reloaded at every cluster boundary. However it will be suitable for most application from view point of the decent performance and low memory comsumption.</p>
-<p>Figure 1 shows that a partial sector, sector misaligned part of the file, is transferred via the file I/O buffer. At long data transfer shown in Figure 2, middle of transfer data that covers one or more sector is transferred to the application buffer directly. Figure 3 shows that the case of entier transfer data is aligned to the sector boundary. In this case, file I/O buffer is not used. On the direct transfer, the maximum extent of sectors are read with <tt>disk_read</tt> function at a time but the multiple sector transfer is divided at cluster boundary even if it is contiguous.</p>
+<p>Figure 1 shows that a partial sector, sector unaligned part of the file, is transferred via the file I/O buffer. At long data transfer shown in Figure 2, middle of transfer data that covers one or more sector is transferred to the application buffer directly. Figure 3 shows that the case of entier transfer data is aligned to the sector boundary. In this case, file I/O buffer is not used. On the direct transfer, the maximum extent of sectors are read with <tt>disk_read</tt> function at a time but the multiple sector transfer is divided at cluster boundary even if it is contiguous.</p>
 <p>Therefore taking effort to sector aligned read/write accesss eliminates buffered data transfer and the read/write performance will be improved. Besides the effect, cached FAT data will not be flushed by file data transfer at the tiny configuration, so that it can achieve same performance as non-tiny configuration with small memory footprint.</p>
 </div>
 
@@ -211,7 +212,7 @@ And other options are left unchanged from original setting.
 Figure 6. Comparison between Multiple/Single Sector Write<br>
 <img src="../res/f6.png" width="630" height="148" alt="fig.6">
 </div>
-<p>The write throughput of the flash memory media becomes the worst at single sector write transaction. The write throughput increases as the number of sectors per a write transaction as shown in Figure 6. This effect more appers at faster interface speed and the performance ratio often becomes grater than ten. <a href="../res/rwtest2.png">This graph</a> is clearly explaining how fast is multiple block write (W:16K, 32 sectors) than single block write (W:100, 1 sector), and also larger card tends to be slow at single block write. Number of write transactions also affects life time of the flash memory media. When compared at same amount of write data, the single sector write in Figure 6 above wears flash memory media 16 times more than multiple sector write in Figure 6 below. Single sector write is pretty pain for the flash memory media.</p>
+<p>The write throughput of the flash memory media becomes the worst at single sector write transaction. The write throughput increases as the number of sectors per a write transaction as shown in Figure 6. This effect more appers at faster interface speed and the performance ratio often becomes grater than ten. <a href="../res/rwtest2.png">This result</a> is clearly explaining how fast is multiple block write (W:16K, 32 sectors) than single block write (W:100, 1 sector), and also larger card tends to be slow at single block write. Number of write transactions also affects life time of the flash memory media. When compared at same amount of write data, the single sector write in Figure 6 above wears flash memory media 16 times more than multiple sector write in Figure 6 below. Single sector write is pretty pain for the flash memory media.</p>
 <p>Therefore the application program should write the data in large block as possible. The ideal write chunk size and alighment is size of sector, and size of cluster is the best. Of course all layers between the application and the storage device must have consideration on multiple sector write, however most of open-source memory card drivers lack it. Do not split a multiple sector write request into single sector write transactions or the write throughput gets poor. Note that FatFs module and its sample disk drivers supprt multiple sector read/write operation. </p>
 <h4>Forcing Memory Erase</h4>
 <p>When remove a file with <tt>f_unlink</tt> function, the data clusters occupied by the file are marked 'free' on the FAT. But the data sectors containing the file data are not that applied any process, so that the file data left occupies a part of the flash memory array as 'live block'. If the file data can be erased on removing the file, those data blocks will be turned into the free block pool. This may skip internal block erase operation to the data block on next write operation. As the result the write performance might be improved. FatFs can manage this function by setting <tt><a href="config.html#use_trim">FF_USE_TRIM</a></tt> to 1. Note that this is an expectation of internal process of the storage device and not that always effective. Most applications will not need this function. Also <tt>f_unlink</tt> function can take a time when remove a large file.</p>
@@ -244,11 +245,11 @@ Figure 5. Minimized critical section<br>
 <h3>Extended Use of FatFs API</h3>
 <p>These are examples of extended use of FatFs APIs. New item will be added whenever a useful code is found.</p>
 <ol>
-<li><a href="../res/app1.c">Open or create a file for append</a> (for only R0.12 and earlier)</li>
-<li><a href="../res/app2.c">Empty a directory</a></li>
-<li><a href="../res/app3.c">Allocate contiguous area to the file</a> (for only R0.11a and earlier)</li>
-<li><a href="../res/app4.c">Compatibility checker for low level disk I/O module</a></li>
-<li><a href="../res/mkfatimg.zip">FAT image creator</a></li>
+<li><a href="http://elm-chan.org/fsw/ff/res/app1.c">Open or create a file for append</a> (for only R0.12 and earlier)</li>
+<li><a href="http://elm-chan.org/fsw/ff/res/app2.c">Empty a directory</a></li>
+<li><a href="http://elm-chan.org/fsw/ff/res/app3.c">Allocate contiguous area to the file</a> (for only R0.11a and earlier)</li>
+<li><a href="http://elm-chan.org/fsw/ff/res/app4.c">Compatibility checker for low level disk I/O module</a></li>
+<li><a href="http://elm-chan.org/fsw/ff/res/mkfatimg.zip">FAT volume image creator</a></li>
 </ol>
 </div>
 

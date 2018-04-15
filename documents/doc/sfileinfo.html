@@ -57,7 +57,16 @@
 </dl>
 </dd>
 <dt>fattrib</dt>
-<dd>Indicates the file/directory attribute in combination of <tt>AM_DIR</tt>, <tt>AM_RDO</tt>, <tt>AM_HID</tt>, <tt>AM_SYS</tt> and <tt>AM_ARC</tt>.</dd>
+<dd>Indicates the attribute flags in combination of:<br>
+<table class="lst">
+<tr><th>Flag</th><th>Meaning</th></tr>
+<tr><td>AM_RDO</td><td>Read-only. Write mode open and deleting is rejected.</td></tr>
+<tr><td>AM_HID</td><td>Hidden. Should not be shown in normal directory listing.</td></tr>
+<tr><td>AM_SYS</td><td>System. Used by system and should not be accessed.</td></tr>
+<tr><td>AM_ARC</td><td>Archive. Set on new creation or any modification to the file.</td></tr>
+<tr><td>AM_DIR</td><td>Directory. This is not a file but a sub-directory container.</td></tr>
+</table>
+</dd>
 <dt>fname[]</dt>
 <dd>The null-terminated object name is stored. A null string is stored when no item to read and it indicates this structure is invalid. The size of <tt>fname[]</tt> and <tt>altname[]</tt> each can be configured at LFN configuration.</dd>
 <dt>altname[]</dt>

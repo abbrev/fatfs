@@ -79,8 +79,7 @@ FRESULT f_getfree (
     fre_sect = fre_clust * fs->csize;
 
     <span class="c">/* Print the free space (assuming 512 bytes/sector) */</span>
-    printf("%10lu KiB total drive space.\n%10lu KiB available.\n",
-           tot_sect / 2, fre_sect / 2);
+    printf("%10lu KiB total drive space.\n%10lu KiB available.\n", tot_sect / 2, fre_sect / 2);
 </pre>
 </div>
 

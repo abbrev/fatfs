@@ -49,12 +49,13 @@ FRESULT f_setlabel (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>When the string has a drive number, the volume label will be set to the volume specified by the drive number. If not, the volume label will be set to the default drive. If length of the given volume label is zero, the volume label on the volume will be removed. The format of the volume label on the FAT volume is similar to the file name but there are some differences shown below:</p>
+<p>When the string has a drive prefix, the volume label will be set to the volume specified by the drive prefix. Unix style volume ID cannot be used to specify the volume. If drive number is not specified, the volume label will be set to the default drive. If length of the given volume label is zero, the volume label on the volume will be removed. The format of the volume label is as shown below:</p>
 <ul>
-<li>Dot is not allowed.</li>
-<li>Spaces can be contained anywhere in the volume label. Trailing spaces are truncated off at FAT volume.</li>
 <li>Up to 11 bytes long as conversion of OEM code page at FAT volume.</li>
-<li>Up to 11 characters long at exFAT volume. Lower case is preserved.</li>
+<li>Up to 11 characters long at exFAT volume.</li>
+<li>Allowable characters for FAT volume are: <tt>! # $ % &amp; ' ( ) - ^ _ ` ~ { } 0-9 A-Z a-z</tt> and extended characters. Low-case characters are up converted.</li>
+<li>Allowable characters for exFAT volume are: characters allowed for FAT volume and <tt>" + , . ; = [ ]</tt>. Low-case characters are preserved.</li>
+<li>Spaces can be contained anywhere in the volume label. Trailing spaces are truncated off at FAT volume.</li>
 </ul>
 <p>Remark: The standard system (Windows) has a problem at the volume label with a heading <tt>\xE5</tt> on the FAT volume. To avoid this problem, this function rejects such volume label as invalid name.</p>
 </div>

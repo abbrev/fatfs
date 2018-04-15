@@ -30,7 +30,7 @@ FRESULT f_findfirst (
 <dt>dp</dt>
 <dd>Pointer to the blank directory object.</dd>
 <dt>fno</dt>
-<dd>Pointer to the file information structure to store the information about the found item.</dd>
+<dd>Pointer to the <a href="sfileinfo.html">file information structure</a> to store the information about the found item.</dd>
 <dt>path</dt>
 <dd>Pointer to the null-terminated string that specifies the <a href="filename.html">directory name</a> to be opened.</dd>
 <dt>pattern</dt>
@@ -61,7 +61,7 @@ FRESULT f_findfirst (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>After the directory specified by <tt class="arg">path</tt> could be opened, it starts to search the directory for items with the name specified by <tt class="arg">pattern</tt>. If the first item is found, the information about the object is stored into the file information structure. For more information about file information structure, refer to <a href="readdir.html"><tt>f_readdir</tt></a> function.</p>
+<p>After the directory specified by <tt class="arg">path</tt> could be opened, it starts to search the directory for items with the name specified by <tt class="arg">pattern</tt>. If the first item is found, the information about the object is stored into the file information structure <tt class="arg">fno</tt>.</p>
 <p>The matching pattern can contain wildcard characters (<tt>?</tt> and <tt>*</tt>). A <tt>?</tt> matches an any character and an <tt>*</tt> matches an any string in length of zero or longer. When support of long file name is enabled, only <tt>fname[]</tt> is tested at <tt>FF_USE_FIND == 1</tt> and also <tt>altname[]</tt> is tested at <tt>FF_USE_FIND == 2</tt>. In this revision, there are some differences listed below between FatFs and standard systems in matching condition.</p>
 <ul>
 <li><tt>"*.*"</tt> never matches any name without extension while it matches any name with or without extension at the standard systems.</li>

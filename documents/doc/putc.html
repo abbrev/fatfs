@@ -16,7 +16,7 @@
 <p>The f_putc funciton puts a character to the file.</p>
 <pre>
 int f_putc (
-  TCHAR <span class="arg">chr</span>,  <span class="c">/* [IN] A character to put */</span>
+  TCHAR <span class="arg">chr</span>,  <span class="c">/* [IN] A character to write */</span>
   FIL* <span class="arg">fp</span>     <span class="c">/* [IN] File object */</span>
 );
 </pre>
@@ -26,7 +26,7 @@ int f_putc (
 <h4>Parameters</h4>
 <dl class="par">
 <dt>chr</dt>
-<dd>A character to be put.</dd>
+<dd>A character to write.</dd>
 <dt>fp</dt>
 <dd>Pointer to the open file object structuer.</dd>
 </dl>
@@ -41,12 +41,12 @@ int f_putc (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>When FatFs is configured for Unicode API (<tt>FF_LFN_UNICODE &gt;= 1</tt>), character encoding on the string fuctions, <tt>f_putc</tt>, <tt>f_puts</tt>, <tt>f_printf</tt> and <tt>f_gets</tt> function, is also switched to Unicode. The character encoding on the file to be written via those functions is selected by <tt>FF_STRF_ENCODE</tt> option. The Unicode characters in multiple encoding unit, such as surrogate pair and multi-byte sequence, cannot be written by this function.</p>
+<p>When FatFs is configured for Unicode API (<tt><a href="config.html#lfn_unicode">FF_LFN_UNICODE</a> &gt;= 1</tt>), character encoding on the string fuctions, <tt>f_putc</tt>, <tt>f_puts</tt>, <tt>f_printf</tt> and <tt>f_gets</tt> function, is also switched to Unicode. The character encoding <em>on the file</em> to be read/written via those functions is selected by <tt><a href="config.html#strf_encode">FF_STRF_ENCODE</a></tt>. The Unicode characters in multiple encoding unit, such as surrogate pair and multi-byte sequence, cannot be written with this function.</p>
 </div>
 
 <div class="para comp">
 <h4>QuickInfo</h4>
-<p>This is a wrapper function of <a href="write.html"><tt>f_write</tt></a> function. Available when <tt>FF_FS_READONLY == 0</tt> and <tt>FF_USE_STRFUNC</tt> is 1 or 2. When it is set to 2, a <tt>'\n'</tt> is converted to <tt>'\r'+'\n'</tt>.</p>
+<p>This is a wrapper function of <a href="write.html"><tt>f_write</tt></a> function. Available when <tt><a href="config.html#fs_readonly">FF_FS_READONLY</a> == 0</tt> and <tt><a href="config.html#use_strfunc">FF_USE_STRFUNC</a> &gt;= 1</tt>. When <tt>FF_USE_STRFUNC == 2</tt>, a <tt>'\n'</tt> is output as <tt>'\r'+'\n'</tt>.</p>
 </div>
 
 

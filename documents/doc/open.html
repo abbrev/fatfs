@@ -43,18 +43,17 @@ FRESULT f_open (
 <tr><td>FA_OPEN_APPEND</td><td>Same as <tt>FA_OPEN_ALWAYS</tt> except the read/write pointer is set end of the file.</td></tr>
 </table>
 Mode flags of POSIX fopen() corresponds to FatFs mode flags as follows:<br>
-<table class="lst">
+<table class="lst2">
 <tr><th>POSIX</th><th>FatFs</th></tr>
-<tr><td><tt>"r"</tt></td><td><tt>FA_READ</tt></td></tr>
-<tr><td><tt>"r+"</tt></td><td><tt>FA_READ | FA_WRITE</tt></td></tr>
-<tr><td><tt>"w"</tt></td><td><tt>FA_CREATE_ALWAYS | FA_WRITE</tt></td></tr>
-<tr><td><tt>"w+"</tt></td><td><tt>FA_CREATE_ALWAYS | FA_WRITE | FA_READ</tt></td></tr>
-<tr><td><tt>"a"</tt></td><td><tt>FA_OPEN_APPEND | FA_WRITE</tt></td></tr>
-<tr><td><tt>"a+"</tt></td><td><tt>FA_OPEN_APPEND | FA_WRITE | FA_READ</tt></td></tr>
-<tr><td><tt>"x"</tt><sup>*1</sup></td><td><tt>FA_CREATE_NEW | FA_WRITE</tt></td></tr>
-<tr><td><tt>"x+"</tt><sup>*1</sup></td><td><tt>FA_CREATE_NEW | FA_WRITE | FA_READ</tt></td></tr>
+<tr><td>"r"</td><td>FA_READ</td></tr>
+<tr><td>"r+"</td><td>FA_READ | FA_WRITE</td></tr>
+<tr><td>"w"</td><td>FA_CREATE_ALWAYS | FA_WRITE</td></tr>
+<tr><td>"w+"</td><td>FA_CREATE_ALWAYS | FA_WRITE | FA_READ</td></tr>
+<tr><td>"a"</td><td>FA_OPEN_APPEND | FA_WRITE</td></tr>
+<tr><td>"a+"</td><td>FA_OPEN_APPEND | FA_WRITE | FA_READ</td></tr>
+<tr><td>"wx"</td><td>FA_CREATE_NEW | FA_WRITE</td></tr>
+<tr><td>"w+x"</td><td>FA_CREATE_NEW | FA_WRITE | FA_READ</td></tr>
 </table>
-<sup>*1</sup>: glibc extension
 </dd>
 </dl>
 </div>

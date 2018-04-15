@@ -13,7 +13,7 @@
 
 <div class="para func">
 <h2>f_chdir</h2>
-<p>The f_chdir function changes the current directory of a drive.</p>
+<p>The <tt>f_chdir</tt> function changes the current directory of the logical drive.</p>
 <pre>
 FRESULT f_chdir (
   const TCHAR* <span class="arg">path</span> <span class="c">/* [IN] Path name */</span>
@@ -50,7 +50,8 @@ FRESULT f_chdir (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>The <tt>f_chdir</tt> function changes the current directory of the logical drive. The current directory of a drive is set to the root directory when the drive is mounted. Note that the current directory is retained in the each file system object, so that it also affects other tasks that use the volume.</p>
+<p>The <tt>f_chdir</tt> function changes the current directory of the logical drive. Also the current drive is changed at Unix style volume ID, <tt><a href="config.html#str_volume_id">FF_STR_VOLUME_ID</a> == 2</tt>. The current directory of each logical drive is initialized to the root directory on mount.</p>
+<p>Note that the current directory is retained in the each file system object and the current drive is retained in a static variable, so that it also affects other tasks that use the file functions.</p>
 </div>
 
 
@@ -63,11 +64,17 @@ FRESULT f_chdir (
 <div class="para use">
 <h4>Example</h4>
 <pre>
-    <span class="c">/* Change current direcoty of the current drive ('dir1' under root directory) */</span>
+    <span class="c">/* Change current direcoty of the current drive ("dir1" under root directory) */</span>
     <em>f_chdir</em>("/dir1");
 
-    <span class="c">/* Change current direcoty of drive 2 (parent directory) */</span>
+    <span class="c">/* Change current direcoty of current drive (parent directory of drive 2) */</span>
     <em>f_chdir</em>("2:..");
+
+    <span class="c">/* Change current direcoty of the drive "sdcard" (at DOS/Windows style volume ID) */</span>
+    <em>f_chdir</em>("sdcard:/dir1");
+
+    <span class="c">/* Change current direcoty of the drive "flash" and set it as current drive (at Unix style volume ID) */</span>
+    <em>f_chdir</em>("/flash/dir1");
 </pre>
 </div>
 

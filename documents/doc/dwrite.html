@@ -16,7 +16,7 @@
 <p>The disk_write function is called to write data to the sector(s) of storage device.</p>
 <pre>
 DRESULT disk_write (
-  BYTE <span class="arg">drv</span>,         <span class="c">/* [IN] Physical drive number */</span>
+  BYTE <span class="arg">pdrv</span>,        <span class="c">/* [IN] Physical drive number */</span>
   const BYTE* <span class="arg">buff</span>, <span class="c">/* [IN] Pointer to the data to be written */</span>
   DWORD <span class="arg">sector</span>,     <span class="c">/* [IN] Sector number to write from */</span>
   UINT <span class="arg">count</span>        <span class="c">/* [IN] Number of sectors to write */</span>
@@ -45,7 +45,7 @@ DRESULT disk_write (
 <dt>RES_OK (0)</dt>
 <dd>The function succeeded.</dd>
 <dt>RES_ERROR</dt>
-<dd>A hard error occured during the write operation and could not recover it.</dd>
+<dd>An unrecoverable hard error occured during the write operation.</dd>
 <dt>RES_WRPRT</dt>
 <dd>The medium is write protected.</dd>
 <dt>RES_PARERR</dt>
@@ -59,7 +59,7 @@ DRESULT disk_write (
 <div class="para desc">
 <h4>Description</h4>
 <p>The specified memory address is not that always aligned to word boundary because the argument is defined as <tt>BYTE*</tt>. For more information, refer to the description of <a href="dread.html"><tt>disk_read</tt></a> function.</p>
-<p>Generally, a multiple sector transfer request must not be split into single sector transactions to the storage device, or the write throughput will be drastically decreased.</p>
+<p>Generally, a multiple sector write request (<tt class="arg">count</tt><tt> &gt; 1</tt>) must not be split into single sector transactions to the storage device, or the file write throughput will be drastically decreased.</p>
 <p>FatFs expects delayed write function of the disk control layer. The write operation to the media does not need to be completed at return from this function by what write operation is in progress or data is only stored into the write-back cache. But write data on the <tt class="arg">buff</tt> is invalid after return from this function. The write completion request is done by <tt>CTRL_SYNC</tt> command of <tt><a href="dioctl.html">disk_ioctl</a></tt> function. Therefore, if a delayed write function is implemented, the write throughput of the filesystem will be improved.</p>
 <p><em>Remarks: Application program MUST NOT call this function, or FAT structure on the volume can be collapsed.</em></p>
 </div>

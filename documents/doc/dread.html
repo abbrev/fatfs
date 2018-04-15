@@ -45,7 +45,7 @@ DRESULT disk_read (
 <dt>RES_OK (0)</dt>
 <dd>The function succeeded.</dd>
 <dt>RES_ERROR</dt>
-<dd>A hard error occured during the read operation and could not recover it.</dd>
+<dd>An unrecoverable hard error occured during the read operation.</dd>
 <dt>RES_PARERR</dt>
 <dd>Invalid parameter.</dd>
 <dt>RES_NOTRDY</dt>
@@ -56,7 +56,7 @@ DRESULT disk_read (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>Read/write operation to the generic storage devices, such as memory card, hadddisk and optical disk, is done in unit of block of data bytes called <em>sector</em>. FatFs supports the sector size in range of from 512 to 4096 bytes. When FatFs is configured for fixed sector size (<tt>FF_MIN_SS == FF_MAX_SS</tt>, this is the most case), the read/write function must work at that sector size. When FatFs is configured for variable sector size (<tt>FF_MIN_SS != FF_MAX_SS</tt>), the sector size of medium is inquired with <tt>disk_ioctl</tt> function immediately following <tt>disk_initialize</tt> function.</p>
+<p>Read/write operation to the generic storage devices, such as memory card, hadddisk and optical disk, is done in unit of block of data bytes called <em>sector</em>. FatFs supports the sector size in range of 512 to 4096 bytes. When FatFs is configured for fixed sector size (<tt>FF_MIN_SS == FF_MAX_SS</tt>, this is the most case), the read/write function must work at that sector size. When FatFs is configured for variable sector size (<tt>FF_MIN_SS &lt; FF_MAX_SS</tt>), the sector size of medium is inquired with <tt>disk_ioctl</tt> function immediately following <tt>disk_initialize</tt> function succeeded.</p>
 <p>The memory address specified by <tt class="arg">buff</tt> is not that always aligned to word boundary because the argument is defined as <tt>BYTE*</tt>. The unaligned read/write request can occure at <a href="appnote.html#fs1">direct transfer</a>. If the bus architecture, especially DMA controller, does not allow unaligned memory access, it should be solved in this function. There are some workarounds described below to avoid this issue.</p>
 <ul>
 <li>Convert word transfer to byte transfer in this function if needed. - Recommended.</li>
