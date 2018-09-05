@@ -4145,6 +4145,7 @@ FRESULT f_getcwd (
 
 
 	/* Get logical drive */
+	buff[0] = 0;	/* Set null string to get current volume */
 	res = find_volume((const TCHAR**)&buff, &fs, 0);	/* Get current volume */
 	if (res == FR_OK) {
 		dj.obj.fs = fs;
