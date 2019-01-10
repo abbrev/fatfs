@@ -118,7 +118,7 @@ int main (void)
     fr = <em>f_open</em>(&amp;fil, "message.txt", FA_READ);
     if (fr) return (int)fr;
 
-    <span class="c">/* Read all lines and display it */</span>
+    <span class="c">/* Read every line and display it */</span>
     while (f_gets(line, sizeof line, &amp;fil)) {
         printf(line);
     }
@@ -134,7 +134,7 @@ int main (void)
 
 int main (void)
 {
-    FATFS fs[2];         <span class="c">/* Work area (filesystem object) for logical drives */</span>
+    FATFS fs0, fs1;      <span class="c">/* Work area (filesystem object) for logical drives */</span>
     FIL fsrc, fdst;      <span class="c">/* File objects */</span>
     BYTE buffer[4096];   <span class="c">/* File copy buffer */</span>
     FRESULT fr;          <span class="c">/* FatFs function common result code */</span>
@@ -142,8 +142,8 @@ int main (void)
 
 
     <span class="c">/* Register work area for each logical drive */</span>
-    f_mount(&amp;fs[0], "0:", 0);
-    f_mount(&amp;fs[1], "1:", 0);
+    f_mount(&amp;fs0, "0:", 0);
+    f_mount(&amp;fs1, "1:", 0);
 
     <span class="c">/* Open source file on the drive 1 */</span>
     fr = <em>f_open</em>(&amp;fsrc, "1:file.bin", FA_READ);
@@ -166,8 +166,8 @@ int main (void)
     f_close(&amp;fdst);
 
     <span class="c">/* Unregister work area prior to discard it */</span>
-    f_mount(NULL, "0:", 0);
-    f_mount(NULL, "1:", 0);
+    f_mount(0, "0:", 0);
+    f_mount(0, "1:", 0);
 
     return (int)fr;
 }

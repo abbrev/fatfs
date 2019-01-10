@@ -61,7 +61,7 @@ DRESULT disk_read (
 <ul>
 <li>Convert word transfer to byte transfer in this function if needed. - Recommended.</li>
 <li>On the <tt>f_read()</tt> calls, avoid long read request that includes a whole of sector. - Any direct transfer never occures.</li>
-<li>On the <tt>f_read(fp, dat, btw, bw)</tt> calls, make sure that <tt>(((UINT)dat &amp; 3) == (f_tell(fp) &amp; 3))</tt> is true. - Word alignment of <tt class="arg">buff</tt> is guaranteed no matter dat is not word aligned.</li>
+<li>On the <tt>f_read(fp, dat, btw, bw)</tt> calls, make sure that <tt>(((UINT)dat &amp; 3) == (f_tell(fp) &amp; 3))</tt> is true. - Word alignment of <tt class="arg">buff</tt> is guaranteed.</li>
 </ul>
 <p>Generally, a multiple sector read request must not be split into single sector transactions to the storage device, or read throughput gets worse.</p>
 </div>

@@ -38,15 +38,15 @@ Note that if once this error occured at any operation to an open file, the file 
 <li>No medium in the drive.</li>
 <li>Wrong lower layer implementation.</li>
 <li>Wrong hardware configuration.</li>
-<li>The storage device has been broken.</li>
+<li>The storage device has broken.</li>
 </ul>
 </dd>
 
 <dt id="nf">FR_NO_FILE</dt>
-<dd>Could not find the file.</dd>
+<dd>Could not find the file in the directory.</dd>
 
 <dt id="np">FR_NO_PATH</dt>
-<dd>Could not find the path.</dd>
+<dd>Could not find the path, some directory in the path name could not be found.</dd>
 
 <dt id="in">FR_INVALID_NAME</dt>
 <dd>The given string is invalid as the <a href="filename.html">path name</a>. One of the following possibilities is suspected.
@@ -72,12 +72,12 @@ Note that if once this error occured at any operation to an open file, the file 
 </dd>
 
 <dt id="ex">FR_EXIST</dt>
-<dd>Name collision. An object with the same name is already existing.</dd>
+<dd>Name collision, an object with the same name is already existing.</dd>
 
 <dt id="io">FR_INVALID_OBJECT</dt>
 <dd>The file/directory object is invalid or a null pointer is given. There are some reasons as follows:
 <ul>
-<li>It has been closed, or collapsed.</li>
+<li>It has been closed, or the structure has been collapsed.</li>
 <li>It has been invalidated. Open objects on the volume are invalidated by voulme mount process.</li>
 <li>Physical drive is not ready to work due to a media removal.</li>
 </ul>

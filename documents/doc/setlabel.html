@@ -53,9 +53,9 @@ FRESULT f_setlabel (
 <ul>
 <li>Up to 11 bytes long as conversion of OEM code page at FAT volume.</li>
 <li>Up to 11 characters long at exFAT volume.</li>
-<li>Allowable characters for FAT volume are: <tt>! # $ % &amp; ' ( ) - ^ _ ` ~ { } 0-9 A-Z a-z</tt> and extended characters. Low-case characters are up converted.</li>
-<li>Allowable characters for exFAT volume are: characters allowed for FAT volume and <tt>" + , . ; = [ ]</tt>. Low-case characters are preserved.</li>
-<li>Spaces can be contained anywhere in the volume label. Trailing spaces are truncated off at FAT volume.</li>
+<li>Allowable characters for FAT volume are: characters allowed for SFN excludes dot. Low-case characters are up converted.</li>
+<li>Allowable characters for exFAT volume are: characters allowed for LFN includes dot. Low-case characters are preserved.</li>
+<li>Spaces can be embedded anywhere in the volume label. Trailing spaces are truncated off at FAT volume.</li>
 </ul>
 <p>Remark: The standard system (Windows) has a problem at the volume label with a heading <tt>\xE5</tt> on the FAT volume. To avoid this problem, this function rejects such volume label as invalid name.</p>
 </div>
