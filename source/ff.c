@@ -1884,7 +1884,7 @@ static int cmp_lfn (		/* 1:matched, 0:not matched */
 	for (wc = 1, s = 0; s < 13; s++) {		/* Process all characters in the entry */
 		uc = ld_word(dir + LfnOfs[s]);		/* Pick an LFN character */
 		if (wc != 0) {
-			if (i >= FF_MAX_LFN || ff_wtoupper(uc) != ff_wtoupper(lfnbuf[i++])) {	/* Compare it */
+			if (i >= FF_MAX_LFN + 1 || ff_wtoupper(uc) != ff_wtoupper(lfnbuf[i++])) {	/* Compare it */
 				return 0;					/* Not matched */
 			}
 			wc = uc;
@@ -1920,15 +1920,15 @@ static int pick_lfn (	/* 1:succeeded, 0:buffer overflow or invalid LFN entry */
 	for (wc = 1, s = 0; s < 13; s++) {		/* Process all characters in the entry */
 		uc = ld_word(dir + LfnOfs[s]);		/* Pick an LFN character */
 		if (wc != 0) {
-			if (i >= FF_MAX_LFN) return 0;	/* Buffer overflow? */
+			if (i >= FF_MAX_LFN + 1) return 0;	/* Buffer overflow? */
 			lfnbuf[i++] = wc = uc;			/* Store it */
 		} else {
 			if (uc != 0xFFFF) return 0;		/* Check filler */
 		}
 	}
 
-	if (dir[LDIR_Ord] & LLEF) {				/* Put terminator if it is the last LFN part */
-		if (i >= FF_MAX_LFN) return 0;		/* Buffer overflow? */
+	if (dir[LDIR_Ord] & LLEF && wc != 0) {	/* Put terminator if it is the last LFN part and not terminated */
+		if (i >= FF_MAX_LFN + 1) return 0;	/* Buffer overflow? */
 		lfnbuf[i] = 0;
 	}
 
