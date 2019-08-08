@@ -5990,7 +5990,8 @@ FRESULT f_mkfs (
 
 #if FF_MULTI_PARTITION
 /*-----------------------------------------------------------------------*/
-/* Create Partition Table on the Physical Drive                          */
+/* Create Partition Table on the Physical Drive with */
+/* cylinder size aligned                                                              */
 /*-----------------------------------------------------------------------*/
 
 FRESULT f_fdisk (
@@ -6062,6 +6063,106 @@ FRESULT f_fdisk (
 	LEAVE_MKFS(res);
 }
 
+/*-----------------------------------------------------------------------*/
+/* Create Partition Table on the Physical Drive with */
+/* MiB size aligned                                                                       */
+/*-----------------------------------------------------------------------*/
+FRESULT f_fdisk_align_mib (
+  BYTE pdrv,      /* Physical drive number */
+  const DWORD* szt, /* Pointer to the size table for each partitions */
+  const DWORD align_mib, /* Alignment size in unit of mib */
+  void* work      /* Pointer to the working buffer (null: use heap memory) */
+)
+{
+  const UINT spt = 63; /* maximum number of sectors per track */
+  UINT hpc; /*maximum number of heads per cylinder*/
+  UINT s_lba, e_lba; /* logical block address */
+  UINT tot_scts, valid_tot_scts, p_scts, b_scts, p_sn;
+  UINT i,s_hd, s_c, s_cyl, e_hd, e_cyl, e_c;
+  BYTE *p, *buf = (BYTE*)work;
+  DSTATUS stat;
+  DWORD sz_disk, sz_sector, align_sector;
+  FRESULT res;
+
+
+  stat = disk_initialize(pdrv);
+  if (stat & STA_NOINIT) return FR_NOT_READY;
+  if (stat & STA_PROTECT) return FR_WRITE_PROTECTED;
+  if (disk_ioctl(pdrv, GET_SECTOR_COUNT, &sz_disk)) return FR_DISK_ERR;
+  if (disk_ioctl(pdrv, GET_SECTOR_SIZE, &sz_sector)) return FR_DISK_ERR;
+
+  align_sector =  align_mib*((1024*1024)/sz_sector);/* Alignment size in unit of sectors */
+  if(align_sector == 0) return FR_DISK_ERR; /*Do not  support a zero sector aligned setting*/
+
+  buf = (BYTE*)work;
+#if FF_USE_LFN == 3
+  if (!buf) buf = ff_memalloc(FF_MAX_SS); /* Use heap memory for working buffer */
+#endif
+  if (!buf) return FR_NOT_ENOUGH_CORE;
+
+  /* Determine the CHS without any consideration of the drive geometry */
+  for (hpc = 16; hpc < 256 && sz_disk / hpc / spt > 1024; hpc *= 2) ;
+  if (hpc == 256) hpc--;
+
+  tot_scts = sz_disk / align_sector;
+  /* Aligned size block number that can be actual partitioned */
+  valid_tot_scts =  tot_scts;
+  /* Exclude first track(63 sectors) of cylinder 0 and align in align_sector block */
+  /*The LBA0 will skip the MBR aligned in align_sector block. */
+  b_scts = (spt/align_sector == 0) ? 1 : (spt/align_sector + 1);
+  valid_tot_scts -= b_scts;
+
+  /* Create partition table */
+  mem_set(buf, 0, FF_MAX_SS);
+  p = buf + MBR_Table;
+  for (i = 0; i < 4; i++, p += SZ_PTE) {
+    p_scts = (szt[i] <= 100U) ? (DWORD)valid_tot_scts * szt[i] / 100 : szt[i] / align_sector; /* Number of align_sector block */
+    if (p_scts == 0) continue;
+    s_lba = (DWORD)align_sector * b_scts; /* Partition head sector address */
+    p_sn = (DWORD)align_sector * p_scts;  /* Partition sector numbers */
+    e_lba = s_lba + p_sn - 1; /* Partition end sector address */
+    if ((b_scts + p_scts - 1) >= tot_scts) LEAVE_MKFS(FR_INVALID_PARAMETER);
+
+    /*CHS conversion :
+     *       C = LBA ÷ (HPC × SPT)
+     *       H = (LBA ÷ SPT) mod HPC
+     *       S = (LBA mod SPT) + 1
+     *    where
+     *         C, H and S are the cylinder number, the head number, and the sector number
+     *         LBA is the logical block address
+     *         HPC is the maximum number of heads per cylinder
+     *         SPT is the maximum number of sectors per track (reported by disk drive, typically 63 for 28-bit LBA)
+     * */
+    /*CHS address of first absolute sector in partition.*/
+    s_hd = (s_lba / spt) % hpc;
+    s_c = (s_lba % spt) + 1;
+    s_cyl = s_lba / (hpc * spt);
+    /*CHS address of last absolute sector in partition.*/
+    e_hd = (e_lba / spt) % hpc;
+    e_c = (e_lba % spt) + 1;
+    e_cyl = e_lba / (hpc * spt);
+
+    /* Set partition table */
+   p[1] = (BYTE)s_hd;              /* Start head */
+   p[2] = (BYTE)(((s_cyl >> 2) & 0xC0) | s_c); /* High bits of cylinder[7-6] and start sector[5-0] */
+   p[3] = (BYTE)s_cyl;                /* Start cylinder */
+   p[4] = 0x07;                              /* System type (temporary setting) */
+   p[5] =  (BYTE)e_hd;            /* End head */
+   p[6] = (BYTE)(((e_cyl >> 2) & 0xC0) | e_c);  /* End sector */
+   p[7] = (BYTE)e_cyl;              /* End cylinder */
+   st_dword(p + 8, s_lba);      /* Start sector in LBA */
+   st_dword(p + 12, p_sn);      /* Number of sectors */
+
+   /* Next partition */
+   b_scts += p_scts;
+  }
+
+  st_word(p, 0xAA55);   /* MBR signature (always at offset 510) */
+
+  /* Write it to the MBR */
+  res = (disk_write(pdrv, buf, 0, 1) == RES_OK && disk_ioctl(pdrv, CTRL_SYNC, 0) == RES_OK) ? FR_OK : FR_DISK_ERR;
+  LEAVE_MKFS(res);
+}
 #endif /* FF_MULTI_PARTITION */
 #endif /* FF_USE_MKFS && !FF_FS_READONLY */
 
