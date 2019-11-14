@@ -52,14 +52,14 @@ FRESULT f_expand (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>The <tt>f_expand</tt> function prepares or allocates a contiguous data area to the file. When <tt class="arg">opt</tt> is 1, the function allocates a contiguous data area to the file. Unlike expansion of file by <tt>f_lseek</tt> function, the file must be truncated prior to use this function and read/write pointer of the file stays at top of the file after the function. The file content allocated with this function is <em>undefined</em> because no data is written to the file in this process. The function can fail with <tt>FR_DENIED</tt> due to some reasons below.</p>
+<p>The <tt>f_expand</tt> function prepares or allocates a contiguous data area to the file. When <tt class="arg">opt</tt> is 1, the function allocates a contiguous data area to the file. Unlike expansion of file by <tt>f_lseek</tt> function, the file must be truncated prior to use this function and read/write pointer of the file stays at offset 0 after the function. The file content allocated with this function is <em>undefined</em> because no data is written to the file in this process. The function can fail with <tt>FR_DENIED</tt> due to some reasons below.</p>
 <ul>
 <li>No free contiguous space was found.</li>
 <li>Size of the file was not zero.</li>
 <li>The file has been opened in read-only mode.</li>
 <li>Not allowable file size. (&gt;= 4 GB on FAT volume)</li>
 </ul>
-<p>When <tt class="arg">opt</tt> is 0, the function finds a contiguous data area and set it as suggested point for next allocation instead of allocating it to the file. The next cluster allocation is started at top of the contiguous area found by this function. Thus the write file is guaranteed be contiguous and no allocation delay until the size reaches that size at least unless any other changes to the volume is performed.</p>
+<p>When <tt class="arg">opt</tt> is 0, the function finds a contiguous data area and set it as suggested point for next allocation instead of allocating it to the file. The next cluster allocation is started at beginning of the contiguous area found by this function. Thus the write file is guaranteed be contiguous and no allocation delay until the size reaches that size at least unless any other changes to the volume is performed.</p>
 <p>The contiguous file would have an advantage at time-critical read/write operations. It eliminates some overheads in the filesystem and the storage media caused by random access due to fragmented file data. Especially FAT access for the contiguous file on the exFAT volume is completely eliminated and storage media will be accessed sequentially.</p>
 <p>Also the contiguous file can be easily accessed directly via low-level disk functions. But this is not recommended in consideration for future compatibility. Use <a href="../res/app5.c">this function</a> to examine if the file is contiguous or not.</p>
 </div>
