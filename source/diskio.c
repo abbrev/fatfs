@@ -11,10 +11,23 @@
 #include "diskio.h"		/* Declarations of disk functions */
 
 /* Definitions of physical drive number for each drive */
-#define DEV_RAM		0	/* Example: Map Ramdisk to physical drive 0 */
-#define DEV_MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
-#define DEV_USB		2	/* Example: Map USB MSD to physical drive 2 */
+#define DEV_RAM		(1)	/* Example: Map Ramdisk to physical drive 0 */
+#define DEV_MMC		(0)	/* Example: Map MMC/SD card to physical drive 1 */
+#define DEV_USB		(2)	/* Example: Map USB MSD to physical drive 2 */
 
+#define DEVICE_FUNCTION(name)               \
+\
+  DSTATUS name ##_## disk_initialize(void);     \
+  DSTATUS name ##_## disk_status(void);         \
+  DSTATUS name ##_## disk_read(BYTE *buff, DWORD sector, BYTE count);        \
+  DSTATUS name ##_## disk_write(const BYTE *buff, DWORD sector, BYTE count); \
+  DSTATUS name ##_## disk_ioctl(BYTE ctrl, void *buff); \
+
+
+
+DEVICE_FUNCTION(RAM)
+DEVICE_FUNCTION(MMC)
+DEVICE_FUNCTION(USB)
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -40,7 +53,7 @@ DSTATUS disk_status (
 
 		// translate the reslut code here
 
-		return stat;
+		return result;
 
 	case DEV_USB :
 		result = USB_disk_status();
@@ -78,7 +91,7 @@ DSTATUS disk_initialize (
 
 		// translate the reslut code here
 
-		return stat;
+		return result;
 
 	case DEV_USB :
 		result = USB_disk_initialize();
@@ -123,7 +136,7 @@ DRESULT disk_read (
 
 		// translate the reslut code here
 
-		return res;
+		return result;
 
 	case DEV_USB :
 		// translate the arguments here
@@ -153,7 +166,7 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
-	DRESULT res;
+	DRESULT res = 0;
 	int result;
 
 	switch (pdrv) {
@@ -201,7 +214,7 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	DRESULT res;
+	DRESULT res = 0;
 	int result;
 
 	switch (pdrv) {
