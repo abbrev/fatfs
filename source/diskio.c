@@ -177,7 +177,7 @@ DRESULT disk_write (
 
 		// translate the reslut code here
 
-		return res;
+		return result;
 
 	case DEV_MMC :
 		// translate the arguments here
@@ -186,7 +186,7 @@ DRESULT disk_write (
 
 		// translate the reslut code here
 
-		return res;
+		return result;
 
 	case DEV_USB :
 		// translate the arguments here
@@ -195,7 +195,7 @@ DRESULT disk_write (
 
 		// translate the reslut code here
 
-		return res;
+		return result;
 	}
 
 	return RES_PARERR;
