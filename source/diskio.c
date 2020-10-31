@@ -35,7 +35,6 @@ DSTATUS disk_status (
   BYTE pdrv   /* Physical drive nmuber to identify the drive */
 )
 {
-  DSTATUS stat;
   int result;
 
   switch (pdrv) {
@@ -59,7 +58,6 @@ DSTATUS disk_initialize (
   BYTE pdrv       /* Physical drive nmuber to identify the drive */
 )
 {
-  DSTATUS stat;
   int result;
 
   switch (pdrv) {
@@ -86,7 +84,6 @@ DRESULT disk_read (
   UINT count    /* Number of sectors to read */
 )
 {
-  DRESULT res;
   int result;
 
   switch (pdrv) {
@@ -118,7 +115,6 @@ DRESULT disk_write (
   UINT count      /* Number of sectors to write */
 )
 {
-  DRESULT res = 0;
   int result;
 
   switch (pdrv) {
@@ -149,7 +145,6 @@ DRESULT disk_ioctl (
 )
 {
   DRESULT res = 0;
-  int result;
 
   switch (pdrv) {
   case DEV_MMC :
