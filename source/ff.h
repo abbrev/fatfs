@@ -118,7 +118,7 @@ typedef QWORD LBA_t;
 typedef DWORD LBA_t;
 #endif
 #else
-#if FF_LBA64
+#if FF_LBA64 == 1
 #error exFAT needs to be enabled when enable 64-bit LBA
 #endif
 typedef DWORD FSIZE_t;
