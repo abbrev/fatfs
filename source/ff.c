@@ -3882,6 +3882,9 @@ FRESULT f_open (
 #endif
 					}
 				}
+#if FF_FS_LOCK != 0
+				if (res != FR_OK) dec_lock(fp->obj.lockid); /* Decrement file open counter if seek failed */
+#endif
 			}
 #endif
 		}
