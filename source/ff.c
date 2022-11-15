@@ -900,7 +900,7 @@ static int lock_volume (	/* 1:Ok, 0:timeout */
 	int rv;
 
 
-#if FS_LOCK
+#if FF_FS_LOCK
 	rv = ff_mutex_take(fs->ldrv);	/* Lock the volume */
 	if (rv && syslock) {			/* System lock reqiered? */
 		rv = ff_mutex_take(FF_VOLUMES);	/* Lock the system */
