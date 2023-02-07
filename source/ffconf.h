@@ -123,7 +123,7 @@
 /   3: Enable LFN with dynamic working buffer on the HEAP.
 /
 /  To enable the LFN, ffunicode.c needs to be added to the project. The LFN function
-/  requiers certain internal working buffer occupies (FF_MAX_LFN + 1) * 2 bytes and
+/  requires certain internal working buffer occupies (FF_MAX_LFN + 1) * 2 bytes and
 /  additional (FF_MAX_LFN + 44) / 15 * 32 bytes when exFAT is enabled.
 /  The FF_MAX_LFN defines size of the working buffer in UTF-16 code unit and it can
 /  be in range of 12 to 255. It is recommended to be set it 255 to fully support LFN
@@ -148,7 +148,7 @@
 #define FF_LFN_BUF		255
 #define FF_SFN_BUF		12
 /* This set of options defines size of file name members in the FILINFO structure
-/  which is used to read out directory items. These values should be suffcient for
+/  which is used to read out directory items. These values should be sufficient for
 /  the file names to read. The maximum possible length of the read file name depends
 /  on character encoding. When LFN is not enabled, these options have no effect. */
 
@@ -197,7 +197,7 @@
 #define FF_MAX_SS		512
 /* This set of options configures the range of sector size to be supported. (512,
 /  1024, 2048 or 4096) Always set both 512 for most systems, generic memory card and
-/  harddisk, but a larger value may be required for on-board flash memory and some
+/  hard disk, but a larger value may be required for on-board flash memory and some
 /  type of optical media. When FF_MAX_SS is larger than FF_MIN_SS, FatFs is configured
 /  for variable sector size mode and disk_ioctl() function needs to implement
 /  GET_SECTOR_SIZE command. */
@@ -226,7 +226,7 @@
 
 #define FF_FS_TINY		0
 /* This option switches tiny buffer configuration. (0:Normal or 1:Tiny)
-/  At the tiny configuration, size of file object (FIL) is shrinked FF_MAX_SS bytes.
+/  At the tiny configuration, size of file object (FIL) is shrank FF_MAX_SS bytes.
 /  Instead of private sector buffer eliminated from the file object, common sector
 /  buffer in the filesystem object (FATFS) is used for the file data transfer. */
 
