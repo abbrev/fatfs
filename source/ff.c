@@ -657,7 +657,7 @@ static QWORD ld_qword (const BYTE* ptr)	/* Load an 8-byte little-endian word */
 static void st_word (BYTE* ptr, WORD val)	/* Store a 2-byte word in little-endian */
 {
 	*ptr++ = (BYTE)val; val >>= 8;
-	*ptr++ = (BYTE)val;
+	*ptr = (BYTE)val;
 }
 
 static void st_dword (BYTE* ptr, DWORD val)	/* Store a 4-byte word in little-endian */
@@ -665,7 +665,7 @@ static void st_dword (BYTE* ptr, DWORD val)	/* Store a 4-byte word in little-end
 	*ptr++ = (BYTE)val; val >>= 8;
 	*ptr++ = (BYTE)val; val >>= 8;
 	*ptr++ = (BYTE)val; val >>= 8;
-	*ptr++ = (BYTE)val;
+	*ptr = (BYTE)val;
 }
 
 #if FF_FS_EXFAT
@@ -678,7 +678,7 @@ static void st_qword (BYTE* ptr, QWORD val)	/* Store an 8-byte word in little-en
 	*ptr++ = (BYTE)val; val >>= 8;
 	*ptr++ = (BYTE)val; val >>= 8;
 	*ptr++ = (BYTE)val; val >>= 8;
-	*ptr++ = (BYTE)val;
+	*ptr = (BYTE)val;
 }
 #endif
 #endif	/* !FF_FS_READONLY */
@@ -1943,7 +1943,7 @@ static int pick_lfn (	/* 1:succeeded, 0:buffer overflow or invalid LFN entry */
 		}
 	}
 
-	if (dir[LDIR_Ord] & LLEF && wc != 0) {	/* Put terminator if it is the last LFN part and not terminated */
+	if ((dir[LDIR_Ord] & LLEF) && wc != 0) {	/* Put terminator if it is the last LFN part and not terminated */
 		if (i >= FF_MAX_LFN + 1) return 0;	/* Buffer overflow? */
 		lfnbuf[i] = 0;
 	}
@@ -5119,9 +5119,9 @@ FRESULT f_mkdir (
 					dj.dir[DIR_Attr] = AM_DIR;			/* Attribute */
 					fs->wflag = 1;
 				}
-				if (res == FR_OK) {
+				//removed duplicate condition (res == FR_OK)
 					res = sync_fs(fs);
-				}
+				
 			} else {
 				remove_chain(&sobj, dcl, 0);		/* Could not register, remove the allocated cluster */
 			}
