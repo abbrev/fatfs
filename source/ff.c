@@ -4828,6 +4828,7 @@ FRESULT f_getfree (
 	UINT i;
 	FFOBJID obj;
 
+	memset(&obj, 0, sizeof (obj));
 
 	/* Get logical drive */
 	res = mount_volume(&path, &fs, 0);
