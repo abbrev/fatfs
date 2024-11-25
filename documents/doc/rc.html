@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="up" title="FatFs" href="../00index_e.html">
-<link rel="alternate" hreflang="ja" title="Japanese" href="../ja/rc.html">
 <link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
 <title>FatFs - API Return Code</title>
 </head>
@@ -75,10 +73,10 @@ Note that if once this error occured in the operation to an open file, the file 
 <dd>Name collision. An object with the same name is already existing in the directory.</dd>
 
 <dt id="io">FR_INVALID_OBJECT</dt>
-<dd>The file/directory object is invalid or a null pointer is given. There are some reasons as follows:
+<dd>The file/directory object is invalid or the pointer is null. There are some reasons as follows:
 <ul>
-<li>It has been closed, or the structure has been collapsed.</li>
-<li>It has been invalidated. Open objects on the volume are invalidated by voulme mount process.</li>
+<li>The file/directory has been closed.</li>
+<li>The file/directory object has been invalidated or the structure has been collapsed. Open objects on the volume will be invalidated by a voulme mount process.</li>
 <li>Physical drive is not ready to work due to a media removal.</li>
 </ul>
 </dd>
@@ -129,6 +127,7 @@ Note that if once this error occured in the operation to an open file, the file 
 <dt id="ip">FR_INVALID_PARAMETER</dt>
 <dd>The given parameter is invalid or there is an inconsistent for the volume.</dd>
 </dl>
+
 
 <p class="foot"><a href="../00index_e.html">Return</a></p>
 </body>

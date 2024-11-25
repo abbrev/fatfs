@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="up" title="FatFs" href="../00index_e.html">
-<link rel="alternate" hreflang="ja" title="Japanese" href="../ja/filename.html">
 <link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
 <title>FatFs - Path Names</title>
 </head>
@@ -36,15 +34,15 @@
 <tr><td>/..</td><td>Invalid name</td><td>The root directory (sticks the top level)</td></tr>
 </table>
 <p>Also the drive prefix can be in pre-defined arbitrary string. When the option <tt><a href="config.html#str_volume_id">FF_STR_VOLUME_ID</a> == 1</tt>, also arbitrary string volume ID can be used as drive prefix. e.g. <tt>"<em>flash:</em>file1.txt"</tt>, <tt>"<em>ram:</em>temp.dat"</tt> or <tt>"<em>sd:</em>"</tt>. If the srting does not match any volume ID, the function fails with <tt>FR_INVALID_DRIVE</tt>.</p>
-<p>When <tt>FF_STR_VOLUME_ID == 2</tt>, Unix style drive prefix can be used. e.g. <tt>"<em>/flash</em>/file1.txt"</tt>, <tt>"<em>/ram</em>/temp.dat"</tt> or <tt>"<em>/sd</em>"</tt>. If a heading separator is exist, it is treated as start of drive prefix and in absolute path. Any form as "root directory in current drive" and "current directory in specified drive" cannot be used. Double dot name cannot traverse the drives such as <tt>"<em>/flash</em>/..<em>/ram</em>/foo.dat"</tt>.</p>
+<p>When <tt>FF_STR_VOLUME_ID == 2</tt>, Unix style drive prefix can be used. e.g. <tt>"<em>/flash</em>/file1.txt"</tt>, <tt>"<em>/ram</em>/temp.dat"</tt> or <tt>"<em>/sd</em>"</tt>. If a heading separator is exist, it is treated as an absolute path with a heading node ID. Any form as "root directory in current drive" and "current directory in specified drive" cannot be used. Double dot name cannot traverse the volumes such as <tt>"<em>/flash</em>/..<em>/ram</em>/foo.dat"</tt>.</p>
 <p><em>Remark: In this revision, double dot name <tt>".."</tt> cannot follow the parent directory on the exFAT volume. It will work as <tt>"."</tt> and stay there.</em></p>
 </div>
 
 <div class="para doc" id="case">
 <h3>Legal Characters and Case Sensitivity</h3>
 <p>In the generic FAT filesystems, the legal characters for object name (file/directory name) are, <tt>0-9 A-Z ! # $ % &amp; ' ( ) - @ ^ _ ` { } ~</tt> in ASCII and extended characters <tt>\x80</tt> to <tt>\xFF</tt>. In the FAT filesystems with LFN extention, also <tt>+ , ; = [ ]</tt>, white space and extended characters <tt>U+000080</tt> to <tt>U+10FFFF</tt> are legal for the object name. White spaces and dots can be placed anywhere in the path name except end of the name. Trailing white spaces and dots are ignored.</p>
-<p>FAT filesystem is case-insensitive to the object names on the volume. Object name on the FAT volume is compared in case-insensitive. For instance, these three names, <tt>file.txt</tt>, <tt>File.Txt</tt> and <tt>FILE.TXT</tt>, are identical on the FAT filesystem. This is applied to extended charactres as well. When an object is created on the FAT volume, up converted name is recorded to the SFN entry, and the raw name is recorded to the LFN entry when LFN extension is exist.</p>
-<p>As for the MS-DOS and PC DOS for CJK (DOS/DBCS), extended characters ware recorded to the SFN entry without up-case conversion and compared in case-sensitive. This causes a problem on compatibility with Windows system when the object with extended characters is created on the volume by DOS/DBCS system; therfore the object names with DBCS extended characters should not be used on the FAT volume shared by those systems. FatFs works with case-sensitive to the extended characters in only non-LFN with DBCS configuration (DOS/DBCS specs). However, FatFs works with case-insensitive to the extended character (WindowsNT specs) in LFN configuration.</p>
+<p>FAT filesystem is case-insensitive to the object names on the volume. Object names on the FAT volume are compared in case-insensitive. For instance, these three names, <tt>file.txt</tt>, <tt>File.Txt</tt> and <tt>FILE.TXT</tt>, are identical on the FAT filesystem. This is applied to extended charactres as well. When an object is created on the FAT volume, up converted name is recorded to the SFN entry, and the original name is recorded to the LFN entry if LFN extension is enabled.</p>
+<p>On the MS-DOS and PC DOS for Chinese, Japanese and Korean (DOS/DBCS), extended characters are recorded to the SFN entry without up-case conversion and compared in case-sensitive. This causes a problem on compatibility with Windows system when the object with extended characters is created on the volume by DOS/DBCS system; therfore the object names with DBCS extended characters should not be used on the FAT volume shared by those systems. FatFs works with case-sensitive to the extended characters in only non-LFN with DBCS configuration (DOS/DBCS specs). However, FatFs works with case-insensitive to the extended character (WindowsNT specs) in LFN configuration.</p>
 </div>
 
 <div class="para doc" id="uni">
@@ -84,10 +82,11 @@ PARTITION VolToPart[FF_VOLUMES] = {
 <li>On the MBR format drive, up to four primary partitions (1-4) can be specified. The partition number 1 specifies the first item in the partition table and the partition number 2 specifies the second one, and so on. The logical patitions (5-) in the extended partition is not supported.</li>
 <li>On the GPT format drive, the partition number 1 specifies the first Microsoft BDP found in the partition table and the partition number 2 specifies the second one found, and so on.</li>
 <li>Windows 10 earlier than 1703 does not support multiple volumes on the physical drive with removable class. Only the first parition found on the drive will be mounted. Windows OS does not support SFD format on the physical drive with non-removable class.</li>
-<li>Some systems manage the on-board storage in non-standard partition format and each partition is mapped as physical drive in <tt>disk_*</tt> functions. For such system, <tt>FF_MULTI_PARTITION</tt> should be always 0.</li>
-<li>For further information about the volume management, refer to the description in <tt><a href="fdisk.html">f_fdisk</a></tt> and <tt><a href="mkfs.html">f_mkfs</a></tt>.</li>
+<li>Some systems manage the on-board storage in non-standard partition format and each partition is mapped as physical drive in <tt>disk_*</tt> functions. For such system, <tt>FF_MULTI_PARTITION</tt> should be always 0 and use <tt>FM_SFD</tt> flag in <tt><a href="mkfs.html">f_mkfs</a></tt>.</li>
+<li>For further information about the volume management, refer to the description in <tt>f_mkfs</tt> and <tt><a href="fdisk.html">f_fdisk</a></tt>.</li>
 </ul>
 </div>
+
 
 <p class="foot"><a href="../00index_e.html">Return</a></p>
 </body>

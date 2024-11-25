@@ -38,6 +38,7 @@ div.ret a {font-size: 0.85em; font-family: "Consolas", "Courier New", monospace;
 ul.flat li {list-style-type: none; margin: 0;}
 a.imglnk img {border: 1px solid;}
 .iequ {white-space: nowrap; font-weight: bold;}
+.lnk {opacity: 0.5;}
 .clr {clear: both;}
 .it {font-style: italic;}
 .mfd {font-size: 0.7em; padding: 0 1px; border: 1px solid; white-space : nowrap}

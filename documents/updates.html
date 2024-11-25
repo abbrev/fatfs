@@ -6,7 +6,7 @@
 <meta http-equiv="cache-control" content="no-cache">
 <link rel="start" title="Site Top" href="../../">
 <link rel="stylesheet" href="css_e.css" type="text/css" media="screen" title="ELM Default">
-<title>FatFs - Known Problems</title>
+<title>FatFs - Updates and Migration Notes</title>
 </head>
 <body style="max-width: none;">
 <h2>Updates and Migration Notes</h2>
@@ -23,7 +23,7 @@ Fixed string functions cannot write the unicode characters not in BMP when <tt>F
 Fixed a compatibility issue in identification of GPT header.<br>
 </td>
 <td>
-User provided synchronization functions, <tt>ff_cre_syncobj</tt>, <tt>ff_del_syncobj</tt>, <tt>ff_req_grant</tt> and <tt>ff_rel_grant</tt>, needed when <tt>FF_FS_REENTRANT</tt> are replaced by <tt>ff_mutex_create</tt>, <tt>ff_mutex_delete</tt>, <tt>ff_mutex_take</tt> and <tt>ff_mutex_give</tt> respectively. For examples, see <tt>ffsystem.c</tt>.<br>
+User provided synchronization functions, <tt>ff_cre_syncobj</tt>, <tt>ff_del_syncobj</tt>, <tt>ff_req_grant</tt> and <tt>ff_rel_grant</tt>, needed when <tt>FF_FS_REENTRANT</tt> are replaced with <tt>ff_mutex_create</tt>, <tt>ff_mutex_delete</tt>, <tt>ff_mutex_take</tt> and <tt>ff_mutex_give</tt> respectively. For example, see <tt>ffsystem.c</tt>.<br>
 <tt>FF_SYNC_t</tt> is removed from the configuration options.<br>
 </td>
 </tr>
@@ -172,10 +172,12 @@ Fixed errors in the case conversion teble of Unicode (<tt>cc*.c</tt>).<br>
 </td>
 <td>
 Usage and members of <tt>FINFO</tt> sructure used in <tt>f_readdir</tt> is changed.<br>
+Dot entries in the sub-directory are never appear in <tt>f_readdir</tt>.<br>
+<tt>".."</tt> does not work as path name in exFAT volume.<br>
+<tt>f_getcwd</tt> does not work in exFAT volume.</br>
 Many members in <tt>FIL</tt> and <tt>DIR</tt> structure are changed.<br>
 To use <tt>f_chmod</tt>, <tt>_USE_CHMOD</tt> needs to be set.<br>
 <tt>_WORD_ACCESS</tt> is removed from the configuration options.<br>
-Dot entries are never appear in <tt>f_reeddir</tt>.<br>
 </td>
 </tr>
 <tr>

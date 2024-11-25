@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="up" title="FatFs" href="../00index_e.html">
-<link rel="alternate" hreflang="ja" title="Japanese" href="../ja/config.html">
 <link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
 <title>FatFs - Configuration Options</title>
 </head>
@@ -105,29 +103,29 @@
 <p>Disable (0) or Enable (1) <tt>f_forward</tt> function.</p>
 
 <h4 id="use_strfunc">FF_USE_STRFUNC</h4>
-<p>This option switches string functions, <tt>f_gets</tt>, <tt>f_putc</tt>, <tt>f_puts</tt> and <tt>f_printf</tt>. These functions are equivalents of regular string stream I/O functions in POSIX. If <tt>sprintf</tt> is available and code conversion is not needed, <tt>f_write</tt> with <tt>sprintf</tt> will be efficient in code size and performance rather than <tt>f_printf</tt>. When enable this feature, <tt>stdarg.h</tt> is included in <tt>ff.c</tt>.</p>
+<p>This option switches string I/O functions, <tt>f_gets</tt>, <tt>f_putc</tt>, <tt>f_puts</tt> and <tt>f_printf</tt>. These functions are the equivalents of regular string stream I/O functions in POSIX. If <tt>sprintf</tt> is available and code conversion is not needed, <tt>f_write</tt> with <tt>sprintf</tt> will be efficient in code size and performance better than <tt>f_printf</tt>. When enable this feature, <tt>stdarg.h</tt> is included in <tt>ff.c</tt>.</p>
 <table class="lst1">
 <tr><th>Value</th><th>Description</th></tr>
 <tr><td>0</td><td>Disable string functions.</td></tr>
-<tr><td>1</td><td>Enable string functions without LF-CRLF conversion.</td></tr>
-<tr><td>2</td><td>Enable string functions with LF-CRLF conversion.</td></tr>
+<tr><td>1</td><td>Enable string functions without LF - CRLF conversion.</td></tr>
+<tr><td>2</td><td>Enable string functions with LF - CRLF conversion.</td></tr>
 </table>
 
 <h4 id="print_lli">FF_PRINT_LLI</h4>
 <p>This option switches support for long long integer argument in <tt>f_printf</tt>.</p>
-<p>Disable (0) or Enable (1). When enable this feature, C standard needs to be C99 or later.</p>
+<p>Disable (0) or Enable (1). When enable this feature, C standard needs to be C99 or later. This option has no effect when <tt>FF_USE_STRFUNC == 0</tt>.</p>
 
 <h4 id="print_fp">FF_PRINT_FLOAT</h4>
-<p>This option switches support for floating point argument in <tt>f_printf</tt>. When enable this feature, C standard needs to be C99 or later and <tt>math.h</tt> is included in <tt>ff.c</tt>.</p>
+<p>This option switches support for floating point argument in <tt>f_printf</tt>. When enable this feature, C standard needs to be C99 or later and <tt>math.h</tt> is included in <tt>ff.c</tt>. This option has no effect when <tt>FF_USE_STRFUNC == 0</tt>.</p>
 <table class="lst1">
 <tr><th>Value</th><th>Description</th></tr>
 <tr><td>0</td><td>Disable floating point argument.</td></tr>
 <tr><td>1</td><td>Enable floating point argument in type <tt>'f'</tt>, <tt>'e'</tt> and <tt>'E'</tt>.</td></tr>
-<tr><td>2</td><td>Enable it with decimal separator <tt>','</tt> instead of <tt>'.'</tt>.</td></tr>
+<tr><td>2</td><td>Same as 1 but with decimal separator <tt>','</tt> instead of <tt>'.'</tt> in output string.</td></tr>
 </table>
 
 <h4 id="strf_encode">FF_STRF_ENCODE</h4>
-<p>When character encoding on the API is Unicode (<tt>FF_LFN_UNICODE &gt;= 1</tt>), string I/O functions enabled by <tt>FF_USE_STRFUNC</tt> convert the character encoding in it. This option defines the assumption of character encoding <em>on the file</em> to be read/written via those functions. When LFN is not enabled or <tt>FF_LFN_UNICODE == 0</tt>, the string functions work without any code conversion and this option has no effect.</p>
+<p>When the character encoding on the API is Unicode (<tt>FF_LFN_UNICODE &gt;= 1</tt>), string I/O functions enabled by <tt>FF_USE_STRFUNC</tt> convert the character encoding in it. This option defines the assumption of character encoding <em>on the file</em> to be read/written via the string I/O functions. When LFN is not enabled or <tt>FF_LFN_UNICODE == 0</tt>, the string I/O functions work without any code conversion and this option has no effect.</p>
 <table class="lst2">
 <tr><th>Value</th><th>Character encoding on the file</th></tr>
 <tr><td>0</td><td>ANSI/OEM in current code page</td></tr>
@@ -228,9 +226,9 @@
 <p>This option switches the support for string volume ID. When arbitrary string for the volume ID is enabled for the drive prefix, also pre-defined strings by <tt>FF_VOLUME_STRS</tt> or user defined strings can be used as drive prefix in the path name. Numeric drive number is always valid regardless of this option, and also either format of drive prefix can be enabled by this option.</p>
 <table class="lst2">
 <tr><th>Value</th><th>Description</th><th>Example</th></tr>
-<tr><td>0</td><td>Only DOS/Windows style drive prefix in numeric ID can be used.</td><td>1:/filename</td></tr>
-<tr><td>1</td><td>Also DOS/Windows style drive prefix in string ID can be used.</td><td>flash:/filename</td></tr>
-<tr><td>2</td><td>Also Unix style drive prefix in string ID can be used.</td><td>/flash/filename</td></tr>
+<tr><td>0</td><td>DOS/Windows style drive prefix in numeric ID.</td><td>1:/filename</td></tr>
+<tr><td>1</td><td>0 + DOS/Windows style drive prefix in arbitry string ID.</td><td>flash:/filename</td></tr>
+<tr><td>2</td><td>0 + Unix style drive prefix in arbitry string ID.</td><td>/flash/filename</td></tr>
 </table>
 
 <h4 id="volume_strs">FF_VOLUME_STRS</h4>
@@ -241,7 +239,7 @@ const char* VolumeStr[FF_VOLUMES] = {"ram","flash","sd","usb"};
 </pre>
 
 <h4 id="multi_partition">FF_MULTI_PARTITION</h4>
-<p>Disable (0) or Enable (1). This option switches multi-partition function. By default (0), each logical drive number is bound to the same physical drive number and only a volume in the physical drive is mounted. When enabled, each logical drive is bound to the partition on the physical drive listed in the user defined partition resolution table <tt>VolToPart[]</tt>. Also <tt>f_fdisk</tt> funciton will be available. For more information, read <a href="filename.html#vol">here</a>.</p>
+<p>This option switches multi-partition featuer. By default (0), each logical drive number is bound to the same physical drive number and only one volume found in the physical drive is mounted. When it is enabled (1), each logical drive is bound to the specific partition listed in the user defined partition resolution table <tt>VolToPart[]</tt>. Also <tt>f_fdisk</tt> funciton is available to create the arbitrary partitions on the physical drive. For more information, read <a href="filename.html#vol">here</a>.</p>
 
 <h4 id="max_ss">FF_MIN_SS, FF_MAX_SS</h4>
 <p>This set of options defines the extent of sector size used for the low level disk I/O interface, <tt>disk_read</tt> and <tt>disk_write</tt> function. Valid values are 512, 1024, 2048 and 4096. <tt>FF_MIN_SS</tt> defines minimum sector size and <tt>FF_MAX_SS</tt> defines the maximum sector size. Always set both 512 for memory card and harddisk. But a larger value may be required for on-board flash memory and some type of optical media. When <tt>FF_MAX_SS &gt; FF_MIN_SS</tt>, support of variable sector size is enabled and <tt>GET_SECTOR_SIZE</tt> command needs to be implemented to the <tt>disk_ioctl</tt> function.</p>
@@ -298,6 +296,7 @@ const char* VolumeStr[FF_VOLUMES] = {"ram","flash","sd","usb"};
 <p>Number of O/S time ticks to abort the file function with <tt>FR_TIMEOUT</tt> when the wait time exceeds this period. This option has no effect when <tt>FF_FS_REENTRANT == 0</tt>.</p>
 
 </div>
+
 
 <p class="foot"><a href="../00index_e.html">Return</a></p>
 </body>

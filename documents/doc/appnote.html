@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="up" title="FatFs" href="../00index_e.html">
-<link rel="alternate" hreflang="ja" title="Japanese" href="../ja/appnote.html">
 <link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
 <title>FatFs Module Application Note</title>
 </head>
@@ -81,7 +79,7 @@ The FatFs module is a middleware written in ANSI C (C89). There is no platform d
 <tr><td>disk_ioctl (GET_SECTOR_SIZE)</td><td><a href="config.html#max_ss">FF_MAX_SS != FF_MIN_SS</a></td></tr>
 <tr><td>disk_ioctl (CTRL_TRIM)</td><td><a href="config.html#use_trim">FF_USE_TRIM == 1</a></td></tr>
 <tr><td>ff_uni2oem<br>ff_oem2uni<br>ff_wtoupper</td><td><a href="config.html#use_lfn">FF_USE_LFN != 0</a></td><td>Unicode support functions.<br>Add optional module ffunicode.c to the project.</td></tr>
-<tr><td>ff_cre_syncobj<br>ff_del_syncobj<br>ff_req_grant<br>ff_rel_grant</td><td><a href="config.html#fs_reentrant">FF_FS_REENTRANT == 1</a></td><td rowspan="2">O/S dependent functions.<br>Sample code is available in ffsystem.c.</td></tr>
+<tr><td>ff_mutex_create<br>ff_mutex_delete<br>ff_mutex_take<br>ff_mutex_give</td><td><a href="config.html#fs_reentrant">FF_FS_REENTRANT == 1</a></td><td rowspan="2">O/S dependent functions.<br>Sample code is available in ffsystem.c.</td></tr>
 <tr><td>ff_mem_alloc<br>ff_mem_free</td><td>FF_USE_LFN == 3</td></tr>
 </table>
 <p>FatFs cares about neither what kind of storage device is used nor how it is implemented. Only a requirement is that it is a block device read/written in fixed-size blocks that accessible via the disk I/O functions defined above.</p>
@@ -171,8 +169,8 @@ And any other options are left unchanged from original setting.
 
 <div class="para doc" id="lfn">
 <h3>Long File Name</h3>
-<p>FatFs module supports the long file name (LFN) extension of the FAT filesystem. The two different file names, short file name (SFN) and LFN, of a file is transparent on the API. The support for LFN feature is disabled by default. To enable the LFN, set <tt><a href="config.html#use_lfn">FF_USE_LFN</a></tt> to 1, 2 or 3, and add <tt>ffunicode.c</tt> to the project. The LFN feature requiers a certain working buffer. The buffer size can be configured by <tt><a href="config.html#max_lfn">FF_MAX_LFN</a></tt> according to the available memory. The length of LFN can be up to 255 characters, so that the <tt>FF_MAX_LFN</tt> should be set to 255 for any existing file names. If the size of working buffer is insufficient for the input file name, the file function fails with <tt>FR_INVALID_NAME</tt>. When use any re-entry to the API with LFN feature in RTOS environment, <tt>FF_USE_LFN</tt> must be set to 2 or 3. In this case, the file function allocates the working buffer on the stack or heap. The LFN working buffer occupies <tt>(FF_MAX_LFN + 1) * 2</tt> bytes and additional <tt>(FF_MAX_LFN + 44) / 15 * 32</tt> bytes when exFAT is enabled.</p>
-<h4>Impact upon Module Size</h4>
+<p>FatFs module supports the long file name (LFN) extension of the FAT filesystem. The two different file names, short file name (SFN) and LFN, of a file are transparent on the API. The support for LFN feature is disabled by default. To enable the LFN, set <tt><a href="config.html#use_lfn">FF_USE_LFN</a></tt> to 1, 2 or 3, and add <tt>ffunicode.c</tt> to the project. The LFN feature requiers a certain working buffer. The buffer size can be configured by <tt><a href="config.html#max_lfn">FF_MAX_LFN</a></tt> according to the available memory. The LFN specification allows the length of LFN up to 255 characters, so that the <tt>FF_MAX_LFN</tt> should be set to 255 for every existing file name. If the size of working buffer is insufficient for the input file name, the file function fails with <tt>FR_INVALID_NAME</tt>. When use any re-entry to the file API with LFN feature in RTOS environment, <tt>FF_USE_LFN</tt> must be set to 2 or 3. In this case, the file function allocates the working buffer on the stack or heap. The LFN working buffer occupies <tt>(FF_MAX_LFN + 1) * 2</tt> bytes and additional <tt>(FF_MAX_LFN + 44) / 15 * 32</tt> bytes when exFAT is enabled.</p>
+<h4>Code Page and Module Size</h4>
 <table class="lst2 rset">
 <caption>With LFN at CM3 + gcc</caption>
 <tr><th><tt>FF_CODE_PAGE</tt></th><th>Code size</th></tr>
@@ -184,8 +182,8 @@ And any other options are left unchanged from original setting.
 <tr><td>0 (All code pages)</td><td>+486k</td></tr>
 </table>
 <p>When the LFN is enabled, the module size will be increased depends on the configured code page. Right table shows the increment of code size in some code pages. Especially, in the CJK region, tens of thousands of characters are being used. Unfortunately, it requires a huge OEM-Unicode bidirectional conversion table and the module size will be drastically increased as shown in the table.</p>
-<p>As the result, the FatFs with LFN enabled with DBCS code pages will not able to be ported on the most 8-bit MCU systems. If the target system is in legacy-free, in only Unicode and any ANSI/OEM code is not used at all, the code page setting gets meaningless. You will able to reduce the code size by configureing FatFs for Unicode API with any SBCS code page.</p>
-<p>There ware some restrictions on using LFN for open source project, because the LFN extension on the FAT filesystem was a patent of Microsoft Corporation. However the related patents all have expired and using the LFN feature is free for any projects.</p>
+<p>As the result, the FatFs with LFN enabled with DBCS code pages will not able to be ported on the most 8-bit MCU systems. If the target system is in legacy-free, in only Unicode and any ANSI/OEM code is not used at all, the code page setting is meaningless. You will able to reduce the code size by configureing FatFs for Unicode API with some SBCS code page.</p>
+<p>There ware some restrictions on using the LFN in open source project, because the LFN extension on the FAT filesystem was a patent of Microsoft Corporation. However the related patents all have expired and using the LFN feature is free for any project.</p>
 </div>
 
 <div class="para doc" id="unicode">
@@ -334,6 +332,7 @@ Figure 5. Minimized critical section<br>
 <p>Therefore FatFs license is one of the BSD-style licenses but there is a significant feature. FatFs is mainly intended for embedded systems. In order to extend the usability for commercial products, the redistributions of FatFs in binary form, such as embedded code, binary library and any forms without source code, does not need to include about FatFs in the documentations. This is equivalent to the 1-clause BSD license. Of course FatFs is compatible with the most of open source software licenses includes GNU GPL. When you redistribute the FatFs source code with any changes or create a fork, the license can also be changed to GNU GPL, BSD-style license or any open source software license that compatible with FatFs license.</p>
 </div>
 
-<p class="foot"><a href="../00index_e.html">Return Home</a></p>
+
+<p class="foot"><a href="../00index_e.html">Return</a></p>
 </body>
 </html>

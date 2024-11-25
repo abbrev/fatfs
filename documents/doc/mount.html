@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="up" title="FatFs" href="../00index_e.html">
-<link rel="alternate" hreflang="ja" title="Japanese" href="../ja/mount.html">
 <link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
 <title>FatFs - f_mount</title>
 </head>
@@ -92,19 +90,19 @@ int main (void)
     FATFS *fs;     <span class="c">/* Ponter to the filesystem object */</span>
 
 
-    fs = malloc(sizeof (FATFS));           <span class="c">/* Get work area for the volume */</span>
-    <em>f_mount</em>(fs, "", 0);                    <span class="c">/* Mount the default drive */</span>
+    fs = malloc(sizeof (FATFS));   <span class="c">/* Get work area for the volume */</span>
+    <em>f_mount</em>(fs, "", 0);            <span class="c">/* Mount the default drive */</span>
 
-    f_open(...                             <span class="c">/* Here any file API can be used */</span>
-
-    ...
-
-    <em>f_mount</em>(fs, "", 0);                    <span class="c">/* Re-mount the default drive to reinitialize the filesystem */</span>
+    f_open(...                     <span class="c">/* Here any file API can be used */</span>
 
     ...
 
-    <em>f_mount</em>(0, "", 0);                     <span class="c">/* Unmount the default drive */</span>
-    free(fs);                              <span class="c">/* Here the work area can be discarded */</span>
+    <em>f_mount</em>(fs, "", 0);            <span class="c">/* Re-mount the default drive to reinitialize the filesystem */</span>
+
+    ...
+
+    <em>f_unmount</em>("");                 <span class="c">/* Unmount the default drive */</span>
+    free(fs);                      <span class="c">/* Here the work area can be discarded */</span>
 
     ...
 }
@@ -116,6 +114,7 @@ int main (void)
 <h4>See Also</h4>
 <p><tt><a href="open.html">f_open</a></tt>, <tt><a href="sfatfs.html">FATFS</a></tt></p>
 </div>
+
 
 <p class="foot"><a href="../00index_e.html">Return</a></p>
 </body>

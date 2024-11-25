@@ -3,8 +3,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
-<link rel="up" title="FatFs" href="../00index_e.html">
-<link rel="alternate" hreflang="ja" title="Japanese" href="../ja/lseek.html">
 <link rel="stylesheet" href="../css_e.css" type="text/css" media="screen" title="ELM Default">
 <title>FatFs - f_lseek</title>
 </head>
@@ -32,7 +30,7 @@ FRESULT f_rewind (
 <h4>Parameters</h4>
 <dl class="par">
 <dt>fp</dt>
-<dd>Pointer to the open file object.</dd>
+<dd>Pointer to the open file object. If a null pointer is given, the function fails with <tt>FR_INVALID_OBJECT</tt>.</dd>
 <dt>ofs</dt>
 <dd>Byte offset from top of the file to set read/write pointer. The data type <tt>FSIZE_t</tt> is an alias of either <tt>DWORD</tt>(32-bit) or <tt>QWORD</tt>(64-bit) depends on the configuration option <tt><a href="config.html#fs_exfat">FF_FS_EXFAT</a></tt>.</dd>
 </dl>
@@ -53,11 +51,12 @@ FRESULT f_rewind (
 
 <div class="para desc">
 <h4>Description</h4>
-<p>File read/write ponter in the open file object points the data byte to be read/written at next read/write operation. It advances as the number of bytes read/written. The <tt>f_lseek</tt> function moves the file read/write pointer without any read/write operation to the file. The <tt>f_rewind</tt> function is impremented as a macro.</p>
+<p>File read/write ponter in the open file object points the data byte to be read/written at next read/write operation. It advances as the number of bytes read/written. The <tt>f_lseek</tt> function moves the file read/write pointer without read/write operation to the file. The <tt>f_rewind</tt> function is impremented as a macro.</p>
 <pre>
 #define <em>f_rewind</em>(fp) f_lseek((fp), 0)
 </pre>
-<p>If an offset beyond the file size is specified in write mode, the file size is expanded to the specified offset. The file data in the expanded part is <em>undefined</em>, because no data is written to the file in this process. This is suitable to pre-allocate a data area to the file quickly for fast write operation. When a contiguous data area needs to be allocated to the file, use <tt>f_expand</tt> function instead. After the <tt>f_lseek</tt> function succeeded, the current read/write pointer should be checked in order to make sure the read/write pointer has been moved correctry. In case of the read/write pointer is not pointing expected offset, either of followings has been occured.</p>
+<p>When an offset beyond the file size is specified in write mode, the file size is expanded to the specified offset <em>in this function</em>. The file data in the expanded part is <em>undefined</em>, because no data is written to the file in this process. Be careful about these behaviours differ from POSIX <tt>fseek</tt> function. This is suitable to pre-allocate a data area to the file for subsequent fast write operation. If a contiguous data area needs to be allocated to the file, use <tt>f_expand</tt> function instead.</p>
+<p>After the <tt>f_lseek</tt> function succeeded, the current read/write pointer should be checked in order to make sure the read/write pointer has been moved correctry. In case of the read/write pointer is not pointing expected offset, either of followings has been occured.</p>
 <ul>
 <li>End of file. The specified <tt class="arg">ofs</tt> was clipped at end of the file in read-only mode.</li>
 <li>Disk full. There is no free space on the volume to expand the file.</li>
@@ -78,7 +77,7 @@ FRESULT f_rewind (
 <pre>
     <span class="c">/* Open file */</span>
     fp = malloc(sizeof (FIL));
-    res = f_open(fp, "file.dat", FA_READ|FA_WRITE);
+    res = <em>f_open</em>(fp, "file.dat", FA_READ|FA_WRITE);
     if (res) ...
 
     <span class="c">/* Set read/write pointer to 5000 */</span>
@@ -96,15 +95,15 @@ FRESULT f_rewind (
 <pre>
 <span class="c">/* Cluster pre-allocation (to prevent buffer overrun on streaming write) */</span>
 
-    res = f_open(fp, recfile, FA_CREATE_NEW | FA_WRITE);   <span class="c">/* Create a file */</span>
+    res = <em>f_open</em>(fp, recfile, FA_CREATE_NEW | FA_WRITE);   <span class="c">/* Create a file */</span>
 
     res = <em>f_lseek</em>(fp, PRE_SIZE);             <span class="c">/* Expand file size (cluster pre-allocation) */</span>
-    if (res || f_tell(fp) != PRE_SIZE) ...   <span class="c">/* Check if the file has been expanded successfly */</span>
+    if (res || <em>f_tell</em>(fp) != PRE_SIZE) ...   <span class="c">/* Check if the file has been expanded successfly */</span>
 
     res = <em>f_lseek</em>(fp, OFS_DATA);             <span class="c">/* Record data stream with free from cluster allocation delay */</span>
     ...                                      <span class="c">/* Write operation should be aligned to sector boundary to optimize the write throughput */</span>
 
-    res = f_truncate(fp);                    <span class="c">/* Truncate unused area */</span>
+    res = <em>f_truncate</em>(fp);                    <span class="c">/* Truncate unused area */</span>
     res = <em>f_lseek</em>(fp, OFS_HEADER);           <span class="c">/* Set file header */</span>
     ...
 
@@ -115,7 +114,7 @@ FRESULT f_rewind (
 
     DWORD clmt[SZ_TBL];                    <span class="c">/* Cluster link map table buffer */</span>
 
-    res = f_open(fp, fname, FA_READ | FA_WRITE);   <span class="c">/* Open a file */</span>
+    res = <em>f_open</em>(fp, fname, FA_READ | FA_WRITE);   <span class="c">/* Open a file */</span>
 
     res = <em>f_lseek</em>(fp, ofs1);               <span class="c">/* This is normal seek (cltbl is nulled on file open) */</span>
 
@@ -133,6 +132,7 @@ FRESULT f_rewind (
 <h4>See Also</h4>
 <p><tt><a href="open.html">f_open</a>, <a href="truncate.html">f_truncate</a>, <a href="expand.html">f_expand</a>, <a href="sfile.html">FIL</a></tt></p>
 </div>
+
 
 <p class="foot"><a href="../00index_e.html">Return</a></p>
 </body>
