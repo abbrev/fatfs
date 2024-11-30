@@ -162,7 +162,7 @@ int ff_mutex_take (	/* Returns 1:Succeeded or 0:Timeout */
 #elif OS_TYPE == 2	/* uC/OS-II */
 	OS_ERR err;
 
-	OSMutexPend(Mutex[vol], FF_FS_TIMEOUT, &err));
+	OSMutexPend(Mutex[vol], FF_FS_TIMEOUT, &err);
 	return (int)(err == OS_NO_ERR);
 
 #elif OS_TYPE == 3	/* FreeRTOS */
