@@ -6330,7 +6330,7 @@ FRESULT f_mkfs (
 		}
 
 		/* Initialize FAT area */
-		memset(buf, 0, sz_buf * ss);
+		memset(&buf[ss], 0, (sz_buf-1) * ss);
 		sect = b_fat;		/* FAT start sector */
 		for (i = 0; i < n_fat; i++) {			/* Initialize FATs each */
 			if (fsty == FS_FAT32) {
