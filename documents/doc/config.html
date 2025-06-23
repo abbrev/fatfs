@@ -56,6 +56,7 @@
    <li><a href="#fs_exfat">FF_FS_EXFAT</a></li>
    <li><a href="#fs_nortc">FF_FS_NORTC</a></li>
    <li><a href="#nortc_time">FF_NORTC_MON, FF_NORTC_MDAY, FF_NORTC_YEAR</a></li>
+   <li><a href="#fs_ctime">FF_FS_CTIME</a></li>
    <li><a href="#fs_nofsinfo">FF_FS_NOFSINFO</a></li>
    <li><a href="#fs_lock">FF_FS_LOCK</a></li>
    <li><a href="#fs_reentrant">FF_FS_REENTRANT</a></li>
@@ -270,6 +271,9 @@ const char* VolumeStr[FF_VOLUMES] = {"ram","flash","sd","usb"};
 
 <h4 id="nortc_time">FF_NORTC_MON, FF_NORTC_MDAY, FF_NORTC_YEAR</h4>
 <p>This set of options defines the time to be used in no RTC systems. This option has no effect in read-only configuration or <tt>FF_FS_NORTC == 0</tt>.</p>
+
+<h4 id="fs_ctime">FF_FS_CTIME</h4>
+<p>This option enables (1) or disables (0) to access the file creation time with <tt>FILINFO</tt> structure.</p>
 
 <h4 id="fs_nofsinfo">FF_FS_NOFSINFO</h4>
 <p>0 to 3. If you need to know correct free space on the FAT32 volume, set bit 0 of this option, and <tt>f_getfree</tt> function at first time after the volume mounted will force a full FAT scan. Bit 1 controls the use of last allocated cluster number for new allocation.</p>

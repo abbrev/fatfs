@@ -4,14 +4,38 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="Content-Style-Type" content="text/css">
 <meta http-equiv="cache-control" content="no-cache">
-<link rel="start" title="Site Top" href="../../">
 <link rel="stylesheet" href="css_e.css" type="text/css" media="screen" title="ELM Default">
 <title>FatFs - Updates and Migration Notes</title>
 </head>
 <body style="max-width: none;">
 <h2>Updates and Migration Notes</h2>
 <table class="lst4">
+
 <tr><th>Revision</th><th>Updates</th><th>Migration Notes</th></tr>
+
+<tr>
+<td>R0.15b<br>Jun 21, 2025</td>
+<td>
+Added support for timestamp of created time. (<tt>FF_FS_CRTIME</tt>)<br>
+Fixed FatFs fails to load the FsInfo in FAT32 volumes and the <tt>f_getfree</tt> always be forced a full FAT scan which takes a long time. (appeared at R0.15a)<br>
+</td>
+<td>
+Small changes to the <tt>f_utime</tt> function to support for the timestamp of created time.<br>
+</td>
+</tr>
+
+<tr>
+<td>R0.15a<br>Nov 22, 2024</td>
+<td>
+Fixed a complie error when <tt>FF_FS_LOCK != 0</tt>. (appeared at R0.15)</br>
+Fixed a potential issue when work FatFs concurrency with <tt>FF_FS_REENTRANT</tt>, <tt>FF_VOLUMES &gt;= 2</tt> and <tt>FF_FS_LOCK &gt; 0</tt>.<br>
+Made <tt>f_setlabel</tt> accept a volume label with Unix style volume ID when <tt>FF_STR_VOLUME_ID == 2</tt>.<br>
+Made FatFs update <tt>PercInUse</tt> field in exFAT VBR. (A preceding <tt>f_getfree</tt> is needed for the accuracy)<br>
+</td>
+<td>
+</td>
+</tr>
+
 <tr>
 <td>R0.15<br>Nov 6, 2022</td>
 <td>
@@ -27,6 +51,7 @@ User provided synchronization functions, <tt>ff_cre_syncobj</tt>, <tt>ff_del_syn
 <tt>FF_SYNC_t</tt> is removed from the configuration options.<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.14b<br>Apr 17, 2021</td>
 <td>
@@ -43,6 +68,7 @@ Fixed some compiler warnings.<br>
 From this revision, FatFs depends on <tt>string.h</tt>.<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.14a<br>Dec 05, 2020</td>
 <td>
@@ -54,6 +80,7 @@ Fixed some compiler warnings.<br>
 Number of wildcards in the matching pattern in <tt>f_findfirst</tt> is limited to 4.<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.14<br>Oct 14, 2019</td>
 <td>
@@ -68,6 +95,7 @@ Fixed <tt>f_mkfs</tt> can fail to create exFAT volume in the second partition. (
 Usage of <tt>f_mkfs</tt> and <tt>f_fdisk</tt> is changed and some features are added to these functions.<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.13c<br>Oct 14, 2018</td>
 <td>
@@ -81,6 +109,7 @@ From this revision, FatFs depends on <tt>stdint.h</tt> in C99 or later.<br>
 <tt>integer.h</tt> is removed.<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.13b<br>Apr 07, 2018</td>
 <td>
@@ -92,6 +121,7 @@ Fixed <tt>f_setlabel</tt> does not reject some invalid characters. (appeared at 
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.13a<br>Oct 14, 2017</td>
 <td>
@@ -105,6 +135,7 @@ Fixed <tt>f_setlabel</tt> rejects some valid characters for exFAT volume. (appea
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.13<br>May 21, 2017</td>
 <td>
@@ -121,6 +152,7 @@ Fixed creating a file can fail when a new cluster allocation to the exFAT direct
 ASCII only configuration, <tt>FF_CODE_PAGE = 1</tt>, is removed. Use <tt>FF_CODE_PAGE = 437</tt> instead.<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.12c<br>Mar 04, 2017</td>
 <td>
@@ -132,6 +164,7 @@ Fixed configuration option <tt>_VOLUMES</tt> cannot be set 10. (appeared at R0.1
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.12b<br>Sep 4, 2016</td>
 <td>
@@ -147,6 +180,7 @@ Fixed some internal errors in <tt>f_expand</tt> and <tt>f_lseek.</tt> (appeared 
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.12a<br>Jul 10, 2016</td>
 <td>
@@ -161,6 +195,7 @@ Fixed compilation fails at some configurations, <tt>_USE_FASTSEEK</tt> and <tt>_
 Usage of <tt>f_mkfs</tt> is changed.<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.12<br>Apr 12, 2016</td>
 <td>
@@ -180,6 +215,7 @@ To use <tt>f_chmod</tt>, <tt>_USE_CHMOD</tt> needs to be set.<br>
 <tt>_WORD_ACCESS</tt> is removed from the configuration options.<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.11a<br>Sep 5, 2015</td>
 <td>
@@ -192,6 +228,7 @@ Fixed errors in the case conversion teble of Unicode (<tt>cc*.c</tt>).<br>
 Removed some code pages actually not exist on the standard systems. (<tt>_CODE_PAGE</tt>)<br>
 </td>
 </tr>
+
 <tr>
 <td>R0.11<br>Feb 9, 2015</td>
 <td>
@@ -202,6 +239,7 @@ Fixed <tt>_FS_NORTC</tt> option does not work properly. (appeared at R0.10c)<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.10c<br>Nov 9, 2014</td>
 <td>
@@ -213,6 +251,7 @@ Fixed null pointer dereference on attempting to delete the root direcotry. (appe
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.10b<br>May 19, 2014</td>
 <td>
@@ -222,6 +261,7 @@ Fixed LFN entry is not deleted on delete/rename an object with its lossy convert
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.10a<br>Jan 15, 2014</td>
 <td>
@@ -236,6 +276,7 @@ Fixed creation of a directory entry with LFN fails on too many SFN collisions. (
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.10<br>Oct 2, 2013</td>
 <td>
@@ -252,6 +293,7 @@ Fixed <tt>f_open</tt>, <tt>f_mkdir</tt> and <tt>f_setlabel</tt> can return incor
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.09b<br>Jan 24, 2013</td>
 <td>
@@ -260,6 +302,7 @@ Added <tt>f_getlabel</tt> and <tt>f_setlabel</tt>. (<tt>_USE_LABEL</tt>)<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.09a<br>Aug 27, 2012</td>
 <td>
@@ -270,6 +313,7 @@ Changed option name <tt>_FS_SHARE</tt> to <tt>_FS_LOCK</tt>.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.09<br>Sep 6, 2011</td>
 <td>
@@ -279,6 +323,7 @@ Added <tt>f_fdisk</tt>. (<tt>_MULTI_PARTITION = 2</tt>)<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.08b<br>Jan 15, 2011</td>
 <td>
@@ -290,6 +335,7 @@ Ignores duplicated directory separators in given path names.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.08a<br>Aug 16, 2010</td>
 <td>
@@ -302,6 +348,7 @@ Fixed <tt>f_mkfs</tt> creates wrong FAT32 volume.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.08<br>May 15, 2010</td>
 <td>
@@ -315,6 +362,7 @@ String functions support UTF-8 encoding files on Unicode cfg.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.07e<br>Nov 3, 2009</td>
 <td>
@@ -327,6 +375,7 @@ Changed <tt>f_readdir</tt> to return the SFN with always upper case on non-LFN c
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.07c<br>Jan 21, 2009</td>
 <td>
@@ -340,6 +389,7 @@ Added proper case conversion to extended characters.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.07a<br>Apr 14, 2009</td>
 <td>
@@ -349,6 +399,7 @@ Added multiple sector size support.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.07<br>Apr 1, 2009</td>
 <td>
@@ -364,6 +415,7 @@ Renamed string functions to avoid name collision.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.06<br>Apr 1, 2008</td>
 <td>
@@ -374,6 +426,7 @@ Improved performance of <tt>f_lseek</tt> on moving to the same or following clus
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.05a<br>Feb 3, 2008</td>
 <td>
@@ -386,6 +439,7 @@ Fixed cached sector is left not flushed when create and close without write.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.05<br>Aug 26, 2007</td>
 <td>
@@ -397,6 +451,7 @@ Fixed <tt>f_mkdir</tt> on FAT32 creates broken directory. (FatFs)<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.04b<br>May 5, 2007</td>
 <td>
@@ -409,6 +464,7 @@ Fixed short seek (<tt>&lt;= csize</tt>) collapses the file object.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.04a<br>Apr 1, 2007</td>
 <td>
@@ -421,6 +477,7 @@ Fixed a problem corresponds to FAT32 support. (Tiny-FatFs)<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.04<br>Feb 4, 2007</td>
 <td>
@@ -432,6 +489,7 @@ Added <tt>_USE_FAT32</tt> option. (Tiny-FatFs)<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.03a<br>Dec 11, 2006</td>
 <td>
@@ -441,6 +499,7 @@ Fixed <tt>f_mkdir</tt> creates broken directory on FAT32.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.03<br>Sep 22, 2006</td>
 <td>
@@ -450,6 +509,7 @@ Changed option <tt>_FS_MINIMUM</tt> to <tt>_FS_MINIMIZE</tt>.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.02a<br>Jun 10, 2006</td>
 <td>
@@ -458,6 +518,7 @@ Added a configuration option <tt>_FS_MINIMUM</tt>.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.02<br>Jun 01, 2006</td>
 <td>
@@ -468,6 +529,7 @@ Fixed a problem on small (<tt>&lt;32M</tt>) patition.<br>
 <td>
 </td>
 </tr>
+
 <tr>
 <td>R0.01<br>Apr 29, 2006</td>
 <td>
@@ -477,5 +539,6 @@ First release.<br>
 </td>
 </tr>
 </table>
+<p class="foot"><a href=".">Return</a></p>
 </body>
 </html>

@@ -86,16 +86,16 @@ FRESULT list_dir (const char *path)
     int nfile, ndir;
 
 
-    res = <em>f_opendir</em>(&amp;dir, path);                       <span class="c">/* Open the directory */</span>
+    res = <em>f_opendir</em>(&amp;dir, path);                   <span class="c">/* Open the directory */</span>
     if (res == FR_OK) {
         nfile = ndir = 0;
         for (;;) {
-            res = <em>f_readdir</em>(&amp;dir, &amp;fno);                   <span class="c">/* Read a directory item */</span>
-            if (res != FR_OK || fno.fname[0] == 0) break;  <span class="c">/* Error or end of dir */</span>
-            if (fno.fattrib &amp; AM_DIR) {            <span class="c">/* Directory */</span>
+            res = <em>f_readdir</em>(&amp;dir, &amp;fno);           <span class="c">/* Read a directory item */</span>
+            if (fno.fname[0] == 0) break;          <span class="c">/* Error or end of dir */</span>
+            if (fno.fattrib &amp; AM_DIR) {            <span class="c">/* It is a directory */</span>
                 printf("   &lt;DIR&gt;   %s\n", fno.fname);
                 ndir++;
-            } else {                               <span class="c">/* File */</span>
+            } else {                               <span class="c">/* It is a file */</span>
                 printf("%10u %s\n", fno.fsize, fno.fname);
                 nfile++;
             }
@@ -121,18 +121,18 @@ FRESULT scan_files (
     static FILINFO fno;
 
 
-    res = <em>f_opendir</em>(&amp;dir, path);                       <span class="c">/* Open the directory */</span>
+    res = <em>f_opendir</em>(&amp;dir, path);                   <span class="c">/* Open the directory */</span>
     if (res == FR_OK) {
         for (;;) {
-            res = <em>f_readdir</em>(&amp;dir, &amp;fno);                   <span class="c">/* Read a directory item */</span>
-            if (res != FR_OK || fno.fname[0] == 0) break;  <span class="c">/* Break on error or end of dir */</span>
-            if (fno.fattrib &amp; AM_DIR) {                    <span class="c">/* It is a directory */</span>
+            res = <em>f_readdir</em>(&amp;dir, &amp;fno);           <span class="c">/* Read a directory item */</span>
+            if (fno.fname[0] == 0) break;          <span class="c">/* Break on error or end of dir */</span>
+            if (fno.fattrib &amp; AM_DIR) {            <span class="c">/* The item is a directory */</span>
                 i = strlen(path);
                 sprintf(&amp;path[i], "/%s", fno.fname);
-                res = scan_files(path);                    <span class="c">/* Enter the directory */</span>
+                res = scan_files(path);            <span class="c">/* Enter the directory */</span>
                 if (res != FR_OK) break;
                 path[i] = 0;
-            } else {                                       <span class="c">/* It is a file. */</span>
+            } else {                               <span class="c">/* The item is a file. */</span>
                 printf("%s/%s\n", path, fno.fname);
             }
         }
