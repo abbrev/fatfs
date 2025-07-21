@@ -35,7 +35,8 @@
    <li><a href="#max_lfn">FF_MAX_LFN</a></li>
    <li><a href="#lfn_unicode">FF_LFN_UNICODE</a></li>
    <li><a href="#lfn_buf">FF_LFN_BUF, FF_SFN_BUF</a></li>
-   <li><a href="#fs_rpath">FF_FS_RPATH</a></li>
+   <li><a href="#fs_rpath">FF_RPATH</a></li>
+   <li><a href="#fs_depth">FF_PATH_DEPTH</a></li>
  </ul>
 </li>
 <li>Volume/Drive Configurations
@@ -56,7 +57,7 @@
    <li><a href="#fs_exfat">FF_FS_EXFAT</a></li>
    <li><a href="#fs_nortc">FF_FS_NORTC</a></li>
    <li><a href="#nortc_time">FF_NORTC_MON, FF_NORTC_MDAY, FF_NORTC_YEAR</a></li>
-   <li><a href="#fs_ctime">FF_FS_CTIME</a></li>
+   <li><a href="#fs_ctime">FF_FS_CRTIME</a></li>
    <li><a href="#fs_nofsinfo">FF_FS_NOFSINFO</a></li>
    <li><a href="#fs_lock">FF_FS_LOCK</a></li>
    <li><a href="#fs_reentrant">FF_FS_REENTRANT</a></li>
@@ -170,7 +171,7 @@
 </table>
 
 <h4 id="use_lfn">FF_USE_LFN</h4>
-<p>This option switches the support for long file name (LFN). When enable the LFN, Unicode support module <tt>ffunicode.c</tt> need to be added to the project. When use stack for the working buffer, take care on stack overflow. When use heap memory for the working buffer, memory management functions (<tt>ff_memalloc</tt> and <tt>ff_memfree</tt>) need to be added to the project.</p>
+<p>This option switches the long file name (LFN) extension and which memory to be allocated for the working buffer. When enable the LFN, Unicode support module <tt>ffunicode.c</tt> need to be added to the project. When use stack for the working buffer, take care on stack usage. When use heap memory for the working buffer, memory management functions (<tt>ff_memalloc</tt> and <tt>ff_memfree</tt>) need to be added to the project.</p>
 <table class="lst1">
 <tr><th>Value</th><th>Description</th></tr>
 <tr><td>0</td><td>Disable LFN. Path name in only 8.3 format can be used.</td></tr>
@@ -180,7 +181,7 @@
 </table>
 
 <h4 id="max_lfn">FF_MAX_LFN</h4>
-<p>LFN function requiers certain internal working buffer for the file name. This option defines size of the buffer and the value can be in range of 12 to 255 characters (actually in UTF-16 code units) of the LFN. The buffer occupies <tt>(FF_MAX_LFN + 1) * 2</tt> bytes and additional <tt>(FF_MAX_LFN + 44) / 15 * 32</tt> bytes when exFAT is enabled. It is recommended to be set 255 to fully support the LFN specification. This option has no effect when LFN is not enabled.</p>
+<p>LFN extension requiers a certain internal working buffer for the file name. This option defines size of the buffer and the value can be in range of 12 to 255 characters (actually in UTF-16 code unit) of the LFN. The working buffer occupies <tt>(FF_MAX_LFN + 1) * 2</tt> bytes and additional <tt>(FF_MAX_LFN + 44) / 15 * 32</tt> bytes when exFAT is enabled. It is recommended to be set 255 to fully satisfy the LFN specification. This option has no effect when LFN is not enabled.</p>
 
 <h4 id="lfn_unicode">FF_LFN_UNICODE</h4>
 <p>This option switches character encoding for the file name on the API. FatFs supports the code point up to U+10FFFF. This option also affects behavior of string I/O functions (see <tt>FF_STRF_ENCODE</tt>).</p>
@@ -191,7 +192,7 @@
 <tr><td>2</td><td>Unicode in UTF-8</td><td>char</td></tr>
 <tr><td>3</td><td>Unicode in UTF-32</td><td>DWORD</td></tr>
 </table>
-<p>When Unicode is selected, <tt>FF_CODE_PAGE</tt> has actually no meaning except for compatibility with legacy systems, such as MS-DOS and any system without support for LFN.</p>
+<p>When Unicode is selected, <tt>FF_CODE_PAGE</tt> has actually no meaning except for compatibility with legacy systems, such as MS-DOS and the systems without support for LFN.</p>
 <p>When LFN is not enabled, this option has no effect and FatFs works in ANSI/OEM code on the API. For more information, read <a href="filename.html#uni">here</a>.</p>
 
 <h4 id="lfn_buf">FF_LFN_BUF, FF_SFN_BUF</h4>
@@ -203,16 +204,20 @@
 <tr><td>Unicode in UTF-16/32</td><td>255 items</td><td>12 items</td></tr>
 <tr><td>Unicode in UTF-8</td><td>765 items</td><td>34 items</td></tr>
 </table>
-<p>If the size of name member is insufficient for the LFN, the item is treated as without LFN. When LFN is not enabled, these options have no effect.</p>
+<p>If the size of <tt>fname[]</tt> is insufficient for the LFN, the directory item is treated as without LFN. When LFN is not enabled, these options have no effect.</p>
 
-<h4 id="fs_rpath">FF_FS_RPATH</h4>
-<p>This option configures relative path function. For more information, read <a href="filename.html#nam">here</a>.</p>
+<h4 id="fs_rpath">FF_RPATH</h4>
+<p>This option configures relative path functions. For more information about relative path, read <a href="filename.html#nam">here</a>.</p>
 <table class="lst1">
 <tr><th>Value</th><th>Description</th></tr>
-<tr><td>0</td><td>Disable relative path and remove related functions.</td></tr>
-<tr><td>1</td><td>Enable relative path. <tt>f_chdir</tt> and <tt>f_chdrive</tt> function is available.</td></tr>
-<tr><td>2</td><td><tt>f_getcwd</tt> function is available in addition to 1</td></tr>
+<tr><td>0</td><td>Disable relative path and remove related APIs.</td></tr>
+<tr><td>1</td><td>Enable relative path. <tt>f_chdir</tt> and <tt>f_chdrive</tt> are available.</td></tr>
+<tr><td>2</td><td><tt>f_getcwd</tt> is available in addition.</td></tr>
 </table>
+
+<h4 id="fs_depth">FF_PATH_DEPTH</h4>
+<p>This option defines maximum depth of directory in the path name on the exFAT volume. For example, <tt>FF_PATH_DEPTH = 3</tt> will able to follow a path <tt>"/dir1/dir2/dir3/file"</tt> but sub-directories in the <tt>dir3</tt> will not able to be followed and set current directory. This is NOT relevant to FAT/FAT32 volume.</p>
+<p>The size of filesystem object (<tt>FATFS</tt>) increases <tt>FF_PATH_DEPTH * 24</tt> bytes to store the current directory path. When <tt>FF_FS_EXFAT == 0</tt> or <tt>FF_FS_RPATH == 0</tt>, this option has no effect.</p>
 
 </div>
 
@@ -224,12 +229,12 @@
 <p>This option configures number of volumes (logical drives up to 10) to be used.</p>
 
 <h4 id="str_volume_id">FF_STR_VOLUME_ID</h4>
-<p>This option switches the support for string volume ID. When arbitrary string for the volume ID is enabled for the drive prefix, also pre-defined strings by <tt>FF_VOLUME_STRS</tt> or user defined strings can be used as drive prefix in the path name. Numeric drive number is always valid regardless of this option, and also either format of drive prefix can be enabled by this option.</p>
+<p>This option switches the support for string volume ID. When arbitrary string for the volume ID is enabled for the drive prefix, also pre-defined strings by <tt>FF_VOLUME_STRS</tt> or user defined strings can be used as drive prefix in the path name. DOS/Windows style numeric volume ID is always valid regardless of this option, and also either format of drive prefix can be enabled by this option.</p>
 <table class="lst2">
 <tr><th>Value</th><th>Description</th><th>Example</th></tr>
-<tr><td>0</td><td>DOS/Windows style drive prefix in numeric ID.</td><td>1:/filename</td></tr>
-<tr><td>1</td><td>0 + DOS/Windows style drive prefix in arbitry string ID.</td><td>flash:/filename</td></tr>
-<tr><td>2</td><td>0 + Unix style drive prefix in arbitry string ID.</td><td>/flash/filename</td></tr>
+<tr><td>0</td><td>DOS/Windows style drive prefix in numeric ID.</td><td><em>1:</em>/filename</td></tr>
+<tr><td>1</td><td>0 + DOS/Windows style drive prefix in arbitry string ID.</td><td><em>flash:</em>/filename</td></tr>
+<tr><td>2</td><td>0 + Unix style drive prefix in arbitry string ID.</td><td><em>/flash</em>/filename</td></tr>
 </table>
 
 <h4 id="volume_strs">FF_VOLUME_STRS</h4>
@@ -272,7 +277,7 @@ const char* VolumeStr[FF_VOLUMES] = {"ram","flash","sd","usb"};
 <h4 id="nortc_time">FF_NORTC_MON, FF_NORTC_MDAY, FF_NORTC_YEAR</h4>
 <p>This set of options defines the time to be used in no RTC systems. This option has no effect in read-only configuration or <tt>FF_FS_NORTC == 0</tt>.</p>
 
-<h4 id="fs_ctime">FF_FS_CTIME</h4>
+<h4 id="fs_ctime">FF_FS_CRTIME</h4>
 <p>This option enables (1) or disables (0) to access the file creation time with <tt>FILINFO</tt> structure.</p>
 
 <h4 id="fs_nofsinfo">FF_FS_NOFSINFO</h4>
@@ -302,6 +307,6 @@ const char* VolumeStr[FF_VOLUMES] = {"ram","flash","sd","usb"};
 </div>
 
 
-<p class="foot"><a href="../00index_e.html">Return</a></p>
+<p class="foot"><a href="../index.html">Return</a></p>
 </body>
 </html>

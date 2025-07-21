@@ -90,7 +90,7 @@ The FatFs module is a middleware written in ANSI C (C89). There is no platform d
 <ul>
 <li>Filesystem type: FAT, FAT32(rev0.0) and exFAT(rev1.0).</li>
 <li>Number of open files: Unlimited. (depends on available memory)</li>
-<li>Number of volumes: Up to 10.</li>
+<li>Number of mounted volumes: Up to 10.</li>
 <li>Sector size: 512, 1024, 2048 and 4096 bytes.</li>
 <li>Minimum volume size: 128 sectors.</li>
 <li>Maximum volume size: 2<sup>32</sup> - 1 sectors in 32-bit LBA, virtually unlimited in 64-bit LBA with exFAT.</li>
@@ -116,11 +116,11 @@ The FatFs module is a middleware written in ANSI C (C89). There is no platform d
 </table>
 <p>These are the memory usage of FatFs module without lower layer on some target systems in following condition. <em>V</em> denotes number of mounted volumes and <em>F</em> denotes number of open files. Every samples here are optimezed in code size.</p>
 <pre>
-FatFs R0.15b options:
+FatFs R0.16 options:
 FF_FS_READONLY   0 (R/W, read/write) or 1 (R/O, read only)
 FF_FS_MINIMIZE   0 (Def, with all basic functions) or 3 (Min, with fully minimized)
 FF_FS_TINY       0 (Default) or 1 (Tiny file object)
-And any other options are left unchanged from original setting.
+Any other option is left unchanged from original settings.
 </pre>
 </div>
 
@@ -202,7 +202,7 @@ And any other options are left unchanged from original setting.
 <div class="para doc" id="lba64">
 <h3>64-bit LBA</h3>
 <p>LBA (Logical Block Addressing) is an addressing method to specify the location of data block, called <em>sector</em>, on the storage media. It is a simple linear address beginning from 0 as the first sector, 1 as the second sector and so on. The host system does not need to consider how the data block is located and managed in the storage device. FatFs supports only LBA for the media access. 32-bit LBA is a common size in the most LBA scheme. It can address up to 2<sup>32</sup> sectors, 2 TB in 512 bytes/sector. When a storage device larger than 2 TB is used, larger sector size or 64-bit LBA will be needed to address the entire sectors of the storage device.</p>
-<p>By default, FatFs works in 32-bit LBA for media access. FatFs can also switch it to 64-bit LBA by a configuration option <tt><a href="config.html#fs_lba64">FF_LBA64</a></tt>. It also enables GPT (GUID Partition Table) for partition management on the storage device. For further information about GPT, refer to <tt><a href="mkfs.html">f_mkfs</a></tt> and <tt><a href="fdisk.html">f_fdisk</a></tt> function.</p>
+<p>By default, FatFs works in 32-bit LBA for media access. By configuration option <a href="config.html#fs_lba64"><tt>FF_LBA64</tt></a>, it can be switched to 64-bit LBA and also GPT (GUID Partition Table) is enabled for partition management on the storage device. For further information about GPT, refer to <tt><a href="mkfs.html">f_mkfs</a></tt> and <tt><a href="fdisk.html">f_fdisk</a></tt> function.</p>
 </div>
 
 <div class="para doc" id="reentrant">
@@ -333,6 +333,6 @@ Figure 5. Minimized critical section<br>
 </div>
 
 
-<p class="foot"><a href="../00index_e.html">Return</a></p>
+<p class="foot"><a href="../index.html">Return</a></p>
 </body>
 </html>

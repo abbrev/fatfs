@@ -12,12 +12,12 @@
 
 <div class="para doc" id="nam">
 <h3>Format of the Path Names</h3>
-<p>The format of path name on the FatFs module is similer to the filename specs of DOS/Windos as follows:</p>
+<p>The format of path name (path to an object (file or sub-directory)) on the FatFs module is similer to the file name specs of DOS/Windos as follows:</p>
 <pre>[<em>drive#</em>:][/]<em>directory</em>/<em>file</em></pre>
-<p>The FatFs module supports long file name (LFN) and 8.3 format file name (SFN). The LFN can be used when <tt><a href="config.html#use_lfn">FF_USE_LFN</a> &gt;= 1</tt>. The sub-directories are separated with a <tt>\</tt> or <tt>/</tt> as the same way as DOS/Windows API. Duplicated separator and terminating separator, such as <tt>"/<em>/</em>animal/<em>//</em>cat<em>/</em>"</tt>, are ignored. Only a difference is that the heading drive prefix to specify the <a href="#vol">logical drive</a>, an FAT volume, is in a digit (0-9) + a colon, while it is in an alphabet (A-Z) + a colon in DOS/Windows. The logical drive number is the identifier to specify the volume to be accessed. When drive prefix is omitted, the logical drive number is assumed as <em>default drive</em>.</p>
-<p>Control characters (<tt>\0</tt> to <tt>\x1F</tt>) are recognized as end of the path name. In LFN configuration, leading or embedded white spaces in the file name are valid as part of the file name, but the treminating white space and dot of the file name are ignored and truncated. In non-LFN configuration, white space is recognized as end of the path name.</p>
-<p>In default configuration (<tt><a href="config.html#fs_rpath">FF_FS_RPATH</a> == 0</tt>), it does not have a concept of current directory like OS oriented filesystem. Every object on the volume is always specified in full path name followed from the root directory. Dot directory names (<tt>".", ".."</tt>) are not allowed. Heading separator is ignored and it can be exist or omitted. The default drive is fixed to drive 0.</p>
-<p>When relative path feature is enabled (<tt>FF_FS_RPATH &gt;= 1</tt>), specified path is followed from the root directory if a heading separator is exist. If not, it is followed from the current directory of the default drive. Dot directory name is also allowed for the path name. The current directory is set by <a href="chdir.html"><tt>f_chdir</tt></a> function and the default drive is the current drive set by <a href="chdrive.html"><tt>f_chdrive</tt></a> function.</p>
+<p>The FatFs module supports long file name (LFN) and 8.3 format file name (SFN). The LFN can be used when <tt><a href="config.html#use_lfn">FF_USE_LFN</a> &gt;= 1</tt>. The sub-directories are separated with a <tt>\</tt> or <tt>/</tt> as the same way as DOS/Windows API. Duplicated separator and terminating separator, such as <tt>"/<em>/</em>animal/<em>//</em>cat<em>/</em>"</tt>, are ignored. Only a difference is that the heading drive prefix to specify the <a href="#vol">logical drive</a> (FAT volume) is in a digit (0-9) + a colon, while it is in an alphabet (A-Z) + a colon in DOS/Windows API. The logical drive number is the identifier to specify the FAT volume to be accessed. When drive prefix is omitted, the logical drive number is assumed as <em>default drive</em>.</p>
+<p>Control characters (<tt>\0</tt> to <tt>\x1F</tt>) are recognized as end of the path name. In LFN configuration, leading or embedded white spaces and dots in the file name are valid as part of the file name, but the treminating white space and dot of the file name are ignored and truncated. In non-LFN configuration, white space is recognized as end of the path name.</p>
+<p>In default configuration (<tt><a href="config.html#fs_rpath">FF_FS_RPATH</a> == 0</tt>), it does not have a concept of current directory like OS oriented filesystems. Every object on the volume is always specified in absolute path name that followed from the root directory. Dot directory names (<tt>"." and ".."</tt>) are not allowed. Heading separator is ignored and it can be exist or omitted. The default drive is fixed to drive 0.</p>
+<p>When relative path feature is enabled (<tt>FF_FS_RPATH &gt;= 1</tt>), specified path is followed from the root directory if a heading separator is exist. If not, it is followed from the current directory. Dot directory names (not the object but to refer this directory or parent directory) are also allowed for the path name. The current directory is set by <a href="chdir.html"><tt>f_chdir</tt></a> function and the default drive is the current drive set by <a href="chdrive.html"><tt>f_chdrive</tt></a> function.</p>
 <table class="lst2">
 <tr><td>Path name</td><td>FF_FS_RPATH == 0</td><td>FF_FS_RPATH &gt;= 1</td></tr>
 <tr class="lst3"><td>file.txt</td><td>A file in the root directory of the drive 0</td><td>A file in the current directory of the current drive</td></tr>
@@ -27,22 +27,20 @@
 <tr><td>2:</td><td>The root directory of the drive 2</td><td>The current directory of the drive 2</td></tr>
 <tr><td>2:/</td><td>The root directory of the drive 2</td><td>The root directory of the drive 2</td></tr>
 <tr><td>2:file.txt</td><td>A file in the root directory of the drive 2</td><td>A file in the current directory of the drive 2</td></tr>
-<tr><td>../file.txt</td><td>Invalid name</td><td>A file in the parent directory</td></tr>
 <tr><td>.</td><td>Invalid name</td><td>This directory</td></tr>
-<tr><td>..</td><td>Invalid name</td><td>Parent directory of the current directory (*)</td></tr>
-<tr><td>dir1/..</td><td>Invalid name</td><td>The current directory</td></tr>
+<tr><td>..</td><td>Invalid name</td><td>Parent directory</td></tr>
+<tr><td>../file.txt</td><td>Invalid name</td><td>A file in the parent directory</td></tr>
 <tr><td>/..</td><td>Invalid name</td><td>The root directory (sticks the top level)</td></tr>
 </table>
-<p>Also the drive prefix can be in pre-defined arbitrary string. When the option <tt><a href="config.html#str_volume_id">FF_STR_VOLUME_ID</a> == 1</tt>, also arbitrary string volume ID can be used as drive prefix. e.g. <tt>"<em>flash:</em>file1.txt"</tt>, <tt>"<em>ram:</em>temp.dat"</tt> or <tt>"<em>sd:</em>"</tt>. If the srting does not match any volume ID, the function fails with <tt>FR_INVALID_DRIVE</tt>.</p>
-<p>When <tt>FF_STR_VOLUME_ID == 2</tt>, Unix style drive prefix can be used. e.g. <tt>"<em>/flash</em>/file1.txt"</tt>, <tt>"<em>/ram</em>/temp.dat"</tt> or <tt>"<em>/sd</em>"</tt>. If a heading separator is exist, it is treated as an absolute path with a heading node ID. Any form as "root directory in current drive" and "current directory in specified drive" cannot be used. Double dot name cannot traverse the volumes such as <tt>"<em>/flash</em>/..<em>/ram</em>/foo.dat"</tt>.</p>
-<p><em>Remark: In this revision, double dot name <tt>".."</tt> cannot follow the parent directory on the exFAT volume. It will work as <tt>"."</tt> and stay there.</em></p>
+<p>The drive prefix can be in pre-defined arbitrary string. When the option <tt><a href="config.html#str_volume_id">FF_STR_VOLUME_ID</a> == 1</tt>, also arbitrary string volume ID can be used as drive prefix. e.g. <tt>"<em>flash:</em>file1.txt"</tt>, <tt>"<em>ram:</em>temp.dat"</tt> or <tt>"<em>sd:</em>"</tt>. If the srting does not match any volume ID, the function fails with <tt>FR_INVALID_DRIVE</tt>.</p>
+<p>When <tt>FF_STR_VOLUME_ID == 2</tt>, Unix style drive prefix can be used. e.g. <tt>"<em>/flash</em>/file1.txt"</tt>, <tt>"<em>/ram</em>/temp.dat"</tt> or <tt>"<em>/sd</em>"</tt>. If a heading separator is exist, it is treated as an absolute path with a heading volume ID. Any form as "root directory in current drive" and "current directory in specified drive" cannot be used. ".." cannot traverse the volumes such as <tt>"<em>/flash</em>/..<em>/ram</em>/foo.dat"</tt>.</p>
 </div>
 
 <div class="para doc" id="case">
 <h3>Legal Characters and Case Sensitivity</h3>
-<p>In the generic FAT filesystems, the legal characters for object name (file/directory name) are, <tt>0-9 A-Z ! # $ % &amp; ' ( ) - @ ^ _ ` { } ~</tt> in ASCII and extended characters <tt>\x80</tt> to <tt>\xFF</tt>. In the FAT filesystems with LFN extention, also <tt>+ , ; = [ ]</tt>, white space and extended characters <tt>U+000080</tt> to <tt>U+10FFFF</tt> are legal for the object name. White spaces and dots can be placed anywhere in the path name except end of the name. Trailing white spaces and dots are ignored.</p>
-<p>FAT filesystem is case-insensitive to the object names on the volume. Object names on the FAT volume are compared in case-insensitive. For instance, these three names, <tt>file.txt</tt>, <tt>File.Txt</tt> and <tt>FILE.TXT</tt>, are identical on the FAT filesystem. This is applied to extended charactres as well. When an object is created on the FAT volume, up converted name is recorded to the SFN entry, and the original name is recorded to the LFN entry if LFN extension is enabled.</p>
-<p>On the MS-DOS and PC DOS for Chinese, Japanese and Korean (DOS/DBCS), extended characters are recorded to the SFN entry without up-case conversion and compared in case-sensitive. This causes a problem on compatibility with Windows system when the object with extended characters is created on the volume by DOS/DBCS system; therfore the object names with DBCS extended characters should not be used on the FAT volume shared by those systems. FatFs works with case-sensitive to the extended characters in only non-LFN with DBCS configuration (DOS/DBCS specs). However, FatFs works with case-insensitive to the extended character (WindowsNT specs) in LFN configuration.</p>
+<p>In the generic FAT filesystems, the legal characters for the object (file or sub-directory) name  are, <tt>0-9 A-Z ! # $ % &amp; ' ( ) - @ ^ _ ` { } ~</tt> in ASCII and extended characters <tt>\x80</tt> to <tt>\xFF</tt>. In the FAT filesystems with LFN extention, also <tt>+ , ; = [ ]</tt>, white space and extended characters <tt>U+000080</tt> to <tt>U+10FFFF</tt> are legal for the object name. White spaces and dots can be placed anywhere in the path name except end of the name. Trailing white spaces and dots are ignored.</p>
+<p>FAT filesystem is case-insensitive to the object names on the volume. Object names on the FAT volume are compared in case-insensitive. For instance, these three object names, <tt>file.txt</tt>, <tt>File.Txt</tt> and <tt>FILE.TXT</tt>, are identical on the FAT filesystem. This is applied to the extended charactres as well. When an object is created on the FAT volume, up converted name is recorded to the SFN entry, and the original name is recorded to the LFN entry if LFN extension is enabled.</p>
+<p>On the MS-DOS and PC DOS for Chinese, Japanese and Korean (DOS/DBCS), extended characters are recorded to the SFN entry without up-case conversion and compared in case-sensitive. This causes a problem on compatibility with Windows system when the file with extended characters is created on the volume by DOS/DBCS system; therfore the object names with DBCS extended characters should not be used on the FAT volume shared by those systems. FatFs works with case-sensitive to the extended characters in only non-LFN with DBCS configuration (DOS/DBCS specs). However, FatFs works with case-insensitive to the extended character (WindowsNT specs) in LFN configuration.</p>
 </div>
 
 <div class="para doc" id="uni">
@@ -71,10 +69,8 @@ PARTITION VolToPart[FF_VOLUMES] = {
     {0, 3},     <span class="c">/* "2:" ==> 3rd partition on the pd#0 */</span>
     {1, 0}      <span class="c">/* "3:" ==> pd#1 as removable drive (auto-search) */</span>
 };
-
-
-<img src="../res/f7.png" width="900" height="288" alt="relationship between logical drive and physical drive">
 </pre>
+<img src="../res/f7.png" width="900" height="288" alt="relationship between logical drive and physical drive">
 <p>There are some considerations when enable the multi-partition configuration.</p>
 <ul>
 <li>The physical drive that hosts two or more mounted partitions should be non-removable, or all volumes on the drive must be unmounted when remove the medium.</li>
@@ -88,6 +84,6 @@ PARTITION VolToPart[FF_VOLUMES] = {
 </div>
 
 
-<p class="foot"><a href="../00index_e.html">Return</a></p>
+<p class="foot"><a href="../index.html">Return</a></p>
 </body>
 </html>
