@@ -161,6 +161,11 @@
 /   2: f_getcwd() function is available in addition to 1.
 */
 
+#define FF_CASE_INSENSITIVE_COMPARISONS  0
+/* This option enables case insensitive comparisons for SFNs, needed by some
+/  FATFS variants which store lowercase filenames instead of the usual uppercase
+/  ones.
+*/
 
 /*---------------------------------------------------------------------------/
 / Drive/Volume Configurations
