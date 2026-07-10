@@ -2172,7 +2172,7 @@ static FRESULT load_xdir (	/* FR_INT_ERR: invalid entry block */
 	if (res != FR_OK) return res;
 	if (dp->dir[XDIR_Type] != ET_STREAM) return FR_INT_ERR;	/* Invalid order? */
 	memcpy(dirb + 1 * SZDIRE, dp->dir, SZDIRE);
-	if (MAXDIRB(dirb[XDIR_NumName]) > sz_ent) return FR_INT_ERR;	/* Invalid block size for the name? */
+	if (MAXDIRB(dirb[XDIR_NumName]) != sz_ent) return FR_INT_ERR;	/* Invalid block size for the name? */
 
 	/* Load file name entries */
 	i = 2 * SZDIRE;	/* Name offset to load */
