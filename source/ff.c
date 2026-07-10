@@ -259,7 +259,7 @@
 
 
 /* Definitions of sector size */
-#if (FF_MAX_SS < FF_MIN_SS) || (FF_MAX_SS != 512 && FF_MAX_SS != 1024 && FF_MAX_SS != 2048 && FF_MAX_SS != 4096) || (FF_MIN_SS != 512 && FF_MIN_SS != 1024 && FF_MIN_SS != 2048 && FF_MIN_SS != 4096)
+#if (FF_MAX_SS < FF_MIN_SS) || (FF_MAX_SS != 256 && FF_MAX_SS != 512 && FF_MAX_SS != 1024 && FF_MAX_SS != 2048 && FF_MAX_SS != 4096) || (FF_MIN_SS != 256 && FF_MIN_SS != 512 && FF_MIN_SS != 1024 && FF_MIN_SS != 2048 && FF_MIN_SS != 4096)
 #error Wrong sector size configuration
 #endif
 #if FF_MAX_SS == FF_MIN_SS
@@ -2412,6 +2412,28 @@ static FRESULT dir_read (
 /* Directory handling - Find an object in the directory                  */
 /*-----------------------------------------------------------------------*/
 
+static int compare_filenames(const char* s1, const char* s2, size_t n)
+{
+#if FF_CASE_INSENSITIVE_COMPARISONS
+	while (n--)
+	{
+		char c1 = *s1++;
+		char c2 = *s2++;
+		int d;
+
+		if (IsLower(c1)) c1 -= 0x20;		/* To upper ASCII char */
+		if (IsLower(c2)) c2 -= 0x20;		/* To upper ASCII char */
+
+		d = c1 - c2;
+		if (d)
+			return d;
+	}
+	return 0;
+#else
+	return memcmp(s1, s2, n);
+#endif
+}
+
 static FRESULT dir_find (	/* FR_OK(0):succeeded, !=0:error */
 	DIR* dp					/* Pointer to the directory object with the file name */
 )
@@ -2472,13 +2494,13 @@ static FRESULT dir_find (	/* FR_OK(0):succeeded, !=0:error */
 				}
 			} else {					/* SFN entry */
 				if (ord == 0 && sum == sum_sfn(dp->dir)) break;	/* LFN matched? */
-				if (!(dp->fn[NSFLAG] & NS_LOSS) && !memcmp(dp->dir, dp->fn, 11)) break;	/* SFN matched? */
+				if (!(dp->fn[NSFLAG] & NS_LOSS) && !compare_filenames(dp->dir, dp->fn, 11)) break;	/* SFN matched? */
 				ord = 0xFF; dp->blk_ofs = 0xFFFFFFFF;	/* Not matched, reset LFN sequence */
 			}
 		}
 #else		/* Non LFN configuration */
 		dp->obj.attr = dp->dir[DIR_Attr] & AM_MASK;
-		if (!(dp->dir[DIR_Attr] & AM_VOL) && !memcmp(dp->dir, dp->fn, 11)) break;	/* Is it a valid entry? */
+		if (!(dp->dir[DIR_Attr] & AM_VOL) && !compare_filenames(dp->dir, dp->fn, 11)) break;	/* Is it a valid entry? */
 #endif
 		res = dir_next(dp, 0);	/* Next entry */
 	} while (res == FR_OK);

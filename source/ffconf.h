@@ -161,6 +161,11 @@
 /   2: f_getcwd() is available in addition to 1.
 */
 
+#define FF_CASE_INSENSITIVE_COMPARISONS  0
+/* This option enables case insensitive comparisons for SFNs, needed by some
+/  FATFS variants which store lowercase filenames instead of the usual uppercase
+/  ones.
+*/
 
 #define FF_PATH_DEPTH	10
 /*  This option defines maximum depth of directory in the exFAT volume. It is NOT
